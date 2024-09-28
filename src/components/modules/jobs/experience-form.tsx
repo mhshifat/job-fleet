@@ -11,7 +11,7 @@ export default function ExperienceForm() {
   return (
     <div className="mt-8">
       <h3 className="font-geist text-xl">Experience</h3>
-      <p className="mt-2 font-geist-mono font-xs">Write and fill out the information of the job</p>
+      <p className="mt-2 font-geist-mono text-sm">Write and fill out the information of the job</p>
 
       <div className="flex gap-5">
         <Label title="Label" className="mt-5 flex-1">

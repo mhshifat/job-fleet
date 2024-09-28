@@ -117,13 +117,10 @@ const tiptapImage = TiptapImage.extend({
 });
 
 const defaultExtensions = [
-	tiptapImage,
 	starterKit,
 	placeholder,
-  tiptapLink,
 	TiptapLink,
 	TiptapImage,
-	UpdatedImage,
 	taskList,
 	taskItem,
 	horizontalRule,
@@ -304,7 +301,9 @@ const Editor = ({ onChange, value, disabled, onFocus }: EditorProps) => {
 	return (
 		<EditorRoot>
 			<EditorContent
-				initialContent={parsedVal}
+				{...value ? {
+          initialContent: parsedVal
+        } : {}}
         onFocus={() => onFocus?.()}
 				extensions={[...defaultExtensions, slashCommand]}
 				editorProps={{

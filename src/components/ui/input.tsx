@@ -1,9 +1,9 @@
 import { cn } from "@/utils/helpers";
-import { ChangeEvent, InputHTMLAttributes, KeyboardEvent, useState } from "react";
+import { ChangeEvent, ForwardedRef, forwardRef, InputHTMLAttributes, KeyboardEvent, useState } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
 
-export default function Input({ type, className, ...restProps }: InputProps) {
+function Input({ type, className, ...restProps }: InputProps, ref: ForwardedRef<HTMLInputElement>) {
   const [value, setValue] = useState("");
 
   function handleNumberInputChange(e: ChangeEvent<HTMLInputElement>) {
@@ -32,14 +32,16 @@ export default function Input({ type, className, ...restProps }: InputProps) {
     case "number":
       return (
         <div className={cn("flex items-center border border-border h-[var(--size)] rounded-md overflow-hidden transition py-2 px-3 font-medium font-geist text-sm focus-within:shadow-[0_0_0_1px_white,0_0_0_3px_hsl(var(--primary))]")}>
-          <input type={type} className="bg-transparent border-none outline-none shadow-none w-full h-full inline-flex focus-visible:border-none focus-visible:outline-none focus-visible:shadow-none placeholder:text-foreground/60 placeholder:font-medium placeholder:font-geist placeholder:text-sm" {...restProps} value={value} onChange={handleNumberInputChange} onKeyDown={handleNumberKeyDown} />
+          <input ref={ref} type={type} className="bg-transparent border-none outline-none shadow-none w-full h-full inline-flex focus-visible:border-none focus-visible:outline-none focus-visible:shadow-none placeholder:text-foreground/60 placeholder:font-medium placeholder:font-geist placeholder:text-sm" {...restProps} value={value} onChange={handleNumberInputChange} onKeyDown={handleNumberKeyDown} />
         </div>
       );
     default:
       return (
         <div className={cn("flex items-center border border-border h-[var(--size)] rounded-md overflow-hidden transition py-2 px-3 font-medium font-geist text-sm focus-within:shadow-[0_0_0_1px_white,0_0_0_3px_hsl(var(--primary))]")}>
-          <input type={type} className="bg-transparent border-none outline-none shadow-none w-full h-full inline-flex focus-visible:border-none focus-visible:outline-none focus-visible:shadow-none placeholder:text-foreground/60 placeholder:font-medium placeholder:font-geist placeholder:text-sm" {...restProps} />
+          <input ref={ref} type={type} className="bg-transparent border-none outline-none shadow-none w-full h-full inline-flex focus-visible:border-none focus-visible:outline-none focus-visible:shadow-none placeholder:text-foreground/60 placeholder:font-medium placeholder:font-geist placeholder:text-sm" {...restProps} />
         </div>
       );
   }
 }
+
+export default forwardRef(Input);

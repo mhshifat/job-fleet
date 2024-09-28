@@ -7,6 +7,7 @@ import { ZodSchema } from "zod";
 import Button from "../ui/button";
 import Spinner from "./spinner";
 import { toast } from "@/utils/toast";
+import { ArrowRightIcon } from "lucide-react";
 
 interface ChildrenProps<T> {
   getValue: (name: keyof T) => string;
@@ -61,6 +62,7 @@ export default function FormHandler<T extends {}>({
       setLoading(false);
     }
   }
+
   return (
     <Form
       disabled={loading}
@@ -87,17 +89,10 @@ export default function FormHandler<T extends {}>({
       })}
 
       <div className="mt-5">
-        <Button disabled={disabled} type="submit">
-          {loading ? (
-            <span className="flex items-center gap-2">
-              <Spinner className="w-max text-foreground/30" />
-              Loading...
-            </span>
-          ) : (
-            <>
-              {renderSubmitBtnText?.() || (defaultValues?.id ? "Update" : "Create")}
-            </>
-          )}
+        <Button disabled={disabled} type="submit" className="capitalize mt-5">
+          {loading && <Spinner className="size-4 animate-spin text-foreground/50" />}
+          {loading ? "Loading..." : renderSubmitBtnText?.() || (defaultValues?.id ? "Update" : "Create")}
+          {!loading && <ArrowRightIcon className="size-4" />}
         </Button>
       </div>
     </Form>

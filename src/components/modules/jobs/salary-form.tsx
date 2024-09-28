@@ -13,7 +13,7 @@ export default function SalaryForm() {
   return (
     <div className="mt-8">
       <h3 className="font-geist text-xl">Salary</h3>
-      <p className="mt-2 font-geist-mono font-xs">Write and fill out the information of the job</p>
+      <p className="mt-2 font-geist-mono text-sm">Write and fill out the information of the job</p>
 
       <Label title="Salary Type" className="mt-5">
         <Checkbox

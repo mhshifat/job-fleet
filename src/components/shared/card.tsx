@@ -12,8 +12,8 @@ export default function Card({ children, title, description, className, actions 
     <div className="bg-background-secondary rounded-lg shadow-sm overflow-hidden border border-border">
       <div className="bg-background-secondary py-2 px-5 border-b border-border flex items-center gap-5">
         <div className="flex flex-col">
-          <h3 className="font-archivo font-medium text-foreground/80 text-xl">{title}</h3>
-          {description && <p className="font-archivo font-medium text-foreground/60 text-sm mt-[1px]">{description}</p>}
+          <h3 className="font-geist font-normal text-foreground/80 text-xl">{title}</h3>
+          {description && <p className="font-geist-mono font-normal text-foreground/60 text-sm mt-[1px] empty:hidden">{description}</p>}
         </div>
 
         <div className="ml-auto">

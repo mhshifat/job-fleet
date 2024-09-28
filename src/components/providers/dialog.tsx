@@ -97,8 +97,8 @@ export default function DialogProvider({ children }: PropsWithChildren) {
             {(dialog.title || dialog.description) && (
               <>
                 <Dialog.Header onClose={closeDialog}>
-                  <h3 className="font-archivo font-medium text-foreground/80 text-xl">{dialog.title}</h3>
-                  <p className="font-archivo font-medium text-foreground/60 text-sm mt-[1px]">{dialog.description}</p>
+                  <h3 className="font-geist-mono font-semibold text-foreground/70 text-xl capitalize tracking-tighter">{dialog.title}</h3>
+                  <p className="font-geist font-semibold text-foreground/60 text-sm mt-[2px]">{dialog.description}</p>
                 </Dialog.Header>
                 <Divider />
               </>
