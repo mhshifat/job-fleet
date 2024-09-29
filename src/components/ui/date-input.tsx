@@ -1,15 +1,16 @@
 "use client";
 
-import { createContext, PropsWithChildren, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, PropsWithChildren, useCallback, useContext, useMemo, useState } from "react";
 import Portal from "../shared/portal";
 import { usePopper } from "react-popper";
 import { ModifierPhases, State } from "@popperjs/core";
 import { cn } from "@/utils/helpers";
 import DatePicker from "./date-picker";
+import { formatISODate } from "@/utils/date";
 
 interface ISelected {
-  value: string;
-  content: string;
+  start: Date;
+  end: Date;
 }
 
 interface DateContextState {
@@ -20,11 +21,12 @@ const DateContext = createContext<DateContextState | null>(null);
 
 interface DateProps {
   placeholder?: string;
+  onChange?: (value: ISelected) => void;
 }
 
-export default function DateInput({ children, placeholder }: PropsWithChildren<DateProps>) {
+export default function DateInput({ placeholder, onChange }: PropsWithChildren<DateProps>) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<ISelected[]>([]);
+  const [selected, setSelected] = useState<ISelected | null>(null);
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null);
@@ -34,7 +36,8 @@ export default function DateInput({ children, placeholder }: PropsWithChildren<D
         name: "sameWidth",
         enabled: true,
         fn: ({ state }: { state: State }) => {
-          state.styles.popper.width = `${state.rects.reference.width}px`;
+          // state.styles.popper.width = `${state.rects.reference.width}px`;
+          state.styles.popper.width = `320px`;
         },
         phase: "beforeWrite" as ModifierPhases,
         requires: ["computeStyles"],
@@ -53,21 +56,25 @@ export default function DateInput({ children, placeholder }: PropsWithChildren<D
   });
 
   const updateValue = useCallback((value: ISelected) => {
-    setSelected([value]);
+    const newVal = value;
+    setSelected(newVal);
+    onChange?.(newVal);
     setOpen(false);
   }, []);
 
   return (
     <DateContext.Provider value={{ updateValue }}>
       <div role="button" ref={setReferenceElement} onClick={() => setOpen(value => !value)}>
-        <DateInput.Placeholder placeholder={selected?.[0]?.content || placeholder || "Select Date"} />
+        <DateInput.Placeholder value={selected ? formatISODate(new Date(selected.end), "MMMM yyyy") || "" : ""} placeholder={placeholder || "Select Date"} />
       </div>
       
       <Portal>
         {open && <div ref={setPopperElement} style={styles.popper} {...attributes.popper} className="z-50">
           <div ref={setArrowElement} style={styles.arrow} className="hidden absolute top-0 left-0 -z-50" />
           <div className="w-full h-auto bg-background p-2 shadow-sm rounded-md border border-border">
-            <DatePicker />
+            <DatePicker
+              onChange={(date) => updateValue({ start: date, end: date })}
+            />
           </div>
         </div>}
       </Portal>
@@ -83,12 +90,13 @@ export function useSelect() {
 
 interface SelectPlaceholderProps {
   placeholder?: string;
+  value?: string;
 }
 
-DateInput.Placeholder = ({ placeholder }: SelectPlaceholderProps) => {
+DateInput.Placeholder = ({ placeholder, value }: SelectPlaceholderProps) => {
   return (
     <div className={cn("cursor-pointer flex items-center border border-border h-[var(--size)] rounded-md overflow-hidden transition py-2 px-3 font-medium font-geist text-sm focus-within:shadow-[0_0_0_1px_white,0_0_0_3px_hsl(var(--primary))]")}>
-      <input readOnly type="text" className="cursor-pointer bg-transparent border-none outline-none shadow-none w-full h-full inline-flex focus-visible:border-none focus-visible:outline-none focus-visible:shadow-none placeholder:text-foreground/60 placeholder:font-medium placeholder:font-geist placeholder:text-sm" placeholder={placeholder} />
+      <input readOnly type="text" className="cursor-pointer bg-transparent border-none outline-none shadow-none w-full h-full inline-flex focus-visible:border-none focus-visible:outline-none focus-visible:shadow-none placeholder:text-foreground/60 placeholder:font-medium placeholder:font-geist placeholder:text-sm" defaultValue={value} placeholder={placeholder} />
     </div>
   )
 }

@@ -5,7 +5,7 @@ import Input from "@/components/ui/input";
 import Label from "@/components/ui/label";
 import Select from "@/components/ui/select";
 import { useSteps } from "@/components/ui/step";
-import { ICreateJobFormSchema } from "@/domain/auth/validators";
+import { ICreateJobFormSchema } from "@/domain/job/validators";
 import { ArrowRightIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import CreateCategoryForm from "./create-category-form";
@@ -15,7 +15,7 @@ export default function BasicInformationForm() {
   const { nextStep } = useSteps();
   const { register, formState: { errors }, trigger, setValue } = useFormContext<ICreateJobFormSchema>();
   const { openDialog, closeDialog } = useDialog();
-  const { data: categories, refetch: refetchCategories } = useCategoriesQuery()
+  const { data: categories, refetch: refetchCategories } = useCategoriesQuery();
 
   async function handleSubmit() {
     try {
@@ -39,7 +39,7 @@ export default function BasicInformationForm() {
       </Label>
 
       <div className="flex gap-5">
-        <Label title="Category" className="mt-5 flex-1">
+        <Label title="Category" className="mt-5 flex-1" error={errors.category?.message}>
           <Select
             onChange={(values) => setValue("category", values[0].value, {
               shouldDirty: true,
@@ -62,7 +62,7 @@ export default function BasicInformationForm() {
             ))}
           </Select>
         </Label>
-        <Label title="Job Code" className="mt-5 flex-1">
+        <Label title="Job Code" className="mt-5 flex-1" error={errors.code?.message}>
           <Input
             placeholder="Ex: 001"
             {...register("code")}
@@ -70,7 +70,7 @@ export default function BasicInformationForm() {
         </Label>
       </div>
 
-      <Label title="Job Description" className="mt-5">
+      <Label title="Job Description" className="mt-5" error={errors.description?.message}>
         <Editor
           onChange={(value) => setValue("description", value, {
             shouldDirty: true,

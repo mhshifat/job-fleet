@@ -6,16 +6,28 @@ import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useSteps } from "@/components/ui/step";
+import { useFormContext } from "react-hook-form";
+import { ICreateJobFormSchema } from "@/domain/job/validators";
 
 export default function SalaryForm() {
   const { nextStep, prevStep } = useSteps();
+  const { register, formState: { errors }, trigger, setValue } = useFormContext<ICreateJobFormSchema>();
 
+  async function handleSubmit() {
+    try {
+      const isValid = await trigger(["salaryType", "currency", "salaryRange"]);
+      if (!isValid) throw new Error("Invalid fields");
+      nextStep({});
+    } catch (err) {
+      console.error(err);
+    }
+  }
   return (
     <div className="mt-8">
       <h3 className="font-geist text-xl">Salary</h3>
       <p className="mt-2 font-geist-mono text-sm">Write and fill out the information of the job</p>
 
-      <Label title="Salary Type" className="mt-5">
+      <Label title="Salary Type" className="mt-5" error={errors?.salaryType?.message}>
         <Checkbox
           type="radio"
           className="flex gap-5"
@@ -24,7 +36,11 @@ export default function SalaryForm() {
               "border-primary bg-primary text-white": isChecked
             })}>{title}</span>
           )}
-          onChange={({ checked, item }) => {}}
+          onChange={({ item }) => setValue("salaryType", item, {
+            shouldDirty: true,
+            shouldTouch: true,
+            shouldValidate: true,
+          })}
         >
           <Checkbox.Item
             className="flex-1"
@@ -43,7 +59,7 @@ export default function SalaryForm() {
           />
           <Checkbox.Item
             className="flex-1"
-            title="MONTHLY"
+            title="Monthly"
             value="MONTHLY"
           />
           <Checkbox.Item
@@ -55,14 +71,21 @@ export default function SalaryForm() {
       </Label>
 
       <div className="flex gap-5">
-        <Label title="Currency" className="mt-5 flex-1">
-          <Select>
-            <Select.Option>BDT</Select.Option>
+        <Label title="Currency" className="mt-5 flex-1" error={errors?.currency?.message}>
+          <Select
+            onChange={(values) => setValue("currency", values[0].value, {
+              shouldDirty: true,
+              shouldTouch: true,
+              shouldValidate: true,
+            })}
+          >
+            <Select.Option value="BDT">BDT</Select.Option>
           </Select>
         </Label>
-        <Label title="Salary" className="mt-5 flex-1">
+        <Label title="Salary" className="mt-5 flex-1" error={errors?.salaryRange?.message}>
           <Input
             placeholder="Ex: 70000 - 100000"
+            {...register("salaryRange")}
           />
         </Label>
       </div>
@@ -73,7 +96,7 @@ export default function SalaryForm() {
           Back to Experience
         </Button>
 
-        <Button type="button" variant="ghost" className="w-max capitalize" onClick={() => nextStep({})}>
+        <Button type="button" variant="ghost" className="w-max capitalize" onClick={handleSubmit}>
           Go to Location
           <ArrowRightIcon className="size-4" />
         </Button>

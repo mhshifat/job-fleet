@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { jobs } from "./job";
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -11,4 +12,5 @@ export const users = pgTable("users", {
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
+  jobs: many(jobs)
 }));

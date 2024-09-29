@@ -20,6 +20,7 @@ import "react-day-picker/dist/style.css";
 import Divider from "./divider";
 import Spinner from "../shared/spinner";
 import { cn } from "@/utils/helpers";
+import React from "react";
 
 interface DatePickerProps {
 	enableTimePicker?: boolean;
@@ -118,7 +119,6 @@ export default function DatePicker({ enableTimePicker, type, onChange, onTimeSel
                   datesOfMonth?.[weekDay]?.[spaceKey];
                 const isDateInMon = isDateInMonth(cell.year, cell.month, cell.day, year, month);
                 const isToday = isDateToday(cell.year, cell.month, cell.day);
-                const isDateSame = cell.year === date.year && cell.day === date.day && cell.month === date.month;
 
                 return (
                   <DatePicker.Cell
@@ -126,7 +126,7 @@ export default function DatePicker({ enableTimePicker, type, onChange, onTimeSel
                     className="text-sm font-medium font-geist-mono text-foreground/50 w-full"
                     readOnly={!isDateInMon}
                     disabled={!isDateInMon}
-                    selected={isDateSame || isToday}
+                    selected={isToday}
                     onClick={() => {
                       setDate(cell);
                       onChange?.(formatToDate(cell.year, cell.month, cell.day));

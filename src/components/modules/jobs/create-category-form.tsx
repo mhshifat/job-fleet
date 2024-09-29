@@ -2,6 +2,7 @@ import FormHandler from "@/components/shared/form-handler";
 import Input from "@/components/ui/input";
 import Label from "@/components/ui/label";
 import { categoryService } from "@/infra/category/service";
+import React from "react";
 import { z } from "zod";
 
 export default function CreateCategoryForm({ onComplete }: { onComplete: () => void }) {

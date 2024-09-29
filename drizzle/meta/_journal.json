@@ -15,6 +15,41 @@
       "when": 1727529068471,
       "tag": "0001_modern_calypso",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1727616405842,
+      "tag": "0002_stormy_the_phantom",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1727616475719,
+      "tag": "0003_typical_spacker_dave",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1727616751197,
+      "tag": "0004_tiresome_mach_iv",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1727617893457,
+      "tag": "0005_mute_skullbuster",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1727618106760,
+      "tag": "0006_faithful_metal_master",
+      "breakpoints": true
     }
   ]
 }

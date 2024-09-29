@@ -2,7 +2,7 @@
 
 import Container from "@/components/shared/container";
 import Steps from "@/components/ui/step";
-import { createJobFormSchema, ICreateJobFormSchema } from "@/domain/auth/validators";
+import { createJobFormSchema, ICreateJobFormSchema } from "@/domain/job/validators";
 import { cn } from "@/utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { lazy } from "react";
