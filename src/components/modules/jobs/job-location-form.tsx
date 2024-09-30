@@ -29,7 +29,7 @@ export default function JobLocationForm() {
         deadline: formValues.deadline?.toISOString(),
         status: status || "PUBLISHED"
       });
-      router.push(ROUTE_PATHS.MY_JOBS);
+      router.push(ROUTE_PATHS.MY_JOB_APPLY_FORM);
     } catch (err) {
       console.error(err);
     } finally {

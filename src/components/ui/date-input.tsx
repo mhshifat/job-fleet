@@ -21,10 +21,11 @@ const DateContext = createContext<DateContextState | null>(null);
 
 interface DateProps {
   placeholder?: string;
+  disabled?: boolean;
   onChange?: (value: ISelected) => void;
 }
 
-export default function DateInput({ placeholder, onChange }: PropsWithChildren<DateProps>) {
+export default function DateInput({ placeholder, onChange, disabled }: PropsWithChildren<DateProps>) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<ISelected | null>(null);
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
@@ -64,8 +65,8 @@ export default function DateInput({ placeholder, onChange }: PropsWithChildren<D
 
   return (
     <DateContext.Provider value={{ updateValue }}>
-      <div role="button" ref={setReferenceElement} onClick={() => setOpen(value => !value)}>
-        <DateInput.Placeholder value={selected ? formatISODate(new Date(selected.end), "MMMM yyyy") || "" : ""} placeholder={placeholder || "Select Date"} />
+      <div role="button" ref={setReferenceElement} onClick={() => !disabled && setOpen(value => !value)}>
+        <DateInput.Placeholder disabled={disabled} value={selected ? formatISODate(new Date(selected.end), "MMMM yyyy") || "" : ""} placeholder={placeholder || "Select Date"} />
       </div>
       
       <Portal>
@@ -91,12 +92,13 @@ export function useSelect() {
 interface SelectPlaceholderProps {
   placeholder?: string;
   value?: string;
+  disabled?: boolean;
 }
 
-DateInput.Placeholder = ({ placeholder, value }: SelectPlaceholderProps) => {
+DateInput.Placeholder = ({ placeholder, value, disabled }: SelectPlaceholderProps) => {
   return (
     <div className={cn("cursor-pointer flex items-center border border-border h-[var(--size)] rounded-md overflow-hidden transition py-2 px-3 font-medium font-geist text-sm focus-within:shadow-[0_0_0_1px_white,0_0_0_3px_hsl(var(--primary))]")}>
-      <input readOnly type="text" className="cursor-pointer bg-transparent border-none outline-none shadow-none w-full h-full inline-flex focus-visible:border-none focus-visible:outline-none focus-visible:shadow-none placeholder:text-foreground/60 placeholder:font-medium placeholder:font-geist placeholder:text-sm" defaultValue={value} placeholder={placeholder} />
+      <input readOnly type="text" disabled={disabled} className="cursor-pointer bg-transparent border-none outline-none shadow-none w-full h-full inline-flex focus-visible:border-none focus-visible:outline-none focus-visible:shadow-none placeholder:text-foreground/60 placeholder:font-medium placeholder:font-geist placeholder:text-sm" defaultValue={value} placeholder={placeholder} />
     </div>
   )
 }

@@ -49,9 +49,9 @@ export default function CreateJobForm() {
         <div className="w-full h-auto shadow-sm flex items-center">
           {STEPS.map(({ component: Component, ...step }, stepIdx) => (
             <Steps.Item key={step.title}>
-              <Steps.Placeholder current={stepIdx} className={cn("flex-1 self-stretch py-5 px-7 border-r border-b-2 border-border last-of-type:border-r-0")}>
+              <Steps.Placeholder current={stepIdx} className={cn("border-b-[1.5px] border-border py-5 px-7 flex-1 self-stretch last-of-type:border-r-0 relative before:content-[''] before:absolute before:top-0 before:right-[2px] before:rounded-md before:aspect-square before:h-full before:bg-transparent before:border-r-2 before:border-t-2 before:border-border before:rotate-45 before:scale-75 last-of-type:before:hidden overflow-hidden")}>
                 {({ active }) => (
-                  <div className="flex items-start gap-[1rem]">
+                  <div className={cn("flex items-start gap-[1rem] relative")}>
                     <div className={cn("text-foreground/50 text-base font-geist font-semibold antialiased", {
                       "text-primary": active === stepIdx
                     })}>{(stepIdx + 1).toString().padStart(2, '0')}</div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/utils/helpers";
+import React from "react";
 import { Children, cloneElement, createContext, Fragment, HTMLAttributes, PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useId, useMemo, useState } from "react";
 
 interface IStepOptions {
@@ -140,9 +141,7 @@ Steps.Placeholder = ({ children, className, current }: StepsPlaceholderProps) =>
   const { active } = useSteps();
   
   return (
-    <div className={cn("", className, {
-      "border-b-primary": active === current
-    })}>
+    <div className={cn("", className)}>
       {children({
         active
       })}

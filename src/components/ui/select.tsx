@@ -20,11 +20,12 @@ const SelectContext = createContext<SelectContextState | null>(null);
 
 interface SelectProps {
   placeholder?: string;
+  disabled?: boolean;
   onCreateNew?: () => void;
   onChange?: (values: ISelected[]) => void;
 }
 
-export default function Select({ children, placeholder, onCreateNew, onChange }: PropsWithChildren<SelectProps>) {
+export default function Select({ children, placeholder, onCreateNew, onChange, disabled }: PropsWithChildren<SelectProps>) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<ISelected[]>([]);
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
@@ -63,8 +64,8 @@ export default function Select({ children, placeholder, onCreateNew, onChange }:
 
   return (
     <SelectContext.Provider value={{ updateValue }}>
-      <div role="button" ref={setReferenceElement} onClick={() => setOpen(value => !value)}>
-        <Select.Placeholder value={selected?.[0]?.content} placeholder={placeholder || "Select"} />
+      <div role="button" ref={setReferenceElement} onClick={() => !disabled && setOpen(value => !value)}>
+        <Select.Placeholder disabled={disabled} value={selected?.[0]?.content} placeholder={placeholder || "Select"} />
       </div>
       
       <Portal>
@@ -97,12 +98,13 @@ export function useSelect() {
 interface SelectPlaceholderProps {
   placeholder?: string;
   value?: string;
+  disabled?: boolean;
 }
 
-Select.Placeholder = ({ placeholder, value }: SelectPlaceholderProps) => {
+Select.Placeholder = ({ placeholder, value, disabled }: SelectPlaceholderProps) => {
   return (
     <div className={cn("cursor-pointer flex items-center border border-border h-[var(--size)] rounded-md overflow-hidden transition py-2 px-3 font-medium font-geist text-sm focus-within:shadow-[0_0_0_1px_white,0_0_0_3px_hsl(var(--primary))]")}>
-      <input readOnly type="text" className="cursor-pointer bg-transparent border-none outline-none shadow-none w-full h-full inline-flex focus-visible:border-none focus-visible:outline-none focus-visible:shadow-none placeholder:text-foreground/60 placeholder:font-medium placeholder:font-geist placeholder:text-sm" defaultValue={value} placeholder={placeholder} />
+      <input readOnly type="text" disabled={disabled} className="cursor-pointer bg-transparent border-none outline-none shadow-none w-full h-full inline-flex focus-visible:border-none focus-visible:outline-none focus-visible:shadow-none placeholder:text-foreground/60 placeholder:font-medium placeholder:font-geist placeholder:text-sm" defaultValue={value} placeholder={placeholder} />
     </div>
   )
 }
