@@ -1,31 +1,32 @@
-import { PropsWithChildren } from "react";
-import { useDrag } from 'react-dnd'
+import { useDraggable } from "@dnd-kit/core";
 
 interface DraggableElementProps {
-  type: string;
+  id: string;
   data: unknown;
+  children: (args: {
+    isDragging: boolean;
+    transform: { x: number, y: number };
+  }) => JSX.Element;
 }
 
-export default function DraggableElement({ children, type, data }: PropsWithChildren<DraggableElementProps>) {
-  const [{ isDragging }, drag] = useDrag(
-    () => ({
-      type: type,
-      item: { data: {...data as unknown as {}, type} },
-      collect: (monitor) => ({
-        isDragging: !!monitor.isDragging(),
+export default function DraggableElement({ children, id, data }: DraggableElementProps) {
+  const {attributes, listeners, setNodeRef, isDragging, transform} = useDraggable({
+    id,
+    data: {
+      draggedItemData: data,
+      dragOverlay: children({
+        isDragging: false,
+        transform: { x: 0, y: 0 }
       })
-    }),
-    []
-  )
+    }
+  });
 
-  return drag(
-    <div style={{
-      opacity: isDragging ? 0.5 : 1,
-      fontSize: 25,
-      fontWeight: 'bold',
-      cursor: 'move',
-    }}>
-      {children}
+  return (
+    <div ref={setNodeRef} {...listeners} {...attributes}>
+      {children({
+        isDragging,
+        transform: { x: transform?.x || 0, y: transform?.y || 0 }
+      })}
     </div>
   )
 }

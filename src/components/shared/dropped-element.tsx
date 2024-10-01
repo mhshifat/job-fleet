@@ -1,27 +1,40 @@
-import { DRAGGABLE_ITEM_TYPES } from "@/utils/constants";
 import { cn } from "@/utils/helpers";
-import { PropsWithChildren } from "react";
-import { useDrop } from "react-dnd";
+import { useDndMonitor, useDroppable } from "@dnd-kit/core";
 
 interface DroppedElementProps {
   className?: string;
-  onDrop?: (data: unknown) => void;
+  onDrop?: (data: { active: unknown; over: unknown; }) => void;
+  onDragStart?: (data: unknown) => void;
+  children: (args: {
+    isOver: boolean;
+  }) => JSX.Element;
 }
 
-export default function DroppedElement({ children, className, onDrop }: PropsWithChildren<DroppedElementProps>) {
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: Object.values(DRAGGABLE_ITEM_TYPES),
-    drop: (data) => onDrop?.(data),
-    collect: monitor => ({
-      isOver: !!monitor.isOver(),
-    }),
-  }), []);
+export default function DroppedElement({ children, className, onDrop, onDragStart }: DroppedElementProps) {
+  const {isOver, setNodeRef} = useDroppable({
+    id: 'job-form-elements-droppable',
+  });
 
-  return drop(
-    <div className={cn("w-full max-w-[600px] bg-background border border-border rounded-md mx-auto py-3 px-5 shadow-sm h-full", className, {
-      "border-primary": isOver
+  useDndMonitor({
+    onDragEnd(event) {
+      if (!event.active || !event.over) return;
+      onDrop?.({
+        active: event.active.data.current?.draggedItemData,
+        over: event.over.data.current,
+      });
+    },
+    onDragStart(event) {
+      onDragStart?.(event.active.data.current?.draggedItemData);
+    },
+  })
+
+  return (
+    <div ref={setNodeRef} className={cn("w-full max-w-[600px] bg-background border border-border rounded-md mx-auto p-3 shadow-md h-full", className, {
+      "border-foreground/20": isOver
     })}>
-      {children}
+      {children({
+        isOver
+      })}
     </div>
   )
 }
