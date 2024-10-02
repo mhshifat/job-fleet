@@ -15,6 +15,7 @@ const buttonVariants = cva(
       size: {
         default: "h-[var(--size)] px-4",
         icon: "h-[var(--size)] w-[var(--size)]",
+        max: "h-[var(--size)] w-max",
       },
     },
     defaultVariants: {
@@ -26,9 +27,9 @@ const buttonVariants = cva(
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "default" | "link" | "outlined" | "ghost";
-  size?: "default" | "icon";
+  size?: "default" | "icon" | "max";
 }
 
 export default function Button({ children, className, disabled, variant = "default", size = "default", ...restProps }: PropsWithChildren<ButtonProps>) {
-  return <button type="button" disabled={disabled} className={cn(buttonVariants({ className, variant }))} {...restProps}>{children}</button>
+  return <button type="button" disabled={disabled} className={cn(buttonVariants({ className, variant, size }))} {...restProps}>{children}</button>
 }

@@ -1,9 +1,8 @@
 "use client";
 
-import {DndContext} from '@dnd-kit/core';
+import {DndContext, MouseSensor, useSensor, useSensors} from '@dnd-kit/core';
 import ElementList from "../../shared/element-list";
 import DroppedElement from "../../shared/dropped-element";
-import { useState } from "react";
 import Label from "../../ui/label";
 import { DRAGGABLE_ITEM_TYPES } from "@/utils/constants";
 import Input from "../../ui/input";
@@ -14,19 +13,31 @@ import DragOverlayWrapper from '../../shared/drag-overlay-wrapper';
 import React from 'react';
 import DraggedElement from '../../shared/dragged-element';
 import { useJobApplyFormBuilder } from './apply-form-builder-provider';
+import { cn } from '@/utils/helpers';
 
 export default function JobApplyFormBuilder() {
-  const { formElements, addFormElement, deleteFormElement, removeAndAddFormElementAt, addFormElementAt } = useJobApplyFormBuilder();
+  const { formElements, addFormElement, deleteFormElement, removeAndAddFormElementAt, addFormElementAt, selectFormElement, isSelectedFormElement } = useJobApplyFormBuilder();
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 10
+    }
+  })
+  const sensors = useSensors(mouseSensor);
 
   console.log(formElements);
   return (
-    <DndContext>
+    <DndContext sensors={sensors}>
       <div className="grid grid-cols-[1fr_320px] flex-1">
         <div className="border-r border-border py-10 px-5">
           <div className="h-full w-full bg-white bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
             <DroppedElement
               className="flex flex-col gap-3"
               onDrop={({ active, over }) => {
+                console.log({
+                  active,
+                  over
+                });
+                
                 const typedData = active as { title: string; currentPosition?: number; isSidebarEl: boolean; isSortableEl?: boolean }
                 const typedOverData = over as { isTop?: boolean; isBottom?: boolean; title: string; currentPosition?: number; updatedPosition?: number; isSidebarEl: boolean; isSortableEl?: boolean }
                 if (!typedOverData) addFormElement(typedData);
@@ -50,8 +61,12 @@ export default function JobApplyFormBuilder() {
                         ...element,
                         currentPosition: formElementIdx
                       }}
+                      onClick={() => selectFormElement(formElementIdx)}
+                      className={cn("", {
+                        "shadow-[0_0_0_1px_white,0_0_0_3px_hsl(var(--primary))]": isSelectedFormElement(formElementIdx)
+                      })}
                     >
-                      <Label title="Title">
+                      <Label title={(element?.properties?.label || "Title") as string}>
                         {element.title === DRAGGABLE_ITEM_TYPES.TEXT_INPUT ?
                           <Input disabled /> :
                           element.title === DRAGGABLE_ITEM_TYPES.NUMBER_INPUT ?
@@ -71,7 +86,7 @@ export default function JobApplyFormBuilder() {
             </DroppedElement>
           </div>
         </div>
-        <div className="py-3 px-5 w-full bg-background-secondary">
+        <div className="w-full bg-background-secondary">
           <ElementList />
         </div>
       </div>

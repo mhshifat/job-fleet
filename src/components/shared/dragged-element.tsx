@@ -7,10 +7,12 @@ import { cn } from "@/utils/helpers";
 
 interface DraggedElementProps { 
   onDelete: () => void; 
+  onClick: () => void; 
   metadata: Record<string, unknown>;
+  className?: string;
 }
 
-export default function DraggedElement({ children, onDelete, metadata }: PropsWithChildren<DraggedElementProps>) {
+export default function DraggedElement({ children, onDelete, metadata, onClick, className }: PropsWithChildren<DraggedElementProps>) {
   const typedMetadata = metadata as { currentPosition: number };
   const topHalf = useDroppable({
     id: `JobApplyFormDraggedEl_Top_${typedMetadata?.currentPosition}`,
@@ -32,7 +34,7 @@ export default function DraggedElement({ children, onDelete, metadata }: PropsWi
   });
 
   return (
-    <div className="w-full h-auto relative rounded-md overflow-hidden">
+    <div className={cn("w-full h-auto relative rounded-md overflow-hidden", className)}>
       <div ref={topHalf.setNodeRef} className={cn("absolute top-0 left-0 w-full h-[50%] bg-transparent z-50 before:content-[''] before:w-full before:h-2 before:top-0 before:absolute before:left-0 before:bg-primary/50 before:hidden pointer-events-none", {
         "before:flex": topHalf.isOver
       })} />
@@ -52,7 +54,7 @@ export default function DraggedElement({ children, onDelete, metadata }: PropsWi
             transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
           }} className="group relative bg-background-secondary p-3 rounded-md border border-border overflow-hidden cursor-pointer">
             {children}
-            <div className="absolute inset-0 w-full h-full bg-background-secondary/60 grid grid-cols-[1fr_auto] z-50 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition">
+            <div role="button" onClick={onClick} className="absolute inset-0 w-full h-full bg-background-secondary/60 grid grid-cols-[1fr_auto] z-50 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition">
               <div className="flex justify-center items-center w-full h-full">
                 <p className="text-sm font-geist font-semibold text-foreground/70">Click for properties or drag for move</p>
               </div>
