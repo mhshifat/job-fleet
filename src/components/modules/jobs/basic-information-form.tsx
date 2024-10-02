@@ -13,7 +13,7 @@ import useCategoriesQuery from "@/domain/category/use-categories-query";
 
 export default function BasicInformationForm() {
   const { nextStep } = useSteps();
-  const { register, formState: { errors }, trigger, setValue } = useFormContext<ICreateJobFormSchema>();
+  const { register, formState: { errors }, trigger, setValue, watch, getValues } = useFormContext<ICreateJobFormSchema>();
   const { openDialog, closeDialog } = useDialog();
   const { data: categories, refetch: refetchCategories } = useCategoriesQuery();
 
@@ -41,6 +41,7 @@ export default function BasicInformationForm() {
       <div className="flex gap-5">
         <Label title="Category" className="mt-5 flex-1" error={errors.category?.message}>
           <Select
+            value={[{ content: watch("category"), value: watch("category") }]}
             onChange={(values) => setValue("category", values[0].value, {
               shouldDirty: true,
               shouldTouch: true,
@@ -72,6 +73,7 @@ export default function BasicInformationForm() {
 
       <Label title="Job Description" className="mt-5" error={errors.description?.message}>
         <Editor
+          value={getValues("description")}
           onChange={(value) => setValue("description", value, {
             shouldDirty: true,
             shouldTouch: true,

@@ -9,10 +9,10 @@ import Input from "../ui/input";
 import Switch from "../ui/switch";
 
 export default function ElementList() {
-  const { selectedFormElement, getSelectedFormElement, selectFormElement, updateSelectedFormElementProperty, getSelectedFormElementProperty } = useJobApplyFormBuilder();
+  const { formElements, selectedFormElement, getSelectedFormElement, selectFormElement, updateSelectedFormElementProperty, getSelectedFormElementProperty } = useJobApplyFormBuilder();
   const element = getSelectedFormElement();
 
-  if (selectedFormElement !== null) return (
+  if (selectedFormElement !== null && !!formElements.length) return (
     <div className="w-full flex flex-col h-full">
       <div className="flex items-center justify-between gap-5 border-b border-border py-3 px-5 text-foreground/80">
         <h3 className="text-base font-bold font-geist-mono capitalize">{element?.title}</h3>

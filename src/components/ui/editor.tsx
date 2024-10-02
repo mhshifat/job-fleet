@@ -1,7 +1,7 @@
 "use client";
 
 import { useDebouncedCallback } from "use-debounce";
-import { EditorCommand, EditorCommandEmpty, EditorCommandItem, EditorCommandList, EditorContent, EditorInstance, EditorRoot } from "novel";
+import { EditorCommand, EditorCommandEmpty, EditorCommandItem, EditorCommandList, EditorContent, EditorInstance, EditorRoot, JSONContent } from "novel";
 import {
 	Code,
 	Heading1,
@@ -32,6 +32,7 @@ import {
 } from "novel/extensions";
 
 import { cx } from "class-variance-authority";
+import { useEffect, useReducer, useState } from "react";
 
 const placeholder = Placeholder;
 
@@ -289,21 +290,28 @@ interface EditorProps {
 }
 
 const Editor = ({ onChange, value, disabled, onFocus }: EditorProps) => {
-  const parsedVal = JSON.parse(value || "{}");
+  const [updateCount, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [content, setContent] = useState<JSONContent | undefined>(undefined)
+
 	const debouncedUpdates = useDebouncedCallback(
 		async (editor: EditorInstance) => {
 			const json = editor.getJSON();
+      setContent(json);
 			onChange?.(JSON.stringify(json));
 		},
 		500
 	);
 
+  useEffect(() => {
+    const parsedVal = JSON.parse(value || "{}");
+    setContent(parsedVal);
+    forceUpdate();
+  }, [value])
+
 	return (
-		<EditorRoot>
+		<EditorRoot key={"Editor_" + updateCount}>
 			<EditorContent
-				{...value ? {
-          initialContent: parsedVal
-        } : {}}
+				initialContent={content}
         onFocus={() => onFocus?.()}
 				extensions={[...defaultExtensions, slashCommand]}
 				editorProps={{

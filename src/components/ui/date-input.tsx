@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, PropsWithChildren, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Portal from "../shared/portal";
 import { usePopper } from "react-popper";
 import { ModifierPhases, State } from "@popperjs/core";
@@ -22,10 +22,11 @@ const DateContext = createContext<DateContextState | null>(null);
 interface DateProps {
   placeholder?: string;
   disabled?: boolean;
+  value?: ISelected;
   onChange?: (value: ISelected) => void;
 }
 
-export default function DateInput({ placeholder, onChange, disabled }: PropsWithChildren<DateProps>) {
+export default function DateInput({ placeholder, onChange, disabled, value }: PropsWithChildren<DateProps>) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<ISelected | null>(null);
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
@@ -63,6 +64,10 @@ export default function DateInput({ placeholder, onChange, disabled }: PropsWith
     setOpen(false);
   }, []);
 
+  useEffect(() => {
+    if (!value) return;
+    setSelected(value);
+  }, [value])
   return (
     <DateContext.Provider value={{ updateValue }}>
       <div role="button" ref={setReferenceElement} onClick={() => !disabled && setOpen(value => !value)}>

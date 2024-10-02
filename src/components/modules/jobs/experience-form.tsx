@@ -9,7 +9,7 @@ import { useFormContext } from "react-hook-form";
 
 export default function ExperienceForm() {
   const { nextStep, prevStep } = useSteps();
-  const { register, formState: { errors }, trigger, setValue } = useFormContext<ICreateJobFormSchema>();
+  const { register, formState: { errors }, trigger, setValue, watch } = useFormContext<ICreateJobFormSchema>();
 
   async function handleSubmit() {
     try {
@@ -28,6 +28,7 @@ export default function ExperienceForm() {
       <div className="flex gap-5">
         <Label title="Label" className="mt-5 flex-1" error={errors?.jobLabel?.message}>
           <Select
+            value={[{ content: watch("jobLabel"), value: watch("jobLabel") }]}
             onChange={(values) => setValue("jobLabel", values[0].value, {
               shouldDirty: true,
               shouldTouch: true,

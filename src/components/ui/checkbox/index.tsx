@@ -9,6 +9,7 @@ interface CheckboxProps {
   className?: string;
   renderItem?: (args: {
     title: string;
+    value: string;
     metadata?: Record<string, unknown>;
     isChecked?: boolean;
   }) => JSX.Element;

@@ -11,7 +11,7 @@ import { useFormContext } from "react-hook-form";
 
 export default function EmploymentDetailsForm() {
   const { nextStep, prevStep } = useSteps();
-  const { register, formState: { errors }, trigger, setValue } = useFormContext<ICreateJobFormSchema>();
+  const { register, formState: { errors }, trigger, setValue, getValues } = useFormContext<ICreateJobFormSchema>();
 
   async function handleSubmit() {
     try {
@@ -31,9 +31,9 @@ export default function EmploymentDetailsForm() {
         <Checkbox
           type="radio"
           className="flex gap-5"
-          renderItem={({ title, isChecked }) => (
+          renderItem={({ title, value, isChecked }) => (
             <span className={cn("border border-border w-full flex justify-center items-center h-[var(--size)] rounded-md text-sm font-geist", {
-              "border-primary bg-primary text-white": isChecked
+              "border-primary bg-primary text-white": isChecked || getValues("type") === value
             })}>{title}</span>
           )}
           onChange={({ item }) => setValue("type", item, {
@@ -74,9 +74,9 @@ export default function EmploymentDetailsForm() {
         <Checkbox
           type="radio"
           className="flex gap-5"
-          renderItem={({ title, isChecked }) => (
+          renderItem={({ title, value, isChecked }) => (
             <span className={cn("border border-border w-full flex justify-center items-center h-[var(--size)] rounded-md text-sm font-geist", {
-              "border-primary bg-primary text-white": isChecked
+              "border-primary bg-primary text-white": isChecked || getValues("jobPlace") === value
             })}>{title}</span>
           )}
           onChange={({ item }) => setValue("jobPlace", item, {
@@ -108,6 +108,10 @@ export default function EmploymentDetailsForm() {
         </Label>
         <Label title="Deadline" className="mt-5 flex-1" error={errors?.deadline?.message}>
           <DateInput
+            value={{
+              start: getValues("deadline"),
+              end: getValues("deadline")
+            }}
             onChange={({ end }) => setValue("deadline", end, {
               shouldDirty: true,
               shouldTouch: true,

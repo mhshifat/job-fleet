@@ -39,9 +39,9 @@ const STEPS = [
 export default function CreateJobForm() {
   const form = useForm<ICreateJobFormSchema>({
     mode: "all",
-    resolver: zodResolver(createJobFormSchema)
+    resolver: zodResolver(createJobFormSchema),
+    defaultValues: {}
   });
-  console.log(form.watch());
 
   return (
     <FormProvider {...form}>

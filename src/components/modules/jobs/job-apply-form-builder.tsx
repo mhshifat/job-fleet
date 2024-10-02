@@ -27,6 +27,9 @@ export default function JobApplyFormBuilder() {
   console.log(formElements);
   return (
     <DndContext sensors={sensors}>
+      <div className='border-b border-border py-3 px-5 flex flex-col'>
+        <p>Welcome</p>
+      </div>
       <div className="grid grid-cols-[1fr_320px] flex-1">
         <div className="border-r border-border py-10 px-5">
           <div className="h-full w-full bg-white bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">

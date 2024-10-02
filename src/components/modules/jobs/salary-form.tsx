@@ -11,7 +11,7 @@ import { ICreateJobFormSchema } from "@/domain/job/validators";
 
 export default function SalaryForm() {
   const { nextStep, prevStep } = useSteps();
-  const { register, formState: { errors }, trigger, setValue } = useFormContext<ICreateJobFormSchema>();
+  const { register, formState: { errors }, trigger, setValue, getValues } = useFormContext<ICreateJobFormSchema>();
 
   async function handleSubmit() {
     try {
@@ -31,9 +31,9 @@ export default function SalaryForm() {
         <Checkbox
           type="radio"
           className="flex gap-5"
-          renderItem={({ title, isChecked }) => (
+          renderItem={({ title, isChecked, value }) => (
             <span className={cn("border border-border w-full flex justify-center items-center h-[var(--size)] rounded-md text-sm font-geist", {
-              "border-primary bg-primary text-white": isChecked
+              "border-primary bg-primary text-white": isChecked || value === getValues("salaryType")
             })}>{title}</span>
           )}
           onChange={({ item }) => setValue("salaryType", item, {
@@ -73,6 +73,7 @@ export default function SalaryForm() {
       <div className="flex gap-5">
         <Label title="Currency" className="mt-5 flex-1" error={errors?.currency?.message}>
           <Select
+            value={[{ content: getValues("currency"), value: getValues("currency") }]}
             onChange={(values) => setValue("currency", values[0].value, {
               shouldDirty: true,
               shouldTouch: true,

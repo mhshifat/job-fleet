@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, PropsWithChildren, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, PropsWithChildren, SetStateAction, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Portal from "../shared/portal";
 import { usePopper } from "react-popper";
 import { ModifierPhases, State } from "@popperjs/core";
@@ -22,10 +22,11 @@ interface SelectProps {
   placeholder?: string;
   disabled?: boolean;
   onCreateNew?: () => void;
+  value?: ISelected[];
   onChange?: (values: ISelected[]) => void;
 }
 
-export default function Select({ children, placeholder, onCreateNew, onChange, disabled }: PropsWithChildren<SelectProps>) {
+export default function Select({ children, placeholder, onCreateNew, onChange, disabled, value }: PropsWithChildren<SelectProps>) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<ISelected[]>([]);
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
@@ -61,6 +62,11 @@ export default function Select({ children, placeholder, onCreateNew, onChange, d
     onChange?.(newVal)
     setOpen(false);
   }, []);
+
+  useEffect(() => {
+    if (!Array.isArray(value)) return;
+    setSelected(value);
+  }, [value])
 
   return (
     <SelectContext.Provider value={{ updateValue }}>
