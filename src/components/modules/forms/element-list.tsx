@@ -1,19 +1,19 @@
 import { cn } from "@/utils/helpers";
-import DraggableElement from "./draggable-element";
+import DraggableElement from "../../shared/draggable-element";
 import { DRAGGABLE_ELEMENT_LIST } from "@/utils/constants";
-import { useJobApplyFormBuilder } from "../modules/jobs/apply-form-builder-provider";
-import Button from "../ui/button";
+import { useFormBuilder } from "./form-builder-provider";
+import Button from "../../ui/button";
 import { XIcon } from "lucide-react";
-import Label from "../ui/label";
-import Input from "../ui/input";
-import Switch from "../ui/switch";
+import Label from "../../ui/label";
+import Input from "../../ui/input";
+import Switch from "../../ui/switch";
 
 export default function ElementList() {
-  const { formElements, selectedFormElement, getSelectedFormElement, selectFormElement, updateSelectedFormElementProperty, getSelectedFormElementProperty } = useJobApplyFormBuilder();
+  const { formElements, selectedFormElement, getSelectedFormElement, selectFormElement, updateSelectedFormElementProperty, getSelectedFormElementProperty } = useFormBuilder();
   const element = getSelectedFormElement();
 
   if (selectedFormElement !== null && !!formElements.length) return (
-    <div className="w-full flex flex-col h-full">
+    <div className="w-full flex flex-col h-full" key={"ElementList_" + selectedFormElement}>
       <div className="flex items-center justify-between gap-5 border-b border-border py-3 px-5 text-foreground/80">
         <h3 className="text-base font-bold font-geist-mono capitalize">{element?.title}</h3>
         <Button variant="ghost" size="max" onClick={() => selectFormElement(null)}>

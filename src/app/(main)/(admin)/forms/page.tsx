@@ -1,4 +1,4 @@
-import ApplyFormBuilder from "@/components/modules/jobs/apply-form-builder";
+import ApplyFormBuilder from "@/components/modules/forms/form-builder-wrapper";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,10 +6,10 @@ export const metadata: Metadata = {
   description: "Create a new job post for your company",
 };
 
-export default function ApplyFormPage() {
+export default function FormsPage() {
   return (
     <div className="w-full flex flex-col flex-1">
-      <ApplyFormBuilder />
+      <p>Welcome</p>
     </div>
   )
 }
