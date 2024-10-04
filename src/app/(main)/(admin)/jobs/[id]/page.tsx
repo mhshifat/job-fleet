@@ -6,10 +6,12 @@ export const metadata: Metadata = {
   description: "Create a new job post for your company",
 };
 
-export default function CreateJobPage({}:{ params: { id: string } }) {
+export default function CreateJobPage({ params }: { params: { id: string } }) {
+  const { id } = params;
+  const jobId = id == "create" ? null : id;
   return (
     <div className="h-screen flex flex-col flex-1 overflow-hidden">
-      <CreateJobForm />
+      <CreateJobForm jobId={jobId} />
     </div>
-  )
+  );
 }

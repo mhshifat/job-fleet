@@ -15,20 +15,44 @@ export default function JobLocationForm() {
   const [loading, setLoading] = useState(false);
   const { prevStep } = useSteps();
   const router = useRouter();
-  const { register, formState: { errors }, trigger, getValues } = useFormContext<ICreateJobFormSchema>();
+  const {
+    register,
+    formState: { errors },
+    trigger,
+    getValues,
+  } = useFormContext<ICreateJobFormSchema>();
+
+  const formValues = getValues();
+  const jobId = getValues("id"); //125c8c71-3a19-4f3e-9b00-f319a7167d8b
 
   async function handleSubmit(status?: "DRAFT") {
     try {
       setLoading(true);
-      const isValid = await trigger(["streetAddress", "zipCode", "city", "country"]);
+
+      const isValid = await trigger([
+        "streetAddress",
+        "zipCode",
+        "city",
+        "country",
+      ]);
       if (!isValid) throw new Error("Invalid fields");
-      const formValues = getValues();
-      await jobService.create({
-        ...formValues,
-        code: formValues.code || null,
-        deadline: formValues.deadline?.toISOString(),
-        status: status || "PUBLISHED"
-      });
+
+      if (jobId != undefined) {//update
+        await jobService.update({
+          ...formValues,
+          // jobId -> how to pass jobId
+          code: formValues.code || null,
+          deadline: formValues.deadline?.toISOString(),
+          status: "PUBLISHED",
+        });
+      } else {//new create
+        await jobService.create({
+          ...formValues,
+          code: formValues.code || null,
+          deadline: formValues.deadline?.toISOString(),
+          status: status || "PUBLISHED",
+        });
+      }
       router.push(ROUTE_PATHS.MY_JOB_APPLY_FORM);
     } catch (err) {
       console.error(err);
@@ -39,55 +63,81 @@ export default function JobLocationForm() {
   return (
     <div className="mt-8">
       <h3 className="font-geist text-xl">Location</h3>
-      <p className="mt-2 font-geist-mono text-sm">Write and fill out the information of the job</p>
+      <p className="mt-2 font-geist-mono text-sm">
+        Write and fill out the information of the job
+      </p>
 
       <div className="flex gap-5">
-        <Label title="Street Address" className="mt-5 flex-1" error={errors?.streetAddress?.message}>
+        <Label
+          title="Street Address"
+          className="mt-5 flex-1"
+          error={errors?.streetAddress?.message}
+        >
           <Input
             placeholder="Ex: 14 Al-Amin Road"
             {...register("streetAddress")}
           />
         </Label>
-        <Label title="City" className="mt-5 flex-1" error={errors?.city?.message}>
-          <Input
-            placeholder="Ex: Dhaka"
-            {...register("city")}
-          />
+        <Label
+          title="City"
+          className="mt-5 flex-1"
+          error={errors?.city?.message}
+        >
+          <Input placeholder="Ex: Dhaka" {...register("city")} />
         </Label>
       </div>
 
       <div className="flex gap-5">
-        <Label title="Zip Code" className="mt-5 flex-1"  error={errors?.zipCode?.message}>
-          <Input
-            placeholder="Ex: 1232"
-            {...register("zipCode")}
-          />
+        <Label
+          title="Zip Code"
+          className="mt-5 flex-1"
+          error={errors?.zipCode?.message}
+        >
+          <Input placeholder="Ex: 1232" {...register("zipCode")} />
         </Label>
-        <Label title="Country" className="mt-5 flex-1"  error={errors?.country?.message}>
-          <Input
-            placeholder="Ex: Bangladesh"
-            {...register("country")}
-          />
+        <Label
+          title="Country"
+          className="mt-5 flex-1"
+          error={errors?.country?.message}
+        >
+          <Input placeholder="Ex: Bangladesh" {...register("country")} />
         </Label>
       </div>
 
       <div className="mt-10 flex flex-col justify-center items-center gap-5">
-        <Button disabled={loading} variant="ghost" className="w-max capitalize" onClick={() => prevStep({})}>
+        <Button
+          disabled={loading}
+          variant="ghost"
+          className="w-max capitalize"
+          onClick={() => prevStep({})}
+        >
           <ArrowLeftIcon className="size-4" />
           Back to Salary
         </Button>
 
-        <Button disabled={loading} className="capitalize" onClick={() => handleSubmit()}>
-          {loading && <Spinner className="size-4 animate-spin text-foreground/50" />}
-          {loading ? "Loading..." : false ? "Update" : "Post this job now"}
+        <Button
+          disabled={loading}
+          className="capitalize"
+          onClick={() => handleSubmit()}
+        >
+          {loading && (
+            <Spinner className="size-4 animate-spin text-foreground/50" />
+          )}
+          {loading ? "Loading..." : jobId ? "Update" : "Post this job now"}
+
           {!loading && <ArrowRightIcon className="size-4" />}
         </Button>
 
-        <Button disabled={loading} variant="ghost" className="w-max capitalize" onClick={() => handleSubmit("DRAFT")}>
+        <Button
+          disabled={loading}
+          variant="ghost"
+          className="w-max capitalize"
+          onClick={() => handleSubmit("DRAFT")}
+        >
           Save as draft
           <SaveIcon className="size-4" />
         </Button>
       </div>
     </div>
-  )
+  );
 }
