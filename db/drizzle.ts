@@ -1,8 +1,8 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres  from 'postgres';
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('Missing DATABASE_URL');
+if (!process.env.DATABASE_URI) {
+  throw new Error('Missing DATABASE_URI');
 }
 
 function singleton<Value>(name: string, value: () => Value): Value {
@@ -17,7 +17,7 @@ function singleton<Value>(name: string, value: () => Value): Value {
 }
 
 function createDatabaseConnection() {
-  const queryClient = postgres(process.env.DATABASE_URL!);
+  const queryClient = postgres(process.env.DATABASE_URI!);
   return drizzle(queryClient);
 }
 

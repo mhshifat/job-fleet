@@ -47,16 +47,19 @@ export async function getMyJobs() {
   return results;
 }
 export async function getJobById(jobId: string) {
-  unstable_noStore();
-
-  const results = await db.select(jobMap).from(jobs).where(eq(jobs.id, jobId));
-  return results[0];
+  const [data] = await db
+    .select(jobMap)
+    .from(jobs)
+    .where(eq(jobs.id, jobId));
+  
+  return data;
 }
 
 export async function createJob(values: IJobDtoPayload) {
   const userId = process.env.ADMIN_USER_ID;
-  if (!userId) throw new Error("Unauthorized");
-  const results = await db
+  if (!userId) throw new Error("401:-Unauthorized");
+  
+  const [data] = await db
     .insert(jobs)
     .values({
       id: createId(),
@@ -66,13 +69,13 @@ export async function createJob(values: IJobDtoPayload) {
     })
     .returning(jobMap);
 
-  return results[0];
+  return data;
 }
-export async function updateJobForId(jobId: string, values: IJobDtoPayload) {
-  const userId = process.env.ADMIN_USER_ID; //made one in .env.local
-  if (!userId) throw new Error("Unauthorized");
+export async function updateJobById(jobId: string, values: IJobDtoPayload) {
+  const userId = process.env.ADMIN_USER_ID;
+  if (!userId) throw new Error("401:-Unauthorized");
 
-  const results = await db
+  const [data] = await db
     .update(jobs)
     .set({
       ...values,
@@ -80,5 +83,6 @@ export async function updateJobForId(jobId: string, values: IJobDtoPayload) {
     })
     .where(eq(jobs.id, jobId))
     .returning(jobMap);
-  return results[0];
+    
+  return data;
 }

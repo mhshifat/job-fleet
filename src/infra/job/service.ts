@@ -4,10 +4,11 @@ import {
   getJobs,
   getMyJobs,
   getJobById,
-  updateJobForId,
+  updateJobById,
 } from "../../../actions/job";
 import { jobDtoListToJobList, jobDtoToJob, jobToJobDto } from "./transform";
 import { IJob, INewJobPayload } from "@/domain/job/job";
+import { IJobDto } from "./dto";
 
 class JobService {
   private _http: IHttp;
@@ -17,20 +18,17 @@ class JobService {
   }
 
   async create(values: INewJobPayload) {
-    console.log("create", values); //jto value ase shb
-
     const newValues = jobToJobDto(values as IJob);
     const data = await createJob(newValues);
     return jobDtoToJob(data);
   }
+  
   async update(values: INewJobPayload) {
-    console.log("values", values);
-    // //i should get id as well as value
     const newValues = jobToJobDto(values as IJob);
-    const data = await updateJobForId(
-      "125c8c71-3a19-4f3e-9b00-f319a7167d8b", ///jobId wont be hardcoded
+    const data = await updateJobById(
+      newValues.id,
       newValues
-    ); //and passs the jobId with value
+    );
     return jobDtoToJob(data);
   }
 
@@ -43,9 +41,11 @@ class JobService {
     const data = await getMyJobs();
     return jobDtoListToJobList(data);
   }
+
   async getJobById(jobId: string) {
-    const data = await getJobById(jobId);
-    return jobDtoToJob(data);
+    const res = await this._http.get<IJobDto>(`/jobs/${jobId}`, {});
+    if (!res.success) throw new Error(res.message);
+    return jobDtoToJob(res.data);
   }
 }
 

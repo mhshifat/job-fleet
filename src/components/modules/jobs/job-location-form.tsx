@@ -3,16 +3,18 @@ import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import Label from "@/components/ui/label";
 import { useSteps } from "@/components/ui/step";
+import useCreateJobMutation from "@/domain/job/use-create-job-mutation";
+import useUpdateJobMutation from "@/domain/job/use-update-job-mutation";
 import { ICreateJobFormSchema } from "@/domain/job/validators";
 import { jobService } from "@/infra/job/service";
 import { ROUTE_PATHS } from "@/utils/constants";
 import { ArrowLeftIcon, ArrowRightIcon, SaveIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 export default function JobLocationForm() {
-  const [loading, setLoading] = useState(false);
+  const createJob = useCreateJobMutation();
+  const updateJob = useUpdateJobMutation();
   const { prevStep } = useSteps();
   const router = useRouter();
   const {
@@ -22,13 +24,12 @@ export default function JobLocationForm() {
     getValues,
   } = useFormContext<ICreateJobFormSchema>();
 
-  const formValues = getValues();
-  const jobId = getValues("id"); //125c8c71-3a19-4f3e-9b00-f319a7167d8b
-
+  const jobId = getValues("id");
+  const loading = createJob.isPending || updateJob.isPending;
+  
   async function handleSubmit(status?: "DRAFT") {
     try {
-      setLoading(true);
-
+      const formValues = getValues();
       const isValid = await trigger([
         "streetAddress",
         "zipCode",
@@ -37,27 +38,23 @@ export default function JobLocationForm() {
       ]);
       if (!isValid) throw new Error("Invalid fields");
 
-      if (jobId != undefined) {//update
-        await jobService.update({
-          ...formValues,
-          // jobId -> how to pass jobId
-          code: formValues.code || null,
-          deadline: formValues.deadline?.toISOString(),
-          status: "PUBLISHED",
-        });
-      } else {//new create
-        await jobService.create({
-          ...formValues,
-          code: formValues.code || null,
-          deadline: formValues.deadline?.toISOString(),
-          status: status || "PUBLISHED",
-        });
-      }
-      router.push(ROUTE_PATHS.MY_JOB_APPLY_FORM);
+      if (jobId != undefined) await updateJob.mutateAsync({
+        ...formValues,
+        code: formValues.code || null,
+        deadline: formValues.deadline?.toISOString(),
+        status: "PUBLISHED",
+      });
+      else await createJob.mutateAsync({
+        ...formValues,
+        code: formValues.code || null,
+        deadline: formValues.deadline?.toISOString(),
+        status: status || "PUBLISHED",
+      });
+      
+      router.push(ROUTE_PATHS.MY_JOBS);
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false);
     }
   }
   return (
@@ -128,7 +125,7 @@ export default function JobLocationForm() {
           {!loading && <ArrowRightIcon className="size-4" />}
         </Button>
 
-        <Button
+        {!jobId && <Button
           disabled={loading}
           variant="ghost"
           className="w-max capitalize"
@@ -136,7 +133,7 @@ export default function JobLocationForm() {
         >
           Save as draft
           <SaveIcon className="size-4" />
-        </Button>
+        </Button>}
       </div>
     </div>
   );

@@ -7,8 +7,7 @@ export default function useGetJobQuery(jobId: string | null) {
     queryFn: async () => {
       if (jobId == null) return null;
       const data = await jobService.getJobById(jobId);
-      
-      return data; //object
+      return data;
     },
   });
 }
