@@ -1,4 +1,3 @@
-import ApplyFormBuilder from "@/components/modules/forms/form-builder-wrapper";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
