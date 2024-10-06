@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     return NextResponse.json<APIResponse>({
       success: true,
       data: job
-    }, { status: 200 });
+    }, { status: 201 });
   } catch (err) {
     if (err instanceof Error) {
       const [status, message] = err.message?.split(":-");

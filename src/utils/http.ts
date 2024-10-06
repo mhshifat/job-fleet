@@ -1,19 +1,20 @@
-import axios from 'axios';
+import axios, { AxiosHeaders } from 'axios';
 import { APIResponse, SuccessAPIResponse } from './types';
 
 export interface IHttp {
-  get<T>(url: string, options: { params?: Record<string, unknown> }): Promise<APIResponse<T>>;
+  get<T>(url: string, options: { params?: Record<string, unknown>, headers?: Record<string, unknown> }): Promise<APIResponse<T>>;
   post<T>(url: string, body: unknown): Promise<APIResponse<T>>;
 }
 
 class Http implements IHttp {
   private _baseUrl = process.env.NEXT_PUBLIC_API_URL + "/api";
 
-  async get<T>(url: string, options: { params?: Record<string, unknown> }) {
+  async get<T>(url: string, options: { params?: Record<string, unknown>, headers?: Record<string, unknown> }) {
     const { data } = await axios({
       method: "GET",
       url: `${this._baseUrl}${url}`,
-      params: options.params
+      params: options.params,
+      headers: options.headers as AxiosHeaders
     });
     return data as Promise<SuccessAPIResponse<T>>;
   }

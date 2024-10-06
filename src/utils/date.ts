@@ -129,9 +129,13 @@ export function formatISODate(
   isoDate: Date,
   format: keyof typeof formats = "MMMM yyyy"
 ) {
-  if (!isoDate) return null;
-  const date = new Date(isoDate);
-  return formats[format](date, format);
+  try {
+    if (!isoDate) return null;
+    const date = new Date(isoDate);
+    return formats[format](date, format);
+  } catch (err) {
+    return null;
+  }
 }
 
 export function getDateWithTimestamp(

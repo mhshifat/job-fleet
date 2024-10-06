@@ -66,7 +66,6 @@ export default function CreateJobForm({ jobId }: { jobId: string | null }) {
     },
   });
   const { data: newData } = useGetJobQuery(jobId);
-  console.log({ newData });
 
   useEffect(() => {
     if (!newData || !jobId) return;

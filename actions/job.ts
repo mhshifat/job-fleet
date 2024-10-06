@@ -46,6 +46,7 @@ export async function getMyJobs() {
 
   return results;
 }
+
 export async function getJobById(jobId: string) {
   const [data] = await db
     .select(jobMap)

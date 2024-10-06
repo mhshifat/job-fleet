@@ -23,7 +23,7 @@ export default function EmploymentDetailsForm() {
     try {
       const isValid = await trigger([
         "type",
-        //  "deadline",
+        "deadline",
         "vacancy",
       ]);
       if (!isValid) throw new Error("Invalid fields");
@@ -143,7 +143,7 @@ export default function EmploymentDetailsForm() {
           className="mt-5 flex-1"
           error={errors?.deadline?.message}
         >
-          {/* <DateInput
+          <DateInput
             value={{
               start: getValues("deadline"),
               end: getValues("deadline"),
@@ -155,7 +155,7 @@ export default function EmploymentDetailsForm() {
                 shouldValidate: true,
               })
             }
-          /> */}
+          />
         </Label>
       </div>
 

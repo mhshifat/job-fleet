@@ -6,7 +6,7 @@ export type SuccessAPIResponse<T> = {
 
 export type FailureAPIResponse = {
   success: false;
-  message?: string;
+  message: string;
   errors?: { path: string; message: string }[]
 }
 
