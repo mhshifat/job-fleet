@@ -1,46 +1,49 @@
 import { createContext, PropsWithChildren, useCallback, useContext, useState } from "react"
 
-interface IApplyFormElement {
+export interface IFormElement {
   title: string;
   currentPosition?: number;
   updatedPosition?: number;
   properties?: Record<string, unknown>;
 }
 
-interface IApplyFormBuilderState {
-  formElements: IApplyFormElement[];
-  addFormElement: (el: IApplyFormElement) => void;
+interface IFormBuilderState {
+  formElements: IFormElement[];
+  addFormElement: (el: IFormElement) => void;
   deleteFormElement: (index: number) => void;
-  addFormElementAt: (idx: number, el: IApplyFormElement) => void;
-  removeAndAddFormElementAt: (rmIdx: number, idx: number, el: IApplyFormElement) => void;
+  addFormElementAt: (idx: number, el: IFormElement) => void;
+  removeAndAddFormElementAt: (rmIdx: number, idx: number, el: IFormElement) => void;
   selectFormElement: (idx: number | null) => void;
   isSelectedFormElement: (index: number) => boolean;
-  getSelectedFormElement: () => IApplyFormElement | undefined;
+  getSelectedFormElement: () => IFormElement | undefined;
   selectedFormElement: number | null;
   updateSelectedFormElementProperty: (key: string, value: unknown) => void;
   getSelectedFormElementProperty: (key: string) => unknown;
+  togglePreviewForm: () => void;
+  previewForm: boolean;
 }
 
-const ApplyFormBuilderCtx = createContext<IApplyFormBuilderState | null>(null);
+const FormBuilderCtx = createContext<IFormBuilderState | null>(null);
 
-export default function ApplyFormBuilderProvider({ children }: PropsWithChildren) {
-  const [formElements, setFormElements] = useState<IApplyFormElement[]>([]);
+export default function FormBuilderProvider({ children }: PropsWithChildren) {
+  const [formElements, setFormElements] = useState<IFormElement[]>([]);
   const [selectedFormElement, setSelectedFormElement] = useState<number | null>(null);
+  const [previewForm, setPreviewForm] = useState(false);
 
-  const addFormElement = useCallback((el: IApplyFormElement) => {
+  const addFormElement = useCallback((el: IFormElement) => {
     setFormElements(values => [...structuredClone(values), el])
   }, []);
   const deleteFormElement = useCallback((index: number) => {
     setFormElements(values => structuredClone(values.filter((_, itemIdx) => itemIdx !== index)))
   }, []);
-  const addFormElementAt = useCallback((idx: number, el: IApplyFormElement) => {
+  const addFormElementAt = useCallback((idx: number, el: IFormElement) => {
     setFormElements(values => {
       const newValues = structuredClone(values);
       newValues.splice(idx, 0, el);
       return newValues;
     });
   }, []);
-  const removeAndAddFormElementAt = useCallback((rmIdx: number, idx: number, el: IApplyFormElement) => {
+  const removeAndAddFormElementAt = useCallback((rmIdx: number, idx: number, el: IFormElement) => {
     setFormElements(values => {
       const newValues = structuredClone(values);
       newValues.splice(rmIdx, 1);
@@ -69,9 +72,12 @@ export default function ApplyFormBuilderProvider({ children }: PropsWithChildren
   const getSelectedFormElementProperty = useCallback((key: string) => {
     return formElements?.find((_, idx) => idx === selectedFormElement)?.properties?.[key];
   }, [selectedFormElement, formElements]);
+  const togglePreviewForm = useCallback(() => {
+    setPreviewForm(value => !value);
+  }, []);
 
   return (
-    <ApplyFormBuilderCtx.Provider value={{
+    <FormBuilderCtx.Provider value={{
       formElements,
       addFormElement,
       addFormElementAt,
@@ -82,15 +88,17 @@ export default function ApplyFormBuilderProvider({ children }: PropsWithChildren
       getSelectedFormElement,
       selectedFormElement,
       updateSelectedFormElementProperty,
-      getSelectedFormElementProperty
+      getSelectedFormElementProperty,
+      togglePreviewForm,
+      previewForm
     }}>
       {children}
-    </ApplyFormBuilderCtx.Provider>
+    </FormBuilderCtx.Provider>
   )
 }
 
-export function useJobApplyFormBuilder() {
-  const res = useContext(ApplyFormBuilderCtx);
-  if (!res) throw new Error("Component needs to be wrapped within ApplyFormBuilderProvider");
+export function useFormBuilder() {
+  const res = useContext(FormBuilderCtx);
+  if (!res) throw new Error("Component needs to be wrapped within FormBuilderProvider");
   return res;
 }
