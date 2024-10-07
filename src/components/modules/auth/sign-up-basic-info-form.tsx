@@ -37,7 +37,7 @@ export default function SignUpBasicInfoForm() {
   return (
     <div>
       {getValues("signUpAs") === "ORGANIZATION" && (
-        <Label title="Job Title" className="mt-5" error={errors.organization?.message}>
+        <Label title="Organization Name" className="mt-5" error={errors.organization?.message}>
           <Input
             placeholder="Ex: Acme Corp"
             {...register("organization")}
