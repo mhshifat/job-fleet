@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import postgres  from 'postgres';
 config({ path: ".env.local" });
 
-const queryClient = postgres(process.env.DATABASE_URL!);
+const queryClient = postgres(process.env.DATABASE_URI!);
 const db = drizzle(queryClient);
 
 const main = async () => {

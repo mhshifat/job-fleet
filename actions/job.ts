@@ -2,10 +2,10 @@
 
 import { db } from "../db/drizzle";
 import { createId } from "@/utils/helpers";
-import { INewCategoryPayload } from "@/domain/category/category";
 import { unstable_noStore } from "next/cache";
 import { jobs } from "../db/schema/job";
 import { IJobDtoPayload } from "@/infra/job/dto";
+import { eq } from "drizzle-orm";
 
 const jobMap = {
   id: jobs.id,
@@ -28,14 +28,13 @@ const jobMap = {
   country: jobs.country,
   status: jobs.status,
   created_at: jobs.created_at,
-}
+  updated_at: jobs.updated_at,
+};
 
 export async function getJobs() {
   unstable_noStore();
 
-  const results = await db
-    .select(jobMap)
-    .from(jobs);
+  const results = await db.select(jobMap).from(jobs);
 
   return results;
 }
@@ -43,17 +42,25 @@ export async function getJobs() {
 export async function getMyJobs() {
   unstable_noStore();
 
-  const results = await db
-    .select(jobMap)
-    .from(jobs);
+  const results = await db.select(jobMap).from(jobs);
 
   return results;
 }
 
+export async function getJobById(jobId: string) {
+  const [data] = await db
+    .select(jobMap)
+    .from(jobs)
+    .where(eq(jobs.id, jobId));
+  
+  return data;
+}
+
 export async function createJob(values: IJobDtoPayload) {
   const userId = process.env.ADMIN_USER_ID;
-  if (!userId) throw new Error("Unauthorized");
-  const results = await db
+  if (!userId) throw new Error("401:-Unauthorized");
+  
+  const [data] = await db
     .insert(jobs)
     .values({
       id: createId(),
@@ -63,5 +70,20 @@ export async function createJob(values: IJobDtoPayload) {
     })
     .returning(jobMap);
 
-  return results[0];
+  return data;
+}
+export async function updateJobById(jobId: string, values: IJobDtoPayload) {
+  const userId = process.env.ADMIN_USER_ID;
+  if (!userId) throw new Error("401:-Unauthorized");
+
+  const [data] = await db
+    .update(jobs)
+    .set({
+      ...values,
+      updated_at: new Date(),
+    })
+    .where(eq(jobs.id, jobId))
+    .returning(jobMap);
+    
+  return data;
 }
