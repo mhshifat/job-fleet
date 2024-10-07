@@ -1,3 +1,4 @@
+import LoadingBtn from "@/components/shared/loading-btn";
 import Spinner from "@/components/shared/spinner";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
@@ -117,12 +118,9 @@ export default function JobLocationForm() {
           className="capitalize"
           onClick={() => handleSubmit()}
         >
-          {loading && (
-            <Spinner className="size-4 animate-spin text-foreground/50" />
-          )}
-          {loading ? "Loading..." : jobId ? "Update" : "Post this job now"}
-
-          {!loading && <ArrowRightIcon className="size-4" />}
+          <LoadingBtn loading={loading}>
+            {jobId ? "Update" : "Post this job now"}
+          </LoadingBtn>
         </Button>
 
         {!jobId && <Button
@@ -131,8 +129,10 @@ export default function JobLocationForm() {
           className="w-max capitalize"
           onClick={() => handleSubmit("DRAFT")}
         >
-          Save as draft
-          <SaveIcon className="size-4" />
+          <LoadingBtn loading={loading} icon={false}>
+            <SaveIcon className="size-4" />
+            Save as draft
+          </LoadingBtn>
         </Button>}
       </div>
     </div>

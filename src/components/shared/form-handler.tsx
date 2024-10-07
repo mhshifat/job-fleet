@@ -8,6 +8,7 @@ import Button from "../ui/button";
 import Spinner from "./spinner";
 import { toast } from "@/utils/toast";
 import { ArrowRightIcon } from "lucide-react";
+import LoadingBtn from "./loading-btn";
 
 interface ChildrenProps<T> {
   getValue: (name: keyof T) => string;
@@ -90,9 +91,9 @@ export default function FormHandler<T extends {}>({
 
       <div className="mt-5">
         <Button disabled={disabled} type="submit" className="capitalize mt-5">
-          {loading && <Spinner className="size-4 animate-spin text-foreground/50" />}
-          {loading ? "Loading..." : renderSubmitBtnText?.() || (defaultValues?.id ? "Update" : "Create")}
-          {!loading && <ArrowRightIcon className="size-4" />}
+          <LoadingBtn loading={loading}>
+            {renderSubmitBtnText?.() || (defaultValues?.id ? "Update" : "Create")}
+          </LoadingBtn>
         </Button>
       </div>
     </Form>

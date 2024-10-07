@@ -1,22 +1,22 @@
 import { toast } from "@/utils/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { IJob, INewJobPayload } from "./job";
-import { jobService } from "@/infra/job/service";
+import { ISendOtpPayload } from "./auth";
+import { authService } from "@/infra/auth/service";
 import { AxiosError } from "axios";
 
-type ResponseType = IJob;
-type RequestType = INewJobPayload;
+type ResponseType = string;
+type RequestType = ISendOtpPayload;
 
-export default function useUpdateJobMutation() {
+export default function useSendOtpMutation() {
   const queryClient = useQueryClient();
   
   return useMutation<ResponseType, Error, RequestType>({
     mutationFn: async (json) => {
-      const data = await jobService.update(json);
+      const data = await authService.sendOtp(json);
       return data;
     },
-    onSuccess: () => {
-      toast.success("Successfully updated the job!");
+    onSuccess: (data) => {
+      toast.success(data || "Successfully logged in!");
     },
     onError: (err) => {
       if (err instanceof AxiosError) {

@@ -151,3 +151,8 @@ export function getDateWithTimestamp(
   const utcDate = fromZonedTime(parsedDate, timezone);
   return utcDate.toISOString();
 }
+
+export function addMinutesToCurrentTime(min: number) {
+  const now = Date.now();
+  return now + (1000 * 60 * min);
+}

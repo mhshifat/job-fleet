@@ -11,8 +11,20 @@ export interface ILoginResponse {
 }
 
 export interface IRegisterPayload {
+  signUpAs: string;
+  organization?: string;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
+  confirmPassword: string;
+}
+
+export interface ISendOtpPayload {
+  email: string;
+}
+
+export interface IValidateOtpPayload {
+  email: string;
+  otp: string;
 }

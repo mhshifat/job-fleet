@@ -3,5 +3,6 @@ export interface IUserDto {
   first_name: string;
   last_name: string;
   email: string;
+  verified: boolean;
   avatar?: string;
 }
