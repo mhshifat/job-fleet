@@ -7,11 +7,11 @@ import { redirect } from "next/navigation";
 import { ROUTE_PATHS } from "@/utils/constants";
 
 export default function Protected({ children }: PropsWithChildren) {
-  const { user } = useAuth();
+  const { authState } = useAuth();
 
   useLayoutEffect(() => {
-    if (!user?.id) return redirect(ROUTE_PATHS.LOGIN);
-  }, [user?.id])
+    if (!authState?.uid) return redirect(ROUTE_PATHS.LOGIN);
+  }, [authState?.uid])
   
   return (
     <>

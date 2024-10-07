@@ -3,6 +3,7 @@ import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { jobs } from "./job";
 import { credentials } from "./credential";
 import { organizations } from "./organization";
+import { sessions } from "./session";
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -17,5 +18,6 @@ export const users = pgTable("users", {
 export const usersRelations = relations(users, ({ many, one }) => ({
   jobs: many(jobs),
   credential: one(credentials),
+  session: one(sessions),
   my_organizations: many(organizations)
 }));

@@ -1,9 +1,7 @@
 import { ILoginPayload, IRegisterPayload, ISendOtpPayload } from "@/domain/auth/auth";
 import { http, IHttp } from "@/utils/http";
 import { loginDtoToLogin } from "./transform";
-import { login } from "../../../actions/auth";
-import { getUserById } from "../../../actions/user";
-import { userDtoToUser } from "../user/transform";
+import { ILoginDto } from "./dto";
 
 class AuthService {
   private _http: IHttp;
@@ -13,8 +11,9 @@ class AuthService {
   }
 
   async login(values: ILoginPayload) {
-    const data = await login(values);
-    return loginDtoToLogin(data);
+    const res = await this._http.post<ILoginDto>("/auth/sign-in", values);
+    if (!res.success) throw new Error(res.message);
+    return loginDtoToLogin(res.data);
   }
 
   async register(values: IRegisterPayload) {
@@ -35,9 +34,10 @@ class AuthService {
     return res.message || "Successfully activated your account";
   }
 
-  async getMe(token: string) {
-    const data = await getUserById(token);
-    return userDtoToUser(data);
+  async getMe() {
+    const res = await this._http.get<ILoginDto>("/auth/me", {});
+    if (!res.success) throw new Error(res.message);
+    return loginDtoToLogin(res.data);
   }
 }
 

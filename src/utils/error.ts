@@ -13,6 +13,7 @@ export async function asyncErrorHandler(asyncFunction: () => Promise<unknown>) {
   try {
     return await asyncFunction();
   } catch (err) {
+    console.log(err);
     if (err instanceof ZodError) return NextResponse.json<APIResponse>({
       success: false,
       message: "Invalid fields",

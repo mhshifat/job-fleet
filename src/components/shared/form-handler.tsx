@@ -58,7 +58,7 @@ export default function FormHandler<T extends {}>({
       onComplete?.(data);
       toast.success(`Successfully ${defaultValues?.id ? "updated the" : "created a new"} record`);
     } catch (err) {
-      handleError(err);
+      console.log(err);
     } finally {
       setLoading(false);
     }

@@ -2,56 +2,33 @@
 
 import { createContext, DispatchWithoutAction, PropsWithChildren, useCallback, useContext, useEffect, useReducer, useState } from "react"
 import Spinner from "../shared/spinner";
-import { usePathname } from "next/navigation";
-import { IUser } from "@/domain/user/user";
-import { storage } from "@/utils/storage";
-import { authService } from "@/infra/auth/service";
+import { ILoginResponse } from "@/domain/auth/auth";
+import useMeQuery from "@/domain/auth/use-me-query";
 
 interface AuthContextState {
-  user: IUser | null;
+  authState: ILoginResponse | null;
   forceUpdate: DispatchWithoutAction;
-  updateUser: ({ token, user }: {
-    token: string;
-    user: IUser;
-  }) => Promise<void>;
+  updateAuthState: (data: ILoginResponse | null) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextState | null>(null);
 
 export default function AuthProvider({ children }: PropsWithChildren) {
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<IUser | null>(null);
-  const pathname = usePathname();
-  const [renderedState, forceUpdate] = useReducer((x) => x + 1, 0);
+  const { data: meData, isLoading } = useMeQuery();
+  const [authState, setAuthState] = useState<ILoginResponse | null>(null);
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
   
-  const updateUser = useCallback(async ({
-    token,
-    user
-  }: {
-    token: string,
-    user: IUser
-  }) => {
-    if (token) await storage.setAuthToken(token);
-    setUser(user);
+  const initializing = isLoading;
+  const updateAuthState = useCallback(async (data: ILoginResponse | null) => {
+    setAuthState(data);
   }, [])
-
-  useEffect(() => {
-    (async () => {
-      setInitializing(true);
-      const token = await storage.getAuthToken();
-      if (!token) return setInitializing(false);
-      const user = await authService.getMe(token as string);
-      setUser(user);
-      setInitializing(false);
-    })()
-  }, [renderedState])
 
   if (initializing) return <Spinner fixed variant="secondary" size="layout" />;
   return (
     <AuthContext.Provider value={{
-      user,
+      authState: authState || meData || null,
       forceUpdate,
-      updateUser
+      updateAuthState
     }}>
       {children}
     </AuthContext.Provider>

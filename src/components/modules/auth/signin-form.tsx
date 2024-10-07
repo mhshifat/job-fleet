@@ -12,7 +12,7 @@ import { z } from "zod";
 export default function SigninForm() {
   const router = useRouter();
   const login = useLoginMutation();
-  const { updateUser } = useAuth();
+  const { updateAuthState } = useAuth();
 
   return (
     <FormHandler
@@ -22,7 +22,7 @@ export default function SigninForm() {
       }}
       onCreate={async (values) => {
         const data = await login.mutateAsync(values);
-        await updateUser(data);
+        await updateAuthState(data);
         router.push(ROUTE_PATHS.HOME);
       }}
       onUpdate={() => Promise.resolve()}
@@ -31,6 +31,7 @@ export default function SigninForm() {
         email: z.string().email(),
         password: z.string(),
       })}
+      renderSubmitBtnText={() => <>Continue</>}
     >
       {({ getError, getValue, onFocus, setValue }) => (
         <div className="flex flex-col mt-5 gap-3">

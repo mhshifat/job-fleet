@@ -7,11 +7,11 @@ import { ROUTE_PATHS } from "@/utils/constants";
 import { redirect } from "next/navigation";
 
 export default function Public({ children }: PropsWithChildren) {
-  const { user } = useAuth();
+  const { authState } = useAuth();
 
   useLayoutEffect(() => {
-    if (user?.id) return redirect(ROUTE_PATHS.HOME);
-  }, [user?.id])
+    if (authState?.uid) return redirect(ROUTE_PATHS.HOME);
+  }, [authState?.uid])
   
   return (
     <>

@@ -1,3 +1,4 @@
+import { IOrganization } from "../organization/organization";
 import { IUser } from "../user/user";
 
 export interface ILoginPayload {
@@ -6,8 +7,10 @@ export interface ILoginPayload {
 }
 
 export interface ILoginResponse {
-  token: string;
+  uid: string;
+  oid: string;
   user: IUser;
+  organization: IOrganization | null;
 }
 
 export interface IRegisterPayload {

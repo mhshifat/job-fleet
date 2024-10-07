@@ -22,3 +22,10 @@ export const registerFormSchema = z.object({
 });
 
 export type IRegisterFormSchema = z.infer<typeof registerFormSchema>;
+
+export const loginFormSchema = z.object({
+  email: z.string().email().min(1),
+  password: z.string().min(8),
+});
+
+export type ILoginFormSchema = z.infer<typeof loginFormSchema>;

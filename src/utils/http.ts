@@ -8,11 +8,14 @@ export interface IHttp {
 
 class Http implements IHttp {
   private _baseUrl = process.env.NEXT_PUBLIC_API_URL + "/api";
+  private _request = axios.create({
+    baseURL: this._baseUrl,
+  })
 
   async get<T>(url: string, options: { params?: Record<string, unknown>, headers?: Record<string, unknown> }) {
-    const { data } = await axios({
+    const { data } = await this._request({
+      url,
       method: "GET",
-      url: `${this._baseUrl}${url}`,
       params: options.params,
       headers: options.headers as AxiosHeaders
     });
@@ -20,9 +23,9 @@ class Http implements IHttp {
   }
   
   async post<T>(url: string, body: unknown) {
-    const { data } = await axios({
+    const { data } = await this._request({
+      url,
       method: "POST",
-      url: `${this._baseUrl}${url}`,
       headers: {
         "Content-Type": "application/json"
       },
