@@ -10,6 +10,12 @@ class AuthService {
     this._http = http;
   }
 
+  async logout() {
+    const res = await this._http.delete("/auth/sign-out", {});
+    if (!res.success) throw new Error(res.message);
+    return res.message;
+  }
+
   async login(values: ILoginPayload) {
     const res = await this._http.post<ILoginDto>("/auth/sign-in", values);
     if (!res.success) throw new Error(res.message);

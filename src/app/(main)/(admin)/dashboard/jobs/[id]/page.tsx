@@ -1,4 +1,4 @@
-import CreateJobForm from "@/components/modules/jobs/create-job-form";
+import CreateJobForm from "@/components/modules/admin/jobs/create-job-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

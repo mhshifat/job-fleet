@@ -1,5 +1,5 @@
 import Label from "@/components/ui/label";
-import Checkbox from './../../ui/checkbox/index';
+import Checkbox from '../../../ui/checkbox/index';
 import { cn } from "@/utils/helpers";
 import Select from "@/components/ui/select";
 import Input from "@/components/ui/input";

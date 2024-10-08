@@ -1,4 +1,4 @@
-import FormBuilderWrapper from "@/components/modules/forms/form-builder-wrapper";
+import FormBuilderWrapper from "@/components/modules/admin/forms/form-builder-wrapper";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

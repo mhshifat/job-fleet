@@ -1,4 +1,4 @@
-import SignUpForm from "@/components/modules/auth/sign-up-form";
+import SignUpForm from "@/components/modules/admin/auth/sign-up-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

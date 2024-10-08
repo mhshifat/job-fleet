@@ -170,3 +170,10 @@ export async function isAuthenticated() {
     return data;
   }
 }
+
+export async function logout() {
+  const { value: accessToken } = cookies().get("access-token") as { value: string };
+  const decodedToken = decodeToken<{ sid: string }>(accessToken);
+  if (!decodedToken || !decodedToken?.sid) throw new Error("Invalid token");
+  await getSessionById(decodedToken.sid);
+}

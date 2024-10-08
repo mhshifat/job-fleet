@@ -2,10 +2,10 @@
 
 import {DndContext, MouseSensor, useSensor, useSensors} from '@dnd-kit/core';
 import ElementList from "./element-list";
-import DroppedElement from "../../shared/dropped-element";
-import DragOverlayWrapper from '../../shared/drag-overlay-wrapper';
+import DroppedElement from "../../../shared/dropped-element";
+import DragOverlayWrapper from '../../../shared/drag-overlay-wrapper';
 import React from 'react';
-import DraggedElement from '../../shared/dragged-element';
+import DraggedElement from '../../../shared/dragged-element';
 import { useFormBuilder } from './form-builder-provider';
 import { cn } from '@/utils/helpers';
 import Button from '@/components/ui/button';

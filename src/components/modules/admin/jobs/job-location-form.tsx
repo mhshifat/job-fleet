@@ -52,7 +52,7 @@ export default function JobLocationForm() {
         status: status || "PUBLISHED",
       });
       
-      router.push(ROUTE_PATHS.MY_JOBS);
+      router.push(ROUTE_PATHS.DASHBOARD_JOBS);
     } catch (err) {
       console.error(err);
     } finally {

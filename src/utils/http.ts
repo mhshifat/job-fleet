@@ -3,6 +3,7 @@ import { APIResponse, SuccessAPIResponse } from './types';
 
 export interface IHttp {
   get<T>(url: string, options: { params?: Record<string, unknown>, headers?: Record<string, unknown> }): Promise<APIResponse<T>>;
+  delete<T>(url: string, options: { params?: Record<string, unknown>, headers?: Record<string, unknown> }): Promise<APIResponse<T>>;
   post<T>(url: string, body: unknown): Promise<APIResponse<T>>;
 }
 
@@ -30,6 +31,16 @@ class Http implements IHttp {
         "Content-Type": "application/json"
       },
       data: body
+    });
+    return data as Promise<SuccessAPIResponse<T>>;
+  }
+
+  async delete<T>(url: string, options: { params?: Record<string, unknown>, headers?: Record<string, unknown> }) {
+    const { data } = await this._request({
+      url,
+      method: "DELETE",
+      params: options.params,
+      headers: options.headers as AxiosHeaders
     });
     return data as Promise<SuccessAPIResponse<T>>;
   }

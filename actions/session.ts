@@ -60,3 +60,12 @@ export async function updateSession(values: { access_token?: string; }, trx = db
   return data;
 }
 
+export async function deleteSessionById(id: string) {
+  const [data] = await db
+    .delete(sessions)
+    .where(
+      eq(sessions.id, id)
+    );
+  
+  return data;
+}

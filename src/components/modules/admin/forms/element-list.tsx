@@ -1,12 +1,12 @@
 import { cn } from "@/utils/helpers";
-import DraggableElement from "../../shared/draggable-element";
+import DraggableElement from "../../../shared/draggable-element";
 import { DRAGGABLE_ELEMENT_LIST } from "@/utils/constants";
 import { useFormBuilder } from "./form-builder-provider";
-import Button from "../../ui/button";
+import Button from "../../../ui/button";
 import { XIcon } from "lucide-react";
-import Label from "../../ui/label";
-import Input from "../../ui/input";
-import Switch from "../../ui/switch";
+import Label from "../../../ui/label";
+import Input from "../../../ui/input";
+import Switch from "../../../ui/switch";
 
 export default function ElementList() {
   const { formElements, selectedFormElement, getSelectedFormElement, selectFormElement, updateSelectedFormElementProperty, getSelectedFormElementProperty } = useFormBuilder();

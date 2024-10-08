@@ -1,4 +1,4 @@
-import AuthLayout from "@/components/modules/auth";
+import AuthLayout from "@/components/modules/admin/auth";
 import Public from "@/components/shared/public";
 import { PropsWithChildren } from "react";
 

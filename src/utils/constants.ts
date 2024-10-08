@@ -3,8 +3,11 @@ import { MousePointerIcon, SpaceIcon, TextCursorInputIcon } from "lucide-react";
 export const ROUTE_PATHS = {
   HOME: "/",
   LOGIN: "/sign-in",
-  MY_JOBS: "/jobs",
-  MY_JOB_APPLY_FORM: "/jobs/create/apply",
+  DASHBOARD: "/dashboard",
+  DASHBOARD_JOBS: "/dashboard/jobs",
+  DASHBOARD_JOB_CREATE: "/dashboard/jobs/create",
+  DASHBOARD_FORMS: "/dashboard/forms",
+  DASHBOARD_FORM_CREATE: "/dashboard/forms/create",
 }
 
 export const DRAGGABLE_ITEM_TYPES = {
