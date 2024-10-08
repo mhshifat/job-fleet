@@ -22,7 +22,7 @@ function OtpInput({ input, onChange, disabled }: OtpInputProps, ref: ForwardedRe
   return (
     <div className="flex items-center gap-5">
       {new Array(input).fill("").map((_, idx) => (
-        <Input disabled={disabled} {...idx===0?{ autoFocus: true }:{}} ref={(el) => {
+        <Input key={"OtpInput_" + idx} disabled={disabled} {...idx===0?{ autoFocus: true }:{}} ref={(el) => {
           if (!inputRefs.current) return;
           inputRefs.current[idx] = { el, value: "" }
         }} defaultValue={inputRefs.current[idx]?.value || ""} onChange={({ target }) => {

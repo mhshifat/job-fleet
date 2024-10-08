@@ -89,8 +89,8 @@ export async function signUp(values: IRegisterPayload) {
       }, trx);
     }
   });
-  
-  await sendEmail({
+
+  sendEmail({
     subject: "Please activate your account",
     from: process.env.MAIL_FROM!,
     to: values.email,
@@ -98,7 +98,7 @@ export async function signUp(values: IRegisterPayload) {
       <p>${otp}</p>
       <p>This OTP will be valid for 5 mins only</p>
     `
-  })
+  });
 }
 
 export async function sendOtp(values: { email: string }) {

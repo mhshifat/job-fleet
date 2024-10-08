@@ -13,7 +13,7 @@ import { useRef } from "react";
 
 export default function AdminHeader() {
   const signOut = useSignOutMutation();
-  const { updateAuthState } = useAuth();
+  const { updateAuthState, authState } = useAuth();
   const popUpRef = useRef<{ toggle: () => void; }>({
     toggle() {},
   });
@@ -30,17 +30,23 @@ export default function AdminHeader() {
         comRef={popUpRef}
       >
         <Popup.Trigger>
-          <Avatar size={40} />
+          <Avatar 
+            size={40}
+            text={(authState?.user?.firstName?.charAt(0) || "") + (authState?.user?.lastName?.charAt(0) || "")}
+          />
         </Popup.Trigger>
         <Popup.Content
           className="p-0"
         >
           <div className="w-full flex-col">
-            <div className="py-3 px-5 flex gap-3 border-b border-border">
-              <Avatar size={40} />
+            <div className="py-3 px-5 flex items-center gap-3 border-b border-border">
+              <Avatar 
+                size={40}
+                text={(authState?.user?.firstName?.charAt(0) || "") + (authState?.user?.lastName?.charAt(0) || "")}
+              />
               <div className="flex flex-col">
-                <h3 className="text-base font-medium font-geist leading-[1]">Mehedi Hassan</h3>
-                <p className="text-sm font-medium font-geist leading-[1] text-foreground/80 mt-1 w-[350px]">mehedihassanshifat01@gmail.com</p>
+                <h3 className="text-base font-medium font-geist leading-[1]">{authState?.user?.firstName} {authState?.user?.lastName}</h3>
+                <p className="text-sm font-medium font-geist leading-[1] text-foreground/80 mt-1 w-[350px]">{authState?.user?.email}</p>
               </div>
             </div>
             <div className="flex flex-col">

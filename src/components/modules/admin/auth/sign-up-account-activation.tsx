@@ -25,6 +25,7 @@ export default function SignUpAccountActivation() {
   async function handleSubmit() {
     try {
       const values = getValues();
+      
       await validateOtp.mutateAsync({
         email: values.email,
         otp

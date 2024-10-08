@@ -7,8 +7,8 @@ export const metadata: Metadata = {
 
 export default function FormsPage() {
   return (
-    <div className="w-full flex flex-col flex-1">
-      <p>Welcome</p>
+    <div className="w-full flex flex-col flex-1 p-5">
+      <p>Forms</p>
     </div>
   )
 }

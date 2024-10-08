@@ -69,7 +69,10 @@ export async function addUserToOrganization(values: { user_id: string; organizat
       user_id: values.user_id,
       organization_id: values.organization_id,
     })
-    .returning({});
-
+    .returning({
+      user_id: organizationUsers.user_id,
+      organization_id: organizationUsers.organization_id,
+    });
+  
   return data;
 }

@@ -23,7 +23,7 @@ export default function WebHeader() {
         {!authState?.uid && (
           <>
             <Link href={ROUTE_PATHS.LOGIN} className="text-base font-geist font-medium text-foreground/90 leading-[1] flex items-center gap-2">
-              <span className="tracking-tighter">Signin/Signup</span>
+              <span className="tracking-tighter">Login / Register</span>
             </Link>
           </>
         )}

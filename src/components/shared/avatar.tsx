@@ -10,7 +10,7 @@ interface AvatarProps {
   alt?: string;
   size?: number;
   className?: string;
-  text?: string;
+  text?: string | JSX.Element;
 }
 
 export default function Avatar({ size, className, src, alt, text }: AvatarProps) {
@@ -36,7 +36,7 @@ export default function Avatar({ size, className, src, alt, text }: AvatarProps)
         fill
         className="w-full h-full object-cover object-center rounded-full bg-background-secondary"
       />}
-      {!src && <span className="text-lg font-geist font-semibold uppercase text-foreground/60">{text || "JF"}</span>}
+      {!src && <span className="text-base font-geist font-semibold uppercase text-foreground/60">{text || "JF"}</span>}
     </div>
   )
 }

@@ -8,6 +8,7 @@ export default function useMeQuery() {
       const data = await authService.getMe();
       return data;
     },
-    retry: false
+    retry: false,
+    refetchOnWindowFocus: false
   })
 }

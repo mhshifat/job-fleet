@@ -3,6 +3,7 @@ import { MousePointerIcon, SpaceIcon, TextCursorInputIcon } from "lucide-react";
 export const ROUTE_PATHS = {
   HOME: "/",
   LOGIN: "/sign-in",
+  REGISTER: "/sign-up",
   DASHBOARD: "/dashboard",
   DASHBOARD_JOBS: "/dashboard/jobs",
   DASHBOARD_JOB_CREATE: "/dashboard/jobs/create",
