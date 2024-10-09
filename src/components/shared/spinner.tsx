@@ -15,6 +15,7 @@ const spinnerVariants = cva(
       size: {
         default: "size-4",
         layout: "size-10",
+        md: "size-6",
       },
     },
     defaultVariants: {
@@ -26,7 +27,7 @@ const spinnerVariants = cva(
 
 interface SpinnerProps extends HTMLAttributes<HTMLDivElement> {
   variant?: "default" | "secondary";
-  size?: "default" | "layout";
+  size?: "default" | "layout" | "md";
   fixed?: boolean;
   showTitle?: boolean;
   title?: string;

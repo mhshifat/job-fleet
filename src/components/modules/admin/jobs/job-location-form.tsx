@@ -39,7 +39,7 @@ export default function JobLocationForm() {
       ]);
       if (!isValid) throw new Error("Invalid fields");
 
-      if (jobId != undefined) await updateJob.mutateAsync({
+      if (jobId) await updateJob.mutateAsync({
         ...formValues,
         code: formValues.code || null,
         deadline: formValues.deadline?.toISOString(),
@@ -55,8 +55,7 @@ export default function JobLocationForm() {
       router.push(ROUTE_PATHS.DASHBOARD_JOBS);
     } catch (err) {
       console.error(err);
-    } finally {
-    }
+    } finally {}
   }
   return (
     <div className="mt-8">

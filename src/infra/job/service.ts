@@ -1,9 +1,5 @@
 import { http, IHttp } from "@/utils/http";
 import {
-  createJob,
-  getJobs,
-  getMyJobs,
-  getJobById,
   updateJobById,
 } from "../../../actions/job";
 import { jobDtoListToJobList, jobDtoToJob, jobToJobDto } from "./transform";
@@ -18,9 +14,9 @@ class JobService {
   }
 
   async create(values: INewJobPayload) {
-    const newValues = jobToJobDto(values as IJob);
-    const data = await createJob(newValues);
-    return jobDtoToJob(data);
+    const res = await this._http.post<IJobDto>("/jobs", values);
+    if (!res.success) throw new Error(res.message);
+    return jobDtoToJob(res.data);
   }
   
   async update(values: INewJobPayload) {
@@ -33,13 +29,14 @@ class JobService {
   }
 
   async list() {
-    const data = await getJobs();
-    return jobDtoListToJobList(data);
+    // const data = await getJobs();
+    // return jobDtoListToJobList(data);
   }
 
   async myList() {
-    const data = await getMyJobs();
-    return jobDtoListToJobList(data);
+    const res = await this._http.get<IJobDto[]>(`/jobs`, {});
+    if (!res.success) throw new Error(res.message);
+    return jobDtoListToJobList(res.data);
   }
 
   async getJobById(jobId: string) {

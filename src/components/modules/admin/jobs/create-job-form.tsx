@@ -1,6 +1,7 @@
 "use client";
 
 import Container from "@/components/shared/container";
+import Spinner from "@/components/shared/spinner";
 import Steps from "@/components/ui/step";
 import useGetJobQuery from "@/domain/job/use-get-job-query";
 import {
@@ -65,7 +66,7 @@ export default function CreateJobForm({ jobId }: { jobId: string | null }) {
       country: "",
     },
   });
-  const { data: newData } = useGetJobQuery(jobId);
+  const { data: newData, isLoading } = useGetJobQuery(jobId);
 
   useEffect(() => {
     if (!newData || !jobId) return;
@@ -91,6 +92,11 @@ export default function CreateJobForm({ jobId }: { jobId: string | null }) {
     });
   }, [newData, jobId, form]);
 
+  if (isLoading) return (
+    <div className="py-10">
+      <Spinner fixed={false} size="md" variant="secondary" showTitle className="gap-3" />
+    </div>
+  )
   return (
     <FormProvider {...form}>
       <Steps>

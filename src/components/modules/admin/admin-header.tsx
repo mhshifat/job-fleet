@@ -25,7 +25,7 @@ export default function AdminHeader() {
     updateAuthState(null);
   }
   return (
-    <div className="p-3 flex items-center justify-end gap-5 border-b border-border/50">
+    <div className="p-3 flex items-center justify-end gap-5 border-b border-border/50 sticky w-full top-0 left-0 z-50 bg-background">
       <Popup
         comRef={popUpRef}
       >

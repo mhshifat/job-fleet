@@ -17,7 +17,7 @@ const buttonVariants = cva(
         default: "h-[var(--size)] px-4",
         icon: "h-[var(--size)] w-[var(--size)]",
         max: "h-[var(--size)] w-max",
-        sm: "h-[calc(var(--size)-7px)]",
+        sm: "h-[calc(var(--size)-7px)] px-4",
       },
     },
     defaultVariants: {

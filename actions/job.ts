@@ -31,18 +31,17 @@ const jobMap = {
   updated_at: jobs.updated_at,
 };
 
-export async function getJobs() {
+export async function getJobs({ user_id }: { user_id?: string }) {
   unstable_noStore();
 
-  const results = await db.select(jobMap).from(jobs);
+  if (user_id) return await db
+    .select(jobMap)
+    .from(jobs)
+    .where(eq(jobs.user_id, user_id));
 
-  return results;
-}
-
-export async function getMyJobs() {
-  unstable_noStore();
-
-  const results = await db.select(jobMap).from(jobs);
+  const results = await db
+    .select(jobMap)
+    .from(jobs);
 
   return results;
 }
@@ -56,15 +55,11 @@ export async function getJobById(jobId: string) {
   return data;
 }
 
-export async function createJob(values: IJobDtoPayload) {
-  const userId = process.env.ADMIN_USER_ID;
-  if (!userId) throw new Error("401:-Unauthorized");
-  
+export async function createJob(values: IJobDtoPayload & { user_id: string }) {
   const [data] = await db
     .insert(jobs)
     .values({
       id: createId(),
-      user_id: userId,
       ...values,
       created_at: new Date(),
     })
@@ -72,6 +67,7 @@ export async function createJob(values: IJobDtoPayload) {
 
   return data;
 }
+
 export async function updateJobById(jobId: string, values: IJobDtoPayload) {
   const userId = process.env.ADMIN_USER_ID;
   if (!userId) throw new Error("401:-Unauthorized");

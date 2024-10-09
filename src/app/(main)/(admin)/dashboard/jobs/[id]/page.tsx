@@ -11,7 +11,7 @@ export default function CreateJobPage({ params }: { params: { id: string } }) {
   const jobId = id == "create" ? null : id;
   
   return (
-    <div className="h-screen flex flex-col flex-1 overflow-hidden">
+    <div className="flex-1">
       <CreateJobForm jobId={jobId} />
     </div>
   );
