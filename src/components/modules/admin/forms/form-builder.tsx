@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import { ROUTE_PATHS } from '@/utils/constants';
 import useGetFormQuery from '@/domain/form/use-get-form-query';
 import Spinner from '@/components/shared/spinner';
+import Badge from '@/components/ui/badge';
 
 export default function FormBuilder({ formId }: { formId: string }) {
   const router = useRouter();
@@ -53,7 +54,7 @@ export default function FormBuilder({ formId }: { formId: string }) {
   return (
     <DndContext sensors={sensors}>
       <div className='border-b border-border py-3 px-5 flex justify-between items-center gap-5'>
-        <h1 className='text-xl font-geist text-foreground font-normal capitalize'>Form</h1>
+        <h1 className='text-xl font-geist text-foreground font-normal capitalize flex items-center gap-2'>{formData?.title} <Badge>{formData?.status}</Badge></h1>
         {!previewForm && <Button disabled={!formElements.length} onClick={togglePreviewForm} className='w-max'>
           <FullscreenIcon className='size-4' />
           <span>Preview</span>
