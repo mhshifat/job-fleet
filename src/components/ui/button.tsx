@@ -8,6 +8,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary border border-primary text-background hover:bg-primary/80 active:bg-primary/90 disabled:bg-foreground/10 disabled:cursor-not-allowed disabled:text-foreground/30",
+        destructive: "bg-danger border border-danger text-background hover:bg-danger/80 active:bg-danger/90 disabled:bg-foreground/10 disabled:cursor-not-allowed disabled:text-foreground/30",
         outlined: "bg-background border border-primary text-primary hover:bg-primary/80 hover:text-background active:bg-primary/90 disabled:bg-foreground/10 disabled:cursor-not-allowed disabled:text-foreground/30",
         "secondary-outlined": "bg-background border border-border text-foreground hover:bg-foreground/80 hover:text-background active:bg-foreground/90 disabled:bg-foreground/10 disabled:cursor-not-allowed disabled:text-foreground/30",
         link: "text-primary hover:text-primary/80 active:text-primary/90 disabled:cursor-not-allowed disabled:text-foreground/30",
@@ -28,7 +29,7 @@ const buttonVariants = cva(
 )
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "link" | "outlined" | "ghost" | "secondary-outlined";
+  variant?: "default" | "link" | "outlined" | "ghost" | "secondary-outlined" | "destructive";
   size?: "default" | "icon" | "max" | "sm";
 }
 

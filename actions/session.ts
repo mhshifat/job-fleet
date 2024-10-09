@@ -2,7 +2,7 @@
 
 import { db } from "../db/drizzle";
 import { createId } from "@/utils/helpers";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { sessions } from "../db/schema/session";
 
 const sessionMap = {
@@ -23,12 +23,14 @@ export async function getSessionByUser(userId: string) {
   return data;
 }
 
-export async function getSessionById(id: string) {
+export async function getSessionById(where: { id: string; }) {
   const [data] = await db
     .select(sessionMap)
     .from(sessions)
     .where(
-      eq(sessions.id, id)
+      and(
+        eq(sessions.id, where.id),
+      )
     );
   
   return data;
@@ -48,23 +50,31 @@ export async function createSession(values: { access_token: string, user_id: str
   return data;
 }
 
-export async function updateSession(values: { access_token?: string; }, trx = db) {
+export async function updateSessionByUserAndId(where: { id: string; user_id: string }, values: { access_token?: string; }, trx = db) {
   const [data] = await trx
     .update(sessions)
     .set({
       access_token: values.access_token,
       updated_at: new Date(),
     })
+    .where(
+      and(
+        eq(sessions.id, where.id),
+        eq(sessions.user_id, where.user_id),
+      )
+    )
     .returning(sessionMap);
 
   return data;
 }
 
-export async function deleteSessionById(id: string) {
+export async function deleteSessionById(where: { id: string; }) {
   const [data] = await db
     .delete(sessions)
     .where(
-      eq(sessions.id, id)
+      and(
+        eq(sessions.id, where.id),
+      )
     );
   
   return data;

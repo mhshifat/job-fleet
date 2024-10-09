@@ -1,6 +1,6 @@
 import { http, IHttp } from "@/utils/http";
 import {
-  updateJobById,
+  updateJobByUserAndId,
 } from "../../../actions/job";
 import { jobDtoListToJobList, jobDtoToJob, jobToJobDto } from "./transform";
 import { IJob, INewJobPayload } from "@/domain/job/job";
@@ -19,13 +19,10 @@ class JobService {
     return jobDtoToJob(res.data);
   }
   
-  async update(values: INewJobPayload) {
-    const newValues = jobToJobDto(values as IJob);
-    const data = await updateJobById(
-      newValues.id,
-      newValues
-    );
-    return jobDtoToJob(data);
+  async update(id: string, values: Partial<INewJobPayload>) {
+    const res = await this._http.patch<IJobDto>(`/jobs/${id}`, values);
+    if (!res.success) throw new Error(res.message);
+    return jobDtoToJob(res.data);
   }
 
   async list() {
@@ -39,8 +36,14 @@ class JobService {
     return jobDtoListToJobList(res.data);
   }
 
-  async getJobById(jobId: string) {
+  async getById(jobId: string) {
     const res = await this._http.get<IJobDto>(`/jobs/${jobId}`, {});
+    if (!res.success) throw new Error(res.message);
+    return jobDtoToJob(res.data);
+  }
+
+  async deleteById(jobId: string) {
+    const res = await this._http.delete<IJobDto>(`/jobs/${jobId}`, {});
     if (!res.success) throw new Error(res.message);
     return jobDtoToJob(res.data);
   }

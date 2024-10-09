@@ -10,8 +10,22 @@ export async function GET(_: Request) {
       data: payload?.data || {}
     }, { status: 200 });
     if (payload?.tokens?.authorizationToken) {
-      response.cookies.set("access-token", payload.tokens.authorizationToken);
-      response.cookies.set("refresh-token", payload.tokens.authorizationRefreshToken);
+      response.cookies.set({
+        name: "access-token",
+        value: payload.tokens.authorizationToken,
+        httpOnly: true,
+        path: "/",
+        maxAge: 300000,
+        expires: new Date(Date.now() + 300000),
+      });
+      response.cookies.set({
+        name: "refresh-token",
+        value: payload.tokens.authorizationRefreshToken,
+        httpOnly: true,
+        path: "/",
+        maxAge: 86400000,
+        expires: new Date(Date.now() + 86400000),
+      });
     }
     return response;
   } catch (err) {

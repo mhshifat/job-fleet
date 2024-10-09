@@ -27,12 +27,12 @@ export default function DialogProvider({ children }: PropsWithChildren) {
   const [dialogState, setDialogState] = useState<DialogState[]>([]);
 
   const openDialog = useCallback((params: DialogState) => {
-    if (!currentDialogRef?.current) overlayRef.current?.classList?.add("z-50", "opacity-100", "pointer-events-auto");
+    if (!currentDialogRef?.current) overlayRef.current?.classList?.add("opacity-100", "pointer-events-auto");
     const handleTransitionEnd = () => {
       setTimeout(() => {
         setDialogState(values => values.map((v, idx) => idx === values.length - 1 ? ({
           ...v,
-          className: v.position === "right" ? "z-50 opacity-100 pointer-events-auto !translate-x-0 !-translate-y-1/2" : "z-50 opacity-100 pointer-events-auto scale-100"
+          className: v.position === "right" ? "opacity-100 pointer-events-auto !translate-x-0 !-translate-y-1/2" : "opacity-100 pointer-events-auto scale-100"
         }) : v));
       }, 0);
     }
@@ -40,10 +40,10 @@ export default function DialogProvider({ children }: PropsWithChildren) {
     currentDialogRef?.current?.addEventListener("transitionend", handleTransitionEnd);
     setDialogState((values) => [...values.map((v, idx) => idx === values.length - 1 ? ({
       ...v,
-      className: v.position === 'right' ? "z-50 opacity-50 pointer-events-none scale-90 translate-x-[-10px]" : "z-50 opacity-50 pointer-events-none scale-90 translate-y-[calc(-50%-10px)]",
+      className: v.position === 'right' ? "opacity-50 pointer-events-none scale-90 translate-x-[-10px]" : "opacity-50 pointer-events-none scale-90 translate-y-[calc(-50%-10px)]",
     }) : v), params]);
     document.body.style.overflow = 'hidden';
-    document.body.style.paddingRight = '17px';
+    // document.body.style.paddingRight = '17px';
   }, []);
 
   const closeDialog = useCallback(() => {
@@ -53,11 +53,11 @@ export default function DialogProvider({ children }: PropsWithChildren) {
           setDialogState(values => {
             const data = values.slice(0, -1).map((v, idx) => idx === values.length - 2 ? ({
               ...v,
-              className: v.position === "right" ? "z-50 opacity-100 pointer-events-auto !translate-x-0 !-translate-y-1/2" : "z-50 opacity-100 pointer-events-auto scale-100"
+              className: v.position === "right" ? "opacity-100 pointer-events-auto !translate-x-0 !-translate-y-1/2" : "opacity-100 pointer-events-auto scale-100"
             }) : v);
             if (!data.length) setTimeout(() => {
-              overlayRef.current?.classList?.remove("z-50", "opacity-100", "pointer-events-auto");
-            }, 100);
+              overlayRef.current?.classList?.remove("opacity-100", "pointer-events-auto");
+            }, 200);
             return data;
           });
         }, 0);
@@ -66,7 +66,7 @@ export default function DialogProvider({ children }: PropsWithChildren) {
     setTimeout(() => {
       setDialogState(values => values.map((v, idx) => idx === values.length - 1 ? ({
         ...v,
-        className: "z-50 opacity-100 pointer-events-none scale-110"
+        className: "opacity-100 pointer-events-none scale-110"
       }) : v));
       document.body.style.overflow = 'unset';
       document.body.style.paddingRight = '0';
@@ -97,8 +97,8 @@ export default function DialogProvider({ children }: PropsWithChildren) {
             {(dialog.title || dialog.description) && (
               <>
                 <Dialog.Header onClose={closeDialog}>
-                  <h3 className="font-geist-mono font-semibold text-foreground/70 text-xl capitalize tracking-tighter">{dialog.title}</h3>
-                  <p className="font-geist font-semibold text-foreground/60 text-sm mt-[2px]">{dialog.description}</p>
+                  <h3 className="font-geist-mono font-medium text-foreground text-xl capitalize tracking-tighter">{dialog.title}</h3>
+                  <p className="font-geist font-medium text-foreground/60 text-sm mt-[2px]">{dialog.description}</p>
                 </Dialog.Header>
                 <Divider />
               </>

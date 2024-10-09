@@ -3,7 +3,7 @@
 import { db } from "../db/drizzle";
 import { createId } from "@/utils/helpers";
 import { credentials } from "../db/schema/credential";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 const credentialMap = {
   id: credentials.id,
@@ -38,7 +38,7 @@ export async function createCredential(values: { password: string; otp: string, 
   return data;
 }
 
-export async function updateCredential(values: { password?: string; otp?: string }, trx = db) {
+export async function updateCredentialByUserAndId(where: { id: string; user_id: string }, values: { password?: string; otp?: string }, trx = db) {
   const [data] = await trx
     .update(credentials)
     .set({
@@ -46,6 +46,12 @@ export async function updateCredential(values: { password?: string; otp?: string
       otp: values.otp,
       updated_at: new Date(),
     })
+    .where(
+      and(
+        eq(credentials.id, where.id),
+        eq(credentials.user_id, where.user_id),
+      )
+    )
     .returning(credentialMap);
 
   return data;

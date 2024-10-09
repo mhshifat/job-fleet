@@ -18,7 +18,7 @@ export const createToken = (payload: Record<string, unknown>, signature: string,
 });
 export const decodeToken = <T extends {}>(token: string) => jwt.decode(token) as T;
 export const verifyToken = async <T extends {}>(token: string, signature: string) => {
-  const data = jwt.decode(token) as JwtPayload;  
+  const data = jwt.decode(token) as JwtPayload;
   if (!data || !data?.exp) throw new Error("Invalid token");
   const now = Date.now();
   if (now >= (data.exp * 1000)) throw new Error("Token expired");

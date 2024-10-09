@@ -1,5 +1,3 @@
 ### Auth
 
-## Register with organization
-## Account activation with OTP
-## Login with sessions
+## Make sure a job can not be access by other with hardcoded url

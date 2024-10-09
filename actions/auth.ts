@@ -5,12 +5,12 @@ import { createUser, deleteUserByEmail, getUserByEmail, getUserById, updateUserB
 import { comparePass, createToken, decodeToken, generateOTP, hashPass, verifyToken } from "@/utils/helpers";
 import { db } from "../db/drizzle";
 import { addUserToOrganization, createOrganization, getOrganizationByName, getOrganizationsByUser } from "./organization";
-import { createCredential, getCredentialByUser, updateCredential } from "./credential";
+import { createCredential, getCredentialByUser, updateCredentialByUserAndId } from "./credential";
 import { sendEmail } from "./email";
 import { addMinutesToCurrentTime } from "@/utils/date";
 import { ILoginDto, ILoginDtoPayload } from "@/infra/auth/dto";
 import { IUserDto } from "@/infra/user/dto";
-import { createSession, getSessionById, getSessionByUser, updateSession } from "./session";
+import { createSession, getSessionById, getSessionByUser, updateSessionByUserAndId, deleteSessionById } from "./session";
 import { cookies } from "next/headers";
 
 export async function prepareAuthPayload({password, ...user}: IUserDto & { password: string }) {
@@ -23,7 +23,10 @@ export async function prepareAuthPayload({password, ...user}: IUserDto & { passw
   }
   const accessToken = createToken(payload, password, "1d");
   let session = await getSessionByUser(user.id);
-  if (session) session = await updateSession({
+  if (session) session = await updateSessionByUserAndId({
+    id: session.id,
+    user_id: user.id
+  }, {
     access_token: accessToken,
   })
   else session = await createSession({
@@ -64,6 +67,7 @@ export async function login(values: ILoginDtoPayload) {
 export async function signUp(values: IRegisterPayload) {
   const existingUser = await getUserByEmail(values.email);
   if (existingUser && !existingUser.verified) await deleteUserByEmail(values.email);
+  if (existingUser && existingUser.verified) throw new Error("400:-User taken");
   const hashedPass = await hashPass(values.password);
   const otp = generateOTP();
   const otpExp = addMinutesToCurrentTime(5);
@@ -105,11 +109,12 @@ export async function sendOtp(values: { email: string }) {
   const existingUser = await getUserByEmail(values.email);
   if (!existingUser) throw new Error("404:-User not exists");
   if (existingUser && existingUser.verified) throw new Error("400:-Already verified");
+  const credential = await getCredentialByUser(existingUser.id);
   const otp = generateOTP();
   const otpExp = addMinutesToCurrentTime(5);
   const otpStr = `${otpExp}:${otp}`;
   await db.transaction(async (trx) => {
-    await updateCredential({ otp: otpStr }, trx);
+    await updateCredentialByUserAndId({ id: credential.id, user_id: existingUser.id }, { otp: otpStr }, trx);
   });
   
   await sendEmail({
@@ -133,7 +138,7 @@ export async function validateOtp(values: { email: string; otp: string }) {
   const [exp, otp] = credential.otp.split(":");
   if (now >= +exp || otp !== values.otp) throw new Error("400:-Invalid OTP");
   await db.transaction(async (trx) => {
-    await updateCredential({ otp: "" }, trx);
+    await updateCredentialByUserAndId({ id: credential.id, user_id: existingUser.id }, { otp: "" }, trx);
     await updateUserById(existingUser.id, { verified: true }, trx);
   });
 }
@@ -143,7 +148,9 @@ export async function isAuthenticated() {
   const { value: refreshToken } = cookies().get("refresh-token") as { value: string };
   const decodedToken = decodeToken<{ sid: string }>(accessToken);
   if (!decodedToken || !decodedToken?.sid) throw new Error("Invalid token");
-  const session = await getSessionById(decodedToken.sid);
+  const session = await getSessionById({
+    id: decodedToken.sid,
+  });
   if (!session || !session.access_token) return null;
   const decodedSessionToken = decodeToken<{ uid: string }>(session.access_token);
   const existingUser = await getUserById(decodedSessionToken.uid);
@@ -161,19 +168,25 @@ export async function isAuthenticated() {
       },
     };
   } catch (err) {
-    await verifyToken(refreshToken, credential.password);
-    await verifyToken<ILoginDto>(session.access_token, credential.password);
-    const data = await prepareAuthPayload({
-      ...existingUser as IUserDto,
-      password: credential.password
-    });
-    return data;
+    try {
+      await verifyToken(refreshToken, credential.password);
+      await verifyToken<ILoginDto>(session.access_token, credential.password);
+      const data = await prepareAuthPayload({
+        ...existingUser as IUserDto,
+        password: credential.password
+      });
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
 
 export async function logout() {
-  const { value: accessToken } = cookies().get("access-token") as { value: string };
+  const { value: accessToken } = cookies()?.get("access-token") as { value: string };
   const decodedToken = decodeToken<{ sid: string }>(accessToken);
   if (!decodedToken || !decodedToken?.sid) throw new Error("Invalid token");
-  await getSessionById(decodedToken.sid);
+  await deleteSessionById({
+    id: decodedToken.sid,
+  });
 }

@@ -7,7 +7,7 @@ interface DialogOverlayProps extends HTMLAttributes<HTMLDivElement> {
 
 function DialogOverlay({ className, ...props }: DialogOverlayProps, ref: Ref<HTMLDivElement>) {
   return (
-    <div ref={ref} className={cn("fixed inset-0 w-full h-full bg-foreground/60 z-[-1px] isolate duration-200 ease-in-out transition-opacity opacity-0 pointer-events-none", className)} {...props} />
+    <div ref={ref} className={cn("fixed inset-0 w-full h-full bg-foreground/60 z-50 isolate duration-200 ease-in-out transition opacity-0 pointer-events-none", className)} {...props} />
   )
 }
 

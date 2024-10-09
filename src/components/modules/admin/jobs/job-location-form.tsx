@@ -44,6 +44,7 @@ export default function JobLocationForm() {
         code: formValues.code || null,
         deadline: formValues.deadline?.toISOString(),
         status: "PUBLISHED",
+        id: jobId
       });
       else await createJob.mutateAsync({
         ...formValues,

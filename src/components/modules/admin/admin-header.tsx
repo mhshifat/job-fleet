@@ -13,7 +13,7 @@ import { useRef } from "react";
 
 export default function AdminHeader() {
   const signOut = useSignOutMutation();
-  const { updateAuthState, authState } = useAuth();
+  const { authState } = useAuth();
   const popUpRef = useRef<{ toggle: () => void; }>({
     toggle() {},
   });
@@ -22,10 +22,9 @@ export default function AdminHeader() {
   async function handleLogout() {
     await signOut.mutateAsync();
     popUpRef.current.toggle();
-    updateAuthState(null);
   }
   return (
-    <div className="p-3 flex items-center justify-end gap-5 border-b border-border/50 sticky w-full top-0 left-0 z-50 bg-background">
+    <div className="p-3 flex items-center justify-end gap-5 border-b border-border/50 sticky w-full top-0 left-0 z-40 bg-background">
       <Popup
         comRef={popUpRef}
       >

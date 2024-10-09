@@ -21,6 +21,7 @@ interface IFormBuilderState {
   getSelectedFormElementProperty: (key: string) => unknown;
   togglePreviewForm: () => void;
   previewForm: boolean;
+  resetFormElements: (elements: IFormElement[]) => void;
 }
 
 const FormBuilderCtx = createContext<IFormBuilderState | null>(null);
@@ -75,6 +76,9 @@ export default function FormBuilderProvider({ children }: PropsWithChildren) {
   const togglePreviewForm = useCallback(() => {
     setPreviewForm(value => !value);
   }, []);
+  const resetFormElements = useCallback((elements: IFormElement[]) => {
+    setFormElements(elements);
+  }, []);
 
   return (
     <FormBuilderCtx.Provider value={{
@@ -90,7 +94,8 @@ export default function FormBuilderProvider({ children }: PropsWithChildren) {
       updateSelectedFormElementProperty,
       getSelectedFormElementProperty,
       togglePreviewForm,
-      previewForm
+      previewForm,
+      resetFormElements,
     }}>
       {children}
     </FormBuilderCtx.Provider>

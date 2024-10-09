@@ -1,0 +1,1 @@
+ALTER TABLE "forms" ADD COLUMN "fields" text NOT NULL;

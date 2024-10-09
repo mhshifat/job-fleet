@@ -1,21 +1,23 @@
 import { toast } from "@/utils/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { authService } from "@/infra/auth/service";
+import { IJob } from "./job";
+import { jobService } from "@/infra/job/service";
 import { AxiosError } from "axios";
 
-type ResponseType = string;
+type ResponseType = IJob;
+type RequestType = unknown;
 
-export default function useSignOutMutation() {
+export default function useDeleteJobMutation(id: string) {
   const queryClient = useQueryClient();
   
-  return useMutation<ResponseType, Error>({
+  return useMutation<ResponseType, Error, RequestType>({
     mutationFn: async () => {
-      const data = await authService.logout();
-      return data || "";
+      const data = await jobService.deleteById(id);
+      return data;
     },
-    onSuccess: (data) => {
-      toast.success(data || "Successfully signed out!");
-      queryClient.invalidateQueries({ queryKey: ["me"] });
+    onSuccess: () => {
+      toast.success("Successfully deleted the job!");
+      queryClient.invalidateQueries({ queryKey: ["get-my-jobs"] });
     },
     onError: (err) => {
       if (err instanceof AxiosError) {

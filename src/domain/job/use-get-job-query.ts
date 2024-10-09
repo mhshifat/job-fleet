@@ -6,7 +6,7 @@ export default function useGetJobQuery(jobId: string | null) {
     queryKey: [`get-job-by-id-${jobId}`],
     queryFn: async () => {
       if (jobId == null) return null;
-      const data = await jobService.getJobById(jobId);
+      const data = await jobService.getById(jobId);
       return data;
     },
   });

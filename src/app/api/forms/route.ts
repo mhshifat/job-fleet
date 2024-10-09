@@ -1,22 +1,22 @@
 import { APIResponse } from "@/utils/types";
 import { NextResponse } from "next/server";
-import { createJob, getJobs } from "../../../../actions/job";
 import { asyncErrorHandler } from "@/utils/error";
 import { isAuthenticated } from "../../../../actions/auth";
-import { jobToJobDto } from "@/infra/job/transform";
-import { createJobFormSchema } from "@/domain/job/validators";
+import { createForm, getForms } from "../../../../actions/form";
+import { formToFormDto } from "@/infra/form/transform";
+import { createFormFormSchema } from "@/domain/form/validators";
 
 export async function GET(_: Request) {
   const payload = await isAuthenticated();
   if (!payload?.data?.uid) throw new Error("401:-Unauthorized");
 
   return asyncErrorHandler(async () => {
-    const jobs = await getJobs({
+    const forms = await getForms({
       user_id: payload?.data?.uid
     });
     return NextResponse.json<APIResponse>({
       success: true,
-      data: jobs
+      data: forms
     }, { status: 200 });
   })
 }
@@ -27,15 +27,15 @@ export async function POST(req: Request) {
 
   return asyncErrorHandler(async () => {
     const json = await req.json();
-    await createJobFormSchema.parseAsync(json);
-    const { id, ...jobPayload } = jobToJobDto(json);
-    const job = await createJob({
-      ...jobPayload,
+    await createFormFormSchema.parseAsync(json);
+    const { id, ...formPayload } = formToFormDto(json);
+    const form = await createForm({
+      ...formPayload,
       user_id: payload?.data?.uid
     });
     return NextResponse.json<APIResponse>({
       success: true,
-      data: job
+      data: form
     }, { status: 201 });
   })
 }

@@ -11,8 +11,8 @@ export async function DELETE(_: Request) {
       message: "Signed Out",
       data: {}
     }, { status: 200 });
-    response.cookies.set("access-token", "");
-    response.cookies.set("refresh-token", "");
+    response.cookies.delete("access-token");
+    response.cookies.delete("refresh-token");
     return response;
   });
 }

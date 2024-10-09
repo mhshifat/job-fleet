@@ -4,6 +4,7 @@ import { jobs } from "./job";
 import { credentials } from "./credential";
 import { organizations } from "./organization";
 import { sessions } from "./session";
+import { forms } from "./form";
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -17,6 +18,7 @@ export const users = pgTable("users", {
 
 export const usersRelations = relations(users, ({ many, one }) => ({
   jobs: many(jobs),
+  forms: many(forms),
   credential: one(credentials),
   session: one(sessions),
   my_organizations: many(organizations)

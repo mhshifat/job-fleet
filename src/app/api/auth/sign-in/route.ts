@@ -13,8 +13,22 @@ export async function POST(req: Request) {
       success: true,
       data: data
     }, { status: 200 });
-    response.cookies.set("access-token", tokens.authorizationToken);
-    response.cookies.set("refresh-token", tokens.authorizationRefreshToken);
+    response.cookies.set({
+      name: "access-token",
+      value: tokens.authorizationToken,
+      httpOnly: true,
+      path: "/",
+      maxAge: 300000,
+      expires: new Date(Date.now() + 300000),
+    });
+    response.cookies.set({
+      name: "refresh-token",
+      value: tokens.authorizationRefreshToken,
+      httpOnly: true,
+      path: "/",
+      maxAge: 86400000,
+      expires: new Date(Date.now() + 86400000),
+    });
     return response;
   })
 }

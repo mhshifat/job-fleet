@@ -5,7 +5,7 @@ import { createId } from "@/utils/helpers";
 import { unstable_noStore } from "next/cache";
 import { jobs } from "../db/schema/job";
 import { IJobDtoPayload } from "@/infra/job/dto";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 const jobMap = {
   id: jobs.id,
@@ -46,11 +46,16 @@ export async function getJobs({ user_id }: { user_id?: string }) {
   return results;
 }
 
-export async function getJobById(jobId: string) {
+export async function getJobByUserAndId(where: { id: string, user_id: string }) {
   const [data] = await db
     .select(jobMap)
     .from(jobs)
-    .where(eq(jobs.id, jobId));
+    .where(
+      and(
+        eq(jobs.id, where.id),
+        eq(jobs.user_id, where.user_id),
+      )
+    );
   
   return data;
 }
@@ -68,7 +73,7 @@ export async function createJob(values: IJobDtoPayload & { user_id: string }) {
   return data;
 }
 
-export async function updateJobById(jobId: string, values: IJobDtoPayload) {
+export async function updateJobByUserAndId(where: { id: string, user_id: string }, values: IJobDtoPayload) {
   const userId = process.env.ADMIN_USER_ID;
   if (!userId) throw new Error("401:-Unauthorized");
 
@@ -78,7 +83,26 @@ export async function updateJobById(jobId: string, values: IJobDtoPayload) {
       ...values,
       updated_at: new Date(),
     })
-    .where(eq(jobs.id, jobId))
+    .where(
+      and(
+        eq(jobs.id, where.id),
+        eq(jobs.user_id, where.user_id),
+      )
+    )
+    .returning(jobMap);
+    
+  return data;
+}
+
+export async function deleteJobByUserAndId(where: { id: string, user_id: string }) {
+  const [data] = await db
+    .delete(jobs)
+    .where(
+      and(
+        eq(jobs.id, where.id),
+        eq(jobs.user_id, where.user_id),
+      )
+    )
     .returning(jobMap);
     
   return data;

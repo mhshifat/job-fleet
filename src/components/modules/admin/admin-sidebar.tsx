@@ -59,7 +59,7 @@ export default function AdminSidebar() {
                 <Sidebar.CollapsedContent className="h-[40px] flex justify-center items-center rounded-md self-stretch aspect-square">
                   <Icon className="size-[20px]" />
                 </Sidebar.CollapsedContent>
-                <Sidebar.ExtendContent className="text-base font-medium font-geist leading-[1]">{item.title}</Sidebar.ExtendContent>
+                <Sidebar.ExtendContent className="text-sm font-medium font-geist leading-[1]">{item.title}</Sidebar.ExtendContent>
               </Link>
             </Sidebar.Item>
           ))}

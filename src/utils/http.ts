@@ -5,6 +5,7 @@ export interface IHttp {
   get<T>(url: string, options: { params?: Record<string, unknown>, headers?: Record<string, unknown> }): Promise<APIResponse<T>>;
   delete<T>(url: string, options: { params?: Record<string, unknown>, headers?: Record<string, unknown> }): Promise<APIResponse<T>>;
   post<T>(url: string, body: unknown): Promise<APIResponse<T>>;
+  patch<T>(url: string, body: unknown): Promise<APIResponse<T>>;
 }
 
 class Http implements IHttp {
@@ -27,6 +28,18 @@ class Http implements IHttp {
     const { data } = await this._request({
       url,
       method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      data: body
+    });
+    return data as Promise<SuccessAPIResponse<T>>;
+  }
+
+  async patch<T>(url: string, body: unknown) {
+    const { data } = await this._request({
+      url,
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json"
       },

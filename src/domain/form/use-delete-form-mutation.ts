@@ -1,23 +1,23 @@
 import { toast } from "@/utils/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { IJob, INewJobPayload } from "./job";
-import { jobService } from "@/infra/job/service";
 import { AxiosError } from "axios";
+import { formService } from "@/infra/form/service";
+import { IForm } from "./form";
 
-type ResponseType = IJob;
-type RequestType = Partial<INewJobPayload> & { id: string };
+type ResponseType = IForm;
+type RequestType = unknown;
 
-export default function useUpdateJobMutation() {
+export default function useDeleteFormMutation(id: string) {
   const queryClient = useQueryClient();
   
   return useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ id, ...json }) => {
-      const data = await jobService.update(id, json);
+    mutationFn: async () => {
+      const data = await formService.deleteById(id);
       return data;
     },
     onSuccess: () => {
-      toast.success("Successfully updated the job!");
-      queryClient.invalidateQueries({ queryKey: ["get-my-jobs"] });
+      toast.success("Successfully deleted the form!");
+      queryClient.invalidateQueries({ queryKey: ["get-my-forms"] });
     },
     onError: (err) => {
       if (err instanceof AxiosError) {

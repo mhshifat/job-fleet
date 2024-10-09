@@ -1,3 +1,5 @@
+import FormLists from "@/components/modules/admin/forms/form-lists";
+import FormsTopActions from "@/components/modules/admin/forms/forms-top-actions";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,8 +9,9 @@ export const metadata: Metadata = {
 
 export default function FormsPage() {
   return (
-    <div className="w-full flex flex-col flex-1 p-5">
-      <p>Forms</p>
+    <div className="p-5">
+      <FormsTopActions />
+      <FormLists />
     </div>
   )
 }
