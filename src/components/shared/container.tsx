@@ -1,8 +1,13 @@
+import { cn } from "@/utils/helpers";
 import { PropsWithChildren } from "react";
 
-export default function Container({ children }: PropsWithChildren) {
+interface ContainerProps {
+  className?: string;
+}
+
+export default function Container({ children, className }: PropsWithChildren<ContainerProps>) {
   return (
-    <div className="max-w-[1023px] mx-auto">
+    <div className={cn("max-w-[1023px] mx-auto", className)}>
       {children}
     </div>
   )

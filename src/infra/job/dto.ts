@@ -8,7 +8,7 @@ export interface IJobDto {
   job_place: string;
   vacancy: number;
   deadline: string;
-  job_label: string;
+  job_level: string;
   num_of_experience: string;
   salary_type: string;
   currency: string;

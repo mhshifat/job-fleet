@@ -33,6 +33,7 @@ import {
 
 import { cx } from "class-variance-authority";
 import { useEffect, useReducer, useState } from "react";
+import { cn } from "@/utils/helpers";
 
 const placeholder = Placeholder;
 
@@ -287,9 +288,10 @@ interface EditorProps {
   onChange?: (value: string) => void;
   onFocus?: () => void;
   disabled?: boolean;
+  className?: string;
 }
 
-const Editor = ({ onChange, value, disabled, onFocus }: EditorProps) => {
+const Editor = ({ onChange, value, disabled, onFocus, className }: EditorProps) => {
   const [updateCount, forceUpdate] = useReducer((x) => x + 1, 0);
   const [content, setContent] = useState<JSONContent | undefined>(undefined)
 
@@ -322,7 +324,7 @@ const Editor = ({ onChange, value, disabled, onFocus }: EditorProps) => {
             keydown: (_view, event) => handleCommandNavigation(event),
           },
           attributes: {
-            class: `prose prose-lg text-foreground prose-headings:font-title font-default focus:outline-none max-w-full border border-border min-h-40 rounded-md overflow-hidden transition py-3 px-3 font-medium font-archivo text-sm focus-within:shadow-[0_0_0_1px_white,0_0_0_3px_hsl(var(--primary))]`,
+            class: cn(`prose prose-lg text-foreground prose-headings:font-title font-default focus:outline-none max-w-full border border-border min-h-40 rounded-md overflow-hidden transition py-3 px-3 font-medium font-archivo text-sm focus-within:shadow-[0_0_0_1px_white,0_0_0_3px_hsl(var(--primary))]`, className),
           },
           editable: () => !disabled
 				}}

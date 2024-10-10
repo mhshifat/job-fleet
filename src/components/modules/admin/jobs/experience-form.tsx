@@ -13,7 +13,7 @@ export default function ExperienceForm() {
 
   async function handleSubmit() {
     try {
-      const isValid = await trigger(["jobLabel", "numOfExperience"]);
+      const isValid = await trigger(["jobLevel", "numOfExperience"]);
       if (!isValid) throw new Error("Invalid fields");
       nextStep({});
     } catch (err) {
@@ -26,10 +26,10 @@ export default function ExperienceForm() {
       <p className="mt-2 font-geist-mono text-sm">Write and fill out the information of the job</p>
 
       <div className="flex gap-5">
-        <Label title="Label" className="mt-5 flex-1" error={errors?.jobLabel?.message}>
+        <Label title="Label" className="mt-5 flex-1" error={errors?.jobLevel?.message}>
           <Select
-            value={[{ content: watch("jobLabel"), value: watch("jobLabel") }]}
-            onChange={(values) => setValue("jobLabel", values[0].value, {
+            value={[{ content: watch("jobLevel"), value: watch("jobLevel") }]}
+            onChange={(values) => setValue("jobLevel", values[0].value, {
               shouldDirty: true,
               shouldTouch: true,
               shouldValidate: true,

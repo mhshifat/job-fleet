@@ -13,7 +13,7 @@ export const jobs = pgTable("jobs", {
   vacancy: integer("vacancy").notNull(),
   job_place: text("job_place").notNull(),
   deadline: date("deadline").notNull(),
-  job_label: text("job_label").notNull(),
+  job_level: text("job_level").notNull(),
   num_of_experience: text("num_of_experience").notNull(),
   salary_type: text("salary_type").notNull(),
   currency: text("currency").notNull(),

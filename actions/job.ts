@@ -17,7 +17,7 @@ const jobMap = {
   vacancy: jobs.vacancy,
   job_place: jobs.job_place,
   deadline: jobs.deadline,
-  job_label: jobs.job_label,
+  job_level: jobs.job_level,
   num_of_experience: jobs.num_of_experience,
   salary_type: jobs.salary_type,
   currency: jobs.currency,

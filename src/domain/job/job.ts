@@ -8,7 +8,7 @@ export interface IJob {
   jobPlace: string;
   vacancy: number;
   deadline: string;
-  jobLabel: string;
+  jobLevel: string;
   numOfExperience: string;
   salaryType: string;
   currency: string;
