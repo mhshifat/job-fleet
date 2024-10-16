@@ -42,14 +42,14 @@ export default function JobLocationForm() {
       if (jobId) await updateJob.mutateAsync({
         ...formValues,
         code: formValues.code || null,
-        deadline: formValues.deadline?.toISOString(),
+        deadline: formValues.deadline,
         status: "PUBLISHED",
         id: jobId
       });
       else await createJob.mutateAsync({
         ...formValues,
         code: formValues.code || null,
-        deadline: formValues.deadline?.toISOString(),
+        deadline: formValues.deadline,
         status: status || "PUBLISHED",
       });
       

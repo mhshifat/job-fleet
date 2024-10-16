@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     const json = await req.json();
     await createJobFormSchema.parseAsync({
       ...json,
-      deadline: new Date(json.deadline)
+      deadline: json.deadline
     });
     const { id, ...jobPayload } = jobToJobDto(json);
     const job = await createJob({

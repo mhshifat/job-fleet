@@ -36,8 +36,8 @@ class JobService {
     return jobDtoListToJobList(res.data);
   }
 
-  async getById(jobId: string) {
-    const res = await this._http.get<IJobDto>(`/jobs/${jobId}`, {});
+  async getById(jobId: string, params?: Record<string, string>) {
+    const res = await this._http.get<IJobDto>(`/jobs/${jobId}`, { params });
     if (!res.success) throw new Error(res.message);
     return jobDtoToJob(res.data);
   }

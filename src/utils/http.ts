@@ -18,7 +18,9 @@ class Http implements IHttp {
     const { data } = await this._request({
       url,
       method: "GET",
-      params: options.params,
+      params: {
+        ...options.params
+      },
       headers: options.headers as AxiosHeaders
     });
     return data as Promise<SuccessAPIResponse<T>>;

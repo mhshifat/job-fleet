@@ -9,7 +9,7 @@ import DraggedElement from '../../../shared/dragged-element';
 import { useFormBuilder } from './form-builder-provider';
 import { cn } from '@/utils/helpers';
 import Button from '@/components/ui/button';
-import { BookCheckIcon, FullscreenIcon } from 'lucide-react';
+import { ArrowLeftIcon, BookCheckIcon, FullscreenIcon } from 'lucide-react';
 import FormPreview from './form-preview';
 import FormElementPreview from './form-element-preview';
 import { toast } from '@/utils/toast';
@@ -54,17 +54,26 @@ export default function FormBuilder({ formId }: { formId: string }) {
   return (
     <DndContext sensors={sensors}>
       <div className='border-b border-border py-3 px-5 flex justify-between items-center gap-5'>
-        <h1 className='text-xl font-geist text-foreground font-normal capitalize flex items-center gap-2'>{formData?.title} <Badge>{formData?.status}</Badge></h1>
-        {!previewForm && <Button disabled={!formElements.length} onClick={togglePreviewForm} className='w-max'>
-          <FullscreenIcon className='size-4' />
-          <span>Preview</span>
-        </Button>}
-        {previewForm && <Button disabled={updateForm.isPending} onClick={handleUpdate} className='w-max'>
-          <LoadingBtn loading={updateForm.isPending} icon={false}>
-            <BookCheckIcon className='size-4' />
-            <span>{!formData?.fields?.length ? "Published" : "Save"}</span>
-          </LoadingBtn>
-        </Button>}
+        <h1 className='text-xl font-geist text-foreground font-normal capitalize flex items-center gap-2'>
+          {previewForm && (
+            <Button variant='ghost' className='p-0 w-max h-max' onClick={togglePreviewForm}>
+              <ArrowLeftIcon className='size-6' />
+            </Button>
+          )}
+          {formData?.title} <Badge>{formData?.status}</Badge>
+        </h1>
+        <div className='flex gap-2'>
+          {!previewForm && <Button disabled={!formElements.length} onClick={togglePreviewForm} className='w-max'>
+            <FullscreenIcon className='size-4' />
+            <span>Preview</span>
+          </Button>}
+          <Button disabled={updateForm.isPending} onClick={handleUpdate} className='w-max'>
+            <LoadingBtn loading={updateForm.isPending} icon={false}>
+              <BookCheckIcon className='size-4' />
+              <span>{!formData?.fields?.length ? "Published" : "Save"}</span>
+            </LoadingBtn>
+          </Button>
+        </div>
       </div>
       {!previewForm && (
         <div className="grid grid-cols-[1fr_320px] flex-1">
@@ -73,11 +82,6 @@ export default function FormBuilder({ formId }: { formId: string }) {
               <DroppedElement
                 className="flex flex-col gap-3"
                 onDrop={({ active, over }) => {
-                  console.log({
-                    active,
-                    over
-                  });
-                  
                   const typedData = active as { title: string; currentPosition?: number; isSidebarEl: boolean; isSortableEl?: boolean }
                   const typedOverData = over as { isTop?: boolean; isBottom?: boolean; title: string; currentPosition?: number; updatedPosition?: number; isSidebarEl: boolean; isSortableEl?: boolean }
                   if (!typedOverData) addFormElement(typedData);

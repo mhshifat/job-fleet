@@ -9,6 +9,7 @@ import { and, eq } from "drizzle-orm";
 
 const jobMap = {
   id: jobs.id,
+  form_id: jobs.form_id,
   title: jobs.title,
   category: jobs.category,
   code: jobs.code,
@@ -46,6 +47,20 @@ export async function getJobs({ user_id }: { user_id?: string }) {
   return results;
 }
 
+export async function getPublishedJobById(id: string) {
+  const [data] = await db
+    .select(jobMap)
+    .from(jobs)
+    .where(
+      and(
+        eq(jobs.id, id),
+        eq(jobs.status, "PUBLISHED"),
+      )
+    );
+  
+  return data;
+}
+
 export async function getJobByUserAndId(where: { id: string, user_id: string }) {
   const [data] = await db
     .select(jobMap)
@@ -74,9 +89,6 @@ export async function createJob(values: IJobDtoPayload & { user_id: string }) {
 }
 
 export async function updateJobByUserAndId(where: { id: string, user_id: string }, values: IJobDtoPayload) {
-  const userId = process.env.ADMIN_USER_ID;
-  if (!userId) throw new Error("401:-Unauthorized");
-
   const [data] = await db
     .update(jobs)
     .set({

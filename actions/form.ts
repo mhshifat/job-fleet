@@ -11,6 +11,7 @@ const formMap = {
   id: forms.id,
   title: forms.title,
   fields: forms.fields,
+  records: forms.records,
   status: forms.status,
   created_at: forms.created_at,
 }

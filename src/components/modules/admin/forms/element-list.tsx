@@ -45,6 +45,12 @@ export default function ElementList() {
               onChange={({ target }) => updateSelectedFormElementProperty("isRequired", target.checked)}
             />
           </Label>
+          <Label title="Unique" className="flex-row items-center justify-between gap-5">
+            <Switch
+              defaultChecked={getSelectedFormElementProperty("isUnique") as boolean}
+              onChange={({ target }) => updateSelectedFormElementProperty("isUnique", target.checked)}
+            />
+          </Label>
         </form>
       </div>
     </div>

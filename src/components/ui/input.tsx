@@ -1,10 +1,14 @@
 import { cn } from "@/utils/helpers";
-import { ChangeEvent, ForwardedRef, forwardRef, InputHTMLAttributes, KeyboardEvent, useState } from "react";
+import { ChangeEvent, ForwardedRef, forwardRef, InputHTMLAttributes, KeyboardEvent, useEffect, useState } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
 
 function Input({ type, className, ...restProps }: InputProps, ref: ForwardedRef<HTMLInputElement>) {
   const [value, setValue] = useState("");
+
+  useEffect(() => {
+    if (restProps?.value) setValue(restProps.value as string);
+  }, [restProps?.value])
 
   function handleNumberInputChange(e: ChangeEvent<HTMLInputElement>) {
     const newValue = e.target.value;

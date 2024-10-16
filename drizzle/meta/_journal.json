@@ -113,6 +113,20 @@
       "when": 1728552875581,
       "tag": "0015_aromatic_squirrel_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1728579704213,
+      "tag": "0016_fancy_virginia_dare",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1729081848230,
+      "tag": "0017_rare_energizer",
+      "breakpoints": true
     }
   ]
 }

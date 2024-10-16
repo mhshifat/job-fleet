@@ -17,6 +17,7 @@ export default function EmploymentDetailsForm() {
     trigger,
     setValue,
     getValues,
+    watch
   } = useFormContext<ICreateJobFormSchema>();
 
   async function handleSubmit() {
@@ -135,6 +136,7 @@ export default function EmploymentDetailsForm() {
           <Input
             type="number"
             placeholder="Ex: 2"
+            value={getValues("vacancy")}
             {...register("vacancy", { valueAsNumber: true })}
           />
         </Label>
@@ -145,11 +147,11 @@ export default function EmploymentDetailsForm() {
         >
           <DateInput
             value={{
-              start: getValues("deadline"),
-              end: getValues("deadline"),
+              start: new Date(getValues("deadline")),
+              end: new Date(getValues("deadline")),
             }}
             onChange={({ end }) =>
-              setValue("deadline", end, {
+              setValue("deadline", end.toISOString(), {
                 shouldDirty: true,
                 shouldTouch: true,
                 shouldValidate: true,

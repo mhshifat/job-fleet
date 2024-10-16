@@ -292,8 +292,8 @@ interface EditorProps {
 }
 
 const Editor = ({ onChange, value, disabled, onFocus, className }: EditorProps) => {
-  const [updateCount, forceUpdate] = useReducer((x) => x + 1, 0);
-  const [content, setContent] = useState<JSONContent | undefined>(undefined)
+  const parsedVal = JSON.parse(value || "{}");
+  const [content, setContent] = useState<JSONContent | undefined>(parsedVal || undefined)
 
 	const debouncedUpdates = useDebouncedCallback(
 		async (editor: EditorInstance) => {
@@ -307,12 +307,12 @@ const Editor = ({ onChange, value, disabled, onFocus, className }: EditorProps) 
   useEffect(() => {
     const parsedVal = JSON.parse(value || "{}");
     setContent(parsedVal);
-    forceUpdate();
   }, [value])
 
 	return (
-		<EditorRoot key={"Editor_" + updateCount}>
+		<EditorRoot>
 			<EditorContent
+        immediatelyRender={true}
 				initialContent={content}
         onFocus={() => onFocus?.()}
 				extensions={[...defaultExtensions, slashCommand]}

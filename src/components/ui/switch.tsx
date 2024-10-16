@@ -1,10 +1,16 @@
 import { cn } from "@/utils/helpers";
-import { ForwardedRef, forwardRef, InputHTMLAttributes, useState } from "react"
+import { ForwardedRef, forwardRef, InputHTMLAttributes, useEffect, useState } from "react"
 
 interface SwitchProps extends InputHTMLAttributes<HTMLInputElement> {}
 
-function Switch({...restProps}: SwitchProps, ref: ForwardedRef<HTMLInputElement>) {
+function Switch({defaultChecked, ...restProps}: SwitchProps, ref: ForwardedRef<HTMLInputElement>) {
   const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    if (defaultChecked !== undefined) {
+      setChecked(defaultChecked);
+    }
+  }, [])
 
   return (
     <div className="cursor-pointer w-[38px] h-[22px] bg-primary/10 border border-border rounded-full relative">

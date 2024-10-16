@@ -13,11 +13,16 @@ export default function useUpdateJobMutation() {
   return useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ id, ...json }) => {
       const data = await jobService.update(id, json);
-      return data;
+      return {
+        ...data,
+        id
+      };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Successfully updated the job!");
       queryClient.invalidateQueries({ queryKey: ["get-my-jobs"] });
+      queryClient.invalidateQueries({ queryKey: [`get-job-by-id-${data.id}`] });
+      queryClient.invalidateQueries({ queryKey: [`get-public-job-by-id--${data.id}`] });
     },
     onError: (err) => {
       if (err instanceof AxiosError) {

@@ -144,8 +144,8 @@ export async function validateOtp(values: { email: string; otp: string }) {
 }
 
 export async function isAuthenticated() {
-  const { value: accessToken } = cookies().get("access-token") as { value: string };
-  const { value: refreshToken } = cookies().get("refresh-token") as { value: string };
+  const { value: accessToken } = cookies()?.get("access-token") || {} as { value: string };
+  const { value: refreshToken } = cookies()?.get("refresh-token") || {} as { value: string };
   const decodedToken = decodeToken<{ sid: string }>(accessToken);
   if (!decodedToken || !decodedToken?.sid) throw new Error("Invalid token");
   const session = await getSessionById({

@@ -1,5 +1,6 @@
 export interface IJobDto {
   id: string;
+  form_id?: string;
   title: string;
   category: string;
   code: string | null;

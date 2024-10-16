@@ -107,6 +107,7 @@ export function isDateSame(date: Date, compareDate: Date) {
 
 const formats = {
   "MMMM yyyy": format,
+  "do, MMMM yyyy": format,
 };
 
 export function formatDate(

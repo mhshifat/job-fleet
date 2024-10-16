@@ -4,6 +4,7 @@ import { IJobDto } from "./dto";
 export function jobDtoToJob(values: IJobDto): IJob {
   return {
     id: values.id,
+    formId: values.form_id,
     title: values.title,
     category: values.category,
     code: values.code,
@@ -29,6 +30,7 @@ export function jobDtoToJob(values: IJobDto): IJob {
 export function jobToJobDto(values: IJob): IJobDto {
   return {
     id: values.id,
+    form_id: values.formId,
     title: values.title,
     category: values.category,
     code: values.code,

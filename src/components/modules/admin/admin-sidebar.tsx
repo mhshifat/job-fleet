@@ -54,7 +54,7 @@ export default function AdminSidebar() {
           {ADMIN_SIDEBAR_MENUS.map(({icon: Icon, ...item}, idx) => (
             <Sidebar.Item key={item.title} className="px-3 py-0 cursor-pointer" label={idx === 0 ? "Menus" : ""}>
               <Link href={item.link} className={cn("flex text-foreground/60 items-center transition hover:bg-foreground/10 rounded-md", {
-                "bg-foreground/10 text-foreground": pathname === item.link
+                "bg-foreground/10 text-foreground": item.link !== "/dashboard" ? pathname.includes(item.link) : pathname === item.link
               })}>
                 <Sidebar.CollapsedContent className="h-[40px] flex justify-center items-center rounded-md self-stretch aspect-square">
                   <Icon className="size-[20px]" />

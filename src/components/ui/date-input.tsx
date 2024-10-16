@@ -29,6 +29,7 @@ interface DateProps {
 export default function DateInput({ placeholder, onChange, disabled, value }: PropsWithChildren<DateProps>) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<ISelected | null>(null);
+  
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null);
@@ -71,7 +72,7 @@ export default function DateInput({ placeholder, onChange, disabled, value }: Pr
   return (
     <DateContext.Provider value={{ updateValue }}>
       <div role="button" ref={setReferenceElement} onClick={() => !disabled && setOpen(value => !value)}>
-        <DateInput.Placeholder disabled={disabled} value={selected ? formatISODate(new Date(selected.end), "MMMM yyyy") || "" : ""} placeholder={placeholder || "Select Date"} />
+        <DateInput.Placeholder key={JSON.stringify(selected)} disabled={disabled} value={selected ? formatISODate(new Date(selected.end), "do, MMMM yyyy") || "" : ""} placeholder={placeholder || "Select Date"} />
       </div>
       
       <Portal>

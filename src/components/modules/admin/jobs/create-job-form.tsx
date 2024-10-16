@@ -80,7 +80,7 @@ export default function CreateJobForm({ jobId }: { jobId: string | null }) {
       jobPlace: newData?.jobPlace || "",
       salaryType: newData?.salaryType || "",
       vacancy: newData?.vacancy || undefined,
-      deadline: new Date(newData?.deadline) || undefined,
+      deadline: newData?.deadline || undefined,
       jobLevel: newData?.jobLevel || "",
       numOfExperience: newData?.numOfExperience || "",
       currency: newData?.currency || "",
