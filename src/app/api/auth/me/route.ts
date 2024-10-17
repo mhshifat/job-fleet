@@ -2,7 +2,7 @@ import { APIResponse } from "@/utils/types";
 import { NextResponse } from "next/server";
 import { isAuthenticated } from "../../../../../actions/auth";
 
-export async function GET(_: Request) {
+export async function GET() {
   try {
     const payload = await isAuthenticated();
     const response = NextResponse.json<APIResponse>({
@@ -29,6 +29,7 @@ export async function GET(_: Request) {
     }
     return response;
   } catch (err) {
+    console.log(err);
     return NextResponse.json<APIResponse>({
       success: true,
       data: {}

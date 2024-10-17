@@ -3,7 +3,7 @@ import { APIResponse } from "@/utils/types";
 import { NextResponse } from "next/server";
 import { logout } from "../../../../../actions/auth";
 
-export async function DELETE(_: Request) {
+export async function DELETE() {
   return asyncErrorHandler(async () => {
     await logout();
     const response = NextResponse.json<APIResponse>({

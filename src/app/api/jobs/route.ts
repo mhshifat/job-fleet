@@ -6,7 +6,7 @@ import { isAuthenticated } from "../../../../actions/auth";
 import { jobToJobDto } from "@/infra/job/transform";
 import { createJobFormSchema } from "@/domain/job/validators";
 
-export async function GET(_: Request) {
+export async function GET() {
   const payload = await isAuthenticated();
   if (!payload?.data?.uid) throw new Error("401:-Unauthorized");
 

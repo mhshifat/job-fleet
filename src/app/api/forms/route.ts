@@ -6,7 +6,7 @@ import { createForm, getForms } from "../../../../actions/form";
 import { formToFormDto } from "@/infra/form/transform";
 import { createFormFormSchema } from "@/domain/form/validators";
 
-export async function GET(_: Request) {
+export async function GET() {
   const payload = await isAuthenticated();
   if (!payload?.data?.uid) throw new Error("401:-Unauthorized");
 
