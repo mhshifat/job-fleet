@@ -13,5 +13,5 @@ export async function POST(req: Request) {
       message: "Please check email to activate your account",
       data: {}
     }, { status: 200 });
-  })
+  }) as Promise<void | Response>
 }

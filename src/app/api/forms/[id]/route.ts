@@ -20,7 +20,7 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
       success: true,
       data: form
     }, { status: 200 });
-  })
+  }) as Promise<void | Response>
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
@@ -41,7 +41,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       success: true,
       data: form
     }, { status: 200 });
-  })
+  }) as Promise<void | Response>
 }
 
 export async function DELETE(_: Request, { params }: { params: { id: string } }) {
@@ -57,5 +57,5 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
       success: true,
       data: form
     }, { status: 200 });
-  })
+  }) as Promise<void | Response>
 }

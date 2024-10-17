@@ -13,5 +13,5 @@ export async function POST(req: Request) {
       message: "Your account has been created, you can login now",
       data: {}
     }, { status: 200 });
-  })
+  }) as Promise<void | Response>
 }

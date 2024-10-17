@@ -14,5 +14,5 @@ export async function DELETE() {
     response.cookies.delete("access-token");
     response.cookies.delete("refresh-token");
     return response;
-  });
+  }) as Promise<void | Response>;
 }

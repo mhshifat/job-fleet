@@ -30,5 +30,5 @@ export async function POST(req: Request) {
       expires: new Date(Date.now() + 86400000),
     });
     return response;
-  })
+  }) as Promise<void | Response>
 }

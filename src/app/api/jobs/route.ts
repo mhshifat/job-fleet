@@ -18,7 +18,7 @@ export async function GET() {
       success: true,
       data: jobs
     }, { status: 200 });
-  })
+  }) as Promise<void | Response>
 }
 
 export async function POST(req: Request) {
@@ -40,5 +40,5 @@ export async function POST(req: Request) {
       success: true,
       data: job
     }, { status: 201 });
-  })
+  }) as Promise<void | Response>
 }
