@@ -17,7 +17,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       success: true,
       data: job
     }, { status: 200 });
-  })
+  }) as Promise<void | Response>
 
   const payload = await isAuthenticated();
   if (!payload?.data?.uid) throw new Error("401:-Unauthorized");
