@@ -45,7 +45,7 @@ export default function JobCard({ data }: { data: IJob }) {
           <h3 className="text-3xl font-geist-mono font-semibold max-w-[95%]">{data?.title}</h3>
         </div>
       </div>
-      <div className="flex flex-col gap-2 pt-7 pb-[calc(1.75rem-5px)] px-3">
+      <div className="flex flex-col gap-5 pt-7 pb-[calc(1.75rem-5px)] px-3">
         <div className="flex items-center gap-5 justify-between bg-background">
           <h3 className="text-lg tracking-tighter font-geist-mono font-semibold leading-[1] text-foreground/80">{data?.type} ({data?.jobPlace})</h3>
 
@@ -82,6 +82,14 @@ export default function JobCard({ data }: { data: IJob }) {
               <Button className="rounded-full">Edit</Button>
             </Link>
           )}
+        </div>
+
+        <div className="flex items-center gap-5 justify-between bg-background">
+          <h3 className="text-lg tracking-tighter font-geist-mono font-semibold leading-[1] text-foreground/80">View Records</h3>
+
+          <Link href={`/dashboard/forms/${data.formId}/records?jobId=${data.id}`}>
+            <Button className="rounded-full">View</Button>
+          </Link>
         </div>
       </div>
     </div>

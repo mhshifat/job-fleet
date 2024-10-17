@@ -25,7 +25,7 @@ export default function ApplyForm() {
     try {
       await updateForm.mutateAsync({
         records: {
-          [String(id)]: data
+          [String(id)]: [data, ...(formRecords?.[id as keyof typeof formRecords] || []) as any[]]
         },
         id: formId as string
       });
