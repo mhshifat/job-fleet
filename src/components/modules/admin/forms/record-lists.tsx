@@ -7,7 +7,7 @@ import useGetFormQuery from "@/domain/form/use-get-form-query";
 import useGetMyJobsQuery from "@/domain/job/use-get-my-jobs-query";
 import { cn } from "@/utils/helpers";
 import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 
 export default function RecordLists() {
   const { id } = useParams();
@@ -58,7 +58,7 @@ export default function RecordLists() {
           </tr>
         </thead>
         {selectedJobId && <tbody>
-          {(Object.values(formData?.records || {}) as any)?.[0].map((item: any, idx: number, arr: any[]) => (
+          {(Object.values(formData?.records || {}))?.[0].map((item, idx: number, arr) => (
             <tr key={"RecordLists_" + idx} className="bg-background-secondary">
               {Object.keys(item).map((key, keyIdx, keyArr) => (
                 <td key={key + idx} className={cn("", {
@@ -67,7 +67,7 @@ export default function RecordLists() {
                   "rounded-bl-lg overflow-hidden": idx === (arr.length - 1) && keyIdx === 0,
                   "rounded-br-lg overflow-hidden": idx === (arr.length - 1) && keyIdx === (keyArr.length - 1),
                 })}>
-                  <span className="text-left w-full flex items-center py-3 px-5 text-sm font-geist text-foreground/80">{item[key]}</span>
+                  <span className="text-left w-full flex items-center py-3 px-5 text-sm font-geist text-foreground/80">{item[key as keyof typeof item] as ReactNode}</span>
                 </td>
               ))}
             </tr>
