@@ -15,17 +15,20 @@ export default function ApplyForm() {
   const updateForm = useUpdateFormMutation();
   const { data: formData, isLoading } = useGetFormQuery(formId as string);
   const formElements = JSON.parse(formData?.fields || "[]");  
-  const formRecords = formData?.records;  
+  const formRecords = formData?.records;
 
   async function handleSubmit(data: Record<string, string>) {
     const uniqueField = formElements.find((el: IFormElement) => el?.properties?.isUnique === true)?.properties?.fieldName;
-    const isAlreadyApplied = formRecords?.[id as keyof typeof formRecords]?.[uniqueField as keyof typeof formRecords[""]] === data[uniqueField];
+    const isAlreadyApplied = formRecords?.[id as keyof typeof formRecords]?.some(item => item[uniqueField] === data[uniqueField]);
     if (isAlreadyApplied) return toast.error("Already applied");
 
     try {
       await updateForm.mutateAsync({
         records: {
-          [String(id)]: [data, ...(formRecords?.[id as keyof typeof formRecords] || []) as any[]]
+          [String(id)]: [{
+            ...data,
+            createdAt: new Date().toISOString()
+          }, ...(formRecords?.[id as keyof typeof formRecords] || []) as any[]]
         },
         id: formId as string
       });

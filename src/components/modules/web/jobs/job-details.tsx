@@ -1,6 +1,7 @@
 "use client";
 
 import Container from "@/components/shared/container";
+import DataNotFound from "@/components/shared/data-not-found";
 import Spinner from "@/components/shared/spinner";
 import Button from "@/components/ui/button";
 import Editor from "@/components/ui/editor";
@@ -21,7 +22,8 @@ export default function JobDetails({ jobId }: { jobId: string }) {
     <div className="py-10">
       <Spinner fixed={false} size="md" variant="secondary" showTitle className="gap-3" />
     </div>
-  )
+  );
+  if (!formData) return <DataNotFound className="mt-20" />;
   return (
     <div>
       <div className="w-full aspect-[1/.25] bg-primary/10" />
