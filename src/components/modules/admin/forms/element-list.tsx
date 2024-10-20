@@ -3,15 +3,28 @@ import DraggableElement from "../../../shared/draggable-element";
 import { DRAGGABLE_ELEMENT_LIST } from "@/utils/constants";
 import { useFormBuilder } from "./form-builder-provider";
 import Button from "../../../ui/button";
-import { XIcon } from "lucide-react";
+import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
 import Label from "../../../ui/label";
 import Input from "../../../ui/input";
 import Switch from "../../../ui/switch";
+import { useFieldArray, useForm } from "react-hook-form";
 
 export default function ElementList() {
   const { formElements, selectedFormElement, getSelectedFormElement, selectFormElement, updateSelectedFormElementProperty, getSelectedFormElementProperty } = useFormBuilder();
   const element = getSelectedFormElement();
+  const form = useForm({
+    defaultValues: {
+      options: (element?.properties?.options as { title: string; value: string }[]) || [{ title: "", value: "" }]
+    },
+  });
+  const fieldArr = useFieldArray({
+    name: "options",
+    control: form.control
+  });
 
+  function updateElementData() {
+    updateSelectedFormElementProperty("options", form.watch().options);
+  }
   if (selectedFormElement !== null && !!formElements.length) return (
     <div className="w-full flex flex-col h-full" key={"ElementList_" + selectedFormElement}>
       <div className="flex items-center justify-between gap-5 border-b border-border py-3 px-5 text-foreground/80">
@@ -51,6 +64,47 @@ export default function ElementList() {
               onChange={({ target }) => updateSelectedFormElementProperty("isUnique", target.checked)}
             />
           </Label>
+
+          {element?.title === "Select" && (
+            <Label title="Options">
+              {fieldArr.fields.map((item, idx) => (
+                <div key={item.id} className="flex items-start gap-2">
+                  <Input
+                    placeholder="Title"
+                    defaultValue={item.value}
+                    onChange={({ target }) => {
+                      form.setValue(`options.${idx}.title`, target.value, {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                        shouldValidate: true,
+                      });
+                      updateElementData();
+                    }}
+                  />
+
+                  <Input
+                    placeholder="Value"
+                    defaultValue={item.value}
+                    onChange={({ target }) => {
+                      form.setValue(`options.${idx}.value`, target.value, {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                        shouldValidate: true,
+                      });
+                      updateElementData();
+                    }}
+                  />
+
+                  {idx === (fieldArr.fields.length - 1) && <Button size="icon" className="shrink-0" onClick={() => fieldArr.append({ title: "", value: "" })}>
+                    <PlusIcon />
+                  </Button>}
+                  {(fieldArr.fields.length > 1 && idx !== (fieldArr.fields.length - 1)) && <Button size="icon" variant="secondary-outlined" className="shrink-0" onClick={() => fieldArr.remove(idx)}>
+                    <MinusIcon />
+                  </Button>}
+                </div>
+              ))}
+            </Label>
+          )}
         </form>
       </div>
     </div>

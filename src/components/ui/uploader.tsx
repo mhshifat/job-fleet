@@ -6,6 +6,7 @@ import { Fragment, useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Spinner from "../shared/spinner";
 import { cn } from "@/utils/helpers";
+import axios from "axios";
 
 interface IUploaderFile {
   name: string;
@@ -15,13 +16,14 @@ interface IUploaderFile {
 }
 
 interface UploaderProps {
+  disabled?: boolean;
   type?: "list" | "single";
   onChange?: (values: IUploaderFile[]) => void;
   value?: IUploaderFile[];
   className?: string;
 }
 
-export default function Uploader({ type = "list", className, value }: UploaderProps) {
+export default function Uploader({ type = "list", className, value, disabled, onChange }: UploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<IUploaderFile[]>([]);
@@ -43,7 +45,44 @@ export default function Uploader({ type = "list", className, value }: UploaderPr
       }))
     ]);
     try {
-      // TODO:
+      const formdata = new FormData();
+      formdata.append("UPLOADCARE_PUB_KEY", process.env.NEXT_PUBLIC_UPLOADCARE_PUB_KEY!);
+      acceptedFiles.map(file => {
+        formdata.append("file", file, file.name);
+      });
+      const uploadRes = await axios({
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        url: "https://upload.uploadcare.com/base/",
+        data: formdata
+      });
+      const { data } = await axios({
+        method: "GET",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        url: "https://upload.uploadcare.com/info/",
+        params: {
+          pub_key: process.env.NEXT_PUBLIC_UPLOADCARE_PUB_KEY!,
+          file_id: uploadRes.data?.file,
+        }
+      });
+      setFiles(() => {
+        const values = [
+          {
+            name: data?.filename || "",
+            progress: 100,
+            size: data?.size || "",
+            url: `https://ucarecdn.com/${data.uuid}/${data.filename}`
+          }
+        ];
+        setTimeout(() => {
+          onChange?.(values);
+        }, 0);
+        return values;
+      })
     } catch (err) {
       console.log(err);
     } finally {
@@ -63,7 +102,7 @@ export default function Uploader({ type = "list", className, value }: UploaderPr
           "border-primary": isDragActive
         })} {...getRootProps()}>
           <input {...getInputProps({
-            disabled: uploading
+            disabled: disabled || uploading
           })} />
 
           {!files.length && (
@@ -74,17 +113,17 @@ export default function Uploader({ type = "list", className, value }: UploaderPr
     
           {(uploading || !!files.length) && (
             <>
-              <div className="w-full relative overflow-hidden rounded-md">
+              <div className="w-full relative overflow-hidden rounded-md flex items-center gap-5">
                 {files[0]?.progress >= 100 ? (
                   <>
-                    <Image
+                    <img
                       src={files[0]?.url || ""}
                       alt=""
-                      fill
                       role="presentation"
-                      className="rounded-md overflow-hidden object-cover border-border border w-full h-fuw-full"
+                      className="rounded-md overflow-hidden object-cover border-border border w-10 h-10"
                     />
-                    <div className="ml-auto absolute top-5 right-5" onClick={(e) => {
+                    <span className="text-sm font-geist font-medium">{files[0].name}</span>
+                    <div className="ml-auto" onClick={(e) => {
                       e.stopPropagation();
                       setFiles([]);
                     }}>
@@ -109,7 +148,7 @@ export default function Uploader({ type = "list", className, value }: UploaderPr
           "border-primary": isDragActive
         })} {...getRootProps()}>
           <input {...getInputProps({
-            disabled: uploading
+            disabled: disabled || uploading
           })} multiple />
 
           {!files.length && (

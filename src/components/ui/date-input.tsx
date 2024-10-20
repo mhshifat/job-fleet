@@ -58,12 +58,12 @@ export default function DateInput({ placeholder, onChange, disabled, value }: Pr
     placement: "bottom-end"
   });
 
-  const updateValue = useCallback((value: ISelected) => {
+  const updateValue = useCallback((value: ISelected) => {    
     const newVal = value;
     setSelected(newVal);
     onChange?.(newVal);
     setOpen(false);
-  }, []);
+  }, [onChange, placeholder]);
 
   useEffect(() => {
     if (!value) return;

@@ -20,7 +20,6 @@ export default function FormPreview({ formElements, onSubmit, submitBtnText }: I
     setErrors({});
 
     const errors: Record<string, string> = {}
-    if (!formElements.find(item => item.properties?.isUnique === true)) errors["global"] = `At least one field needs to be unique`;
     for (const element of formElements) {
       if (element.properties?.isRequired === true && !formValues[element.properties?.fieldName as string]) {
         errors[element.properties?.fieldName as string] = `${element.properties?.label} is required!`;
@@ -49,7 +48,7 @@ export default function FormPreview({ formElements, onSubmit, submitBtnText }: I
                   <FormElementPreview
                     key={"FormPreview_" + formElementIdx}
                     label={(element?.properties?.label) as string}
-                    element={element.title}
+                    element={element}
                     error={errors?.[element.properties?.fieldName as string]}
                     onChange={(value) => {
                       setErrors(values => {

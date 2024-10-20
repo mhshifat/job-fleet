@@ -1,4 +1,4 @@
-import { MousePointerIcon, SpaceIcon, TextCursorInputIcon } from "lucide-react";
+import { FilesIcon, MousePointerIcon, SpaceIcon, TextCursorInputIcon } from "lucide-react";
 
 export const ROUTE_PATHS = {
   HOME: "/",
@@ -17,6 +17,7 @@ export const DRAGGABLE_ITEM_TYPES = {
   DATE_INPUT: "Date Input",
   TEXTAREA: "Textarea",
   SELECT: "Select",
+  FILE: "File Input",
 }
 
 export const DRAGGABLE_ELEMENT_LIST = [
@@ -39,5 +40,9 @@ export const DRAGGABLE_ELEMENT_LIST = [
   {
     title: DRAGGABLE_ITEM_TYPES.SELECT,
     icon: MousePointerIcon,
+  },
+  {
+    title: DRAGGABLE_ITEM_TYPES.FILE,
+    icon: FilesIcon,
   },
 ]

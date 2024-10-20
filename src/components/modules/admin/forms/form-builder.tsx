@@ -40,6 +40,10 @@ export default function FormBuilder({ formId }: { formId: string }) {
   }, [formData?.id])
 
   async function handleUpdate() {
+    const isInValidForPropertyName = formElements.some(el => !el.properties?.fieldName)
+    if (isInValidForPropertyName) return toast.error("One or more fields do not have a field name");
+    const uniquePresentFields = formElements.filter(el => el.properties?.isUnique)
+    if (!uniquePresentFields.length || uniquePresentFields.length > 1) return toast.error("One form field needs to be unique");
     await updateForm.mutateAsync({
       fields: JSON.stringify(formElements),
       id: formId
@@ -113,7 +117,7 @@ export default function FormBuilder({ formId }: { formId: string }) {
                         <FormElementPreview
                           readonly
                           label={(element?.properties?.label) as string}
-                          element={element.title}
+                          element={element}
                         />
                       </DraggedElement>
                     ))}
