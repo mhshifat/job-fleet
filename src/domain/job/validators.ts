@@ -9,8 +9,10 @@ export const createJobFormSchema = z.object({
   type: z.string().min(1),
   jobPlace: z.string().min(1),
   vacancy: z.number().min(1),
-  deadline: z.string(),
-  jobLevel: z.string().min(1),
+  deadline: z.string().refine((data) => new Date(data) > new Date(), {
+    message: "Date must be a future date"
+  }),
+  jobLevel: z.string().min(1, "Job level is required"),
   numOfExperience: z.string().min(1),
   salaryType: z.string().min(1),
   currency: z.string().min(1),

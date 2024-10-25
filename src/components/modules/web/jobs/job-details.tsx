@@ -5,7 +5,6 @@ import DataNotFound from "@/components/shared/data-not-found";
 import Spinner from "@/components/shared/spinner";
 import Button from "@/components/ui/button";
 import Editor from "@/components/ui/editor";
-import useGetFormQuery from "@/domain/form/use-get-form-query";
 import useGetPublicFormQuery from "@/domain/form/use-get-public-form-query";
 import useGetPublicJobQuery from "@/domain/job/use-get-public-job-query";
 import { formatISODate } from "@/utils/date";
