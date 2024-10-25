@@ -68,7 +68,7 @@ export default function CreateJobForm({ jobId }: { jobId: string | null }) {
     },
   });
   const { data: newData, isLoading } = useGetJobQuery(jobId);
-  const { data: settingsData } = useSettingsQuery();
+  const { data: settingsData, isLoading: isSettingsLoading } = useSettingsQuery();
 
   useEffect(() => {
     form.reset({
@@ -93,7 +93,7 @@ export default function CreateJobForm({ jobId }: { jobId: string | null }) {
     });
   }, [newData, jobId, form, settingsData]);
 
-  if (isLoading) return (
+  if (isLoading || isSettingsLoading) return (
     <div className="py-10">
       <Spinner fixed={false} size="md" variant="secondary" showTitle className="gap-3" />
     </div>
