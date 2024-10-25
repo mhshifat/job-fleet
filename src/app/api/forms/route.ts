@@ -6,13 +6,17 @@ import { createForm, getForms } from "../../../../actions/form";
 import { formToFormDto } from "@/infra/form/transform";
 import { createFormFormSchema } from "@/domain/form/validators";
 
-export async function GET() {
+export async function GET(req: Request) {
   const payload = await isAuthenticated();
   if (!payload?.data?.uid) throw new Error("401:-Unauthorized");
+  const searchParams = new URL(req.url).searchParams; 
 
   return asyncErrorHandler(async () => {
     const forms = await getForms({
-      user_id: payload?.data?.uid
+      user_id: payload?.data?.uid,
+      ...searchParams.has("status") ? {
+        status: searchParams.get("status")!
+      } :{}
     });
     return NextResponse.json<APIResponse>({
       success: true,

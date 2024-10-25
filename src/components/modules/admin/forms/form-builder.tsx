@@ -20,6 +20,7 @@ import { ROUTE_PATHS } from '@/utils/constants';
 import useGetFormQuery from '@/domain/form/use-get-form-query';
 import Spinner from '@/components/shared/spinner';
 import Badge from '@/components/ui/badge';
+import ElementConfig from './element-config';
 
 export default function FormBuilder({ formId }: { formId: string }) {
   const router = useRouter();
@@ -39,14 +40,15 @@ export default function FormBuilder({ formId }: { formId: string }) {
     resetFormElements(data);
   }, [formData?.id])
 
-  async function handleUpdate() {
+  async function handleUpdate(status?: string) {
     const isInValidForPropertyName = formElements.some(el => !el.properties?.fieldName)
     if (isInValidForPropertyName) return toast.error("One or more fields do not have a field name");
     const uniquePresentFields = formElements.filter(el => el.properties?.isUnique)
     if (!uniquePresentFields.length || uniquePresentFields.length > 1) return toast.error("One form field needs to be unique");
     await updateForm.mutateAsync({
       fields: JSON.stringify(formElements),
-      id: formId
+      id: formId,
+      ...status?{status}:{}
     });
     router.push(ROUTE_PATHS.DASHBOARD_FORMS);
   }
@@ -71,16 +73,22 @@ export default function FormBuilder({ formId }: { formId: string }) {
             <FullscreenIcon className='size-4' />
             <span>Preview</span>
           </Button>}
-          <Button disabled={updateForm.isPending} onClick={handleUpdate} className='w-max'>
+          <Button disabled={updateForm.isPending} onClick={() => handleUpdate()} className='w-max'>
             <LoadingBtn loading={updateForm.isPending} icon={false}>
               <BookCheckIcon className='size-4' />
-              <span>{!formData?.fields?.length ? "Published" : "Save"}</span>
+              <span>Save</span>
             </LoadingBtn>
           </Button>
+          {formData?.status === "DRAFT" && <Button disabled={updateForm.isPending || !formData?.fields?.length} onClick={() => handleUpdate("PUBLISHED")} className='w-max'>
+            <LoadingBtn loading={updateForm.isPending} icon={false}>
+              <BookCheckIcon className='size-4' />
+              <span>Publish</span>
+            </LoadingBtn>
+          </Button>}
         </div>
       </div>
       {!previewForm && (
-        <div className="grid grid-cols-[1fr_320px] flex-1">
+        <div className="grid grid-cols-[1fr_auto] flex-1">
           <div className="border-r border-border py-10 px-5">
             <div className="h-full w-full bg-white bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
               <DroppedElement
@@ -126,8 +134,13 @@ export default function FormBuilder({ formId }: { formId: string }) {
               </DroppedElement>
             </div>
           </div>
-          <div className="w-full bg-background-secondary">
-            <ElementList />
+          <div className="w-full bg-background-secondary flex">
+            <div className='w-[320px] border-r border-border empty:hidden'>
+              <ElementConfig />
+            </div>
+            <div className='w-[320px] empty:hidden'>
+              <ElementList />
+            </div>
           </div>
         </div>
       )}

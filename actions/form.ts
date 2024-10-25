@@ -16,13 +16,25 @@ const formMap = {
   created_at: forms.created_at,
 }
 
-export async function getForms({ user_id }: { user_id?: string }) {
+export async function getForms({ user_id, status }: { user_id?: string, status?: string }) {
   unstable_noStore();
+
+  const queries = [
+    eq(forms.user_id, user_id!)
+  ];
+
+  if (status) {
+    queries.push(eq(forms.status, status));
+  }
 
   if (user_id) return await db
     .select(formMap)
     .from(forms)
-    .where(eq(forms.user_id, user_id));
+    .where(
+      and(
+        ...queries
+      )
+    );
 
   const results = await db
     .select(formMap)

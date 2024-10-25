@@ -10,11 +10,14 @@ import { useMemo } from "react";
 import useUpdateJobMutation from "@/domain/job/use-update-job-mutation";
 import { toast } from "@/utils/toast";
 import { handleError } from "@/utils/error";
+import { copyToClipboard } from "@/utils/helpers";
 
 export default function JobCard({ data }: { data: IJob }) {
   const updateJob = useUpdateJobMutation();
   const { openDialog, closeDialog } = useDialog();
-  const { data: forms, refetch: refetchForms, isLoading: formsIsLoading } =  useGetMyFormsQuery();
+  const { data: forms, refetch: refetchForms, isLoading: formsIsLoading } =  useGetMyFormsQuery({
+    status: "PUBLISHED"
+  });
   const form = useMemo(() => {
     return forms?.find(f => f.id === data.formId)
   }, [forms, data]);
@@ -90,6 +93,13 @@ export default function JobCard({ data }: { data: IJob }) {
           <Link href={`/dashboard/forms/${data.formId}/records?jobId=${data.id}`}>
             <Button className="rounded-full">View</Button>
           </Link>
+        </div>
+        <div className="flex items-center gap-5 justify-between bg-background">
+          <h3 className="text-lg tracking-tighter font-geist-mono font-semibold leading-[1] text-foreground/80">Share</h3>
+
+          <div>
+            <Button className="rounded-full" onClick={() => copyToClipboard(`${window.location.origin}/jobs/${data.id}`)}>Copy</Button>
+          </div>
         </div>
       </div>
     </div>

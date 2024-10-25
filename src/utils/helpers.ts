@@ -3,6 +3,8 @@ import { twMerge } from 'tailwind-merge';
 import { v4 } from 'uuid';
 import bcrypt from 'bcryptjs';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import copy from 'copy-to-clipboard';
+import { toast } from './toast';
 
 export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs))
@@ -29,4 +31,9 @@ export const verifyToken = async <T extends {}>(token: string, signature: string
 export function generateOTP() {
   const otp = Math.floor(100000 + Math.random() * 900000);
   return otp.toString();
+}
+
+export function copyToClipboard(text: string) {
+  toast.success("Copied");
+  return copy(text)
 }

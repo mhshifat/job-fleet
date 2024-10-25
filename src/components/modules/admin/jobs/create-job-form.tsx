@@ -148,17 +148,6 @@ export default function CreateJobForm({ jobId }: { jobId: string | null }) {
             <Steps.Body />
           </Container>
         </div>
-
-        <Steps.Progress
-          className="mt-auto flex fixed bottom-0 left-0 w-full"
-          renderItem={({ isActive }) => (
-            <span
-              className={cn("flex flex-1 bg-border h-1", {
-                "bg-primary": isActive,
-              })}
-            />
-          )}
-        />
       </Steps>
     </FormProvider>
   );

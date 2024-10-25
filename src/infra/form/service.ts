@@ -27,8 +27,8 @@ class FormService {
     // return jobDtoListToJobList(data);
   }
 
-  async myList() {
-    const res = await this._http.get<IFormDto[]>(`/forms`, {});
+  async myList(query: Record<string, unknown> = {}) {
+    const res = await this._http.get<IFormDto[]>(`/forms`, { params: query });
     if (!res.success) throw new Error(res.message);
     return formDtoListToFormList(res.data);
   }

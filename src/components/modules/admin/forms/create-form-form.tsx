@@ -21,7 +21,7 @@ export default function CreateFormForm({ onSuccess }: CreateFormFormProps) {
       onCreate={async (values) => {
         await createForm.mutateAsync({
           ...values,
-          status: "PUBLISHED",
+          status: "DRAFT",
           records: {},
           fields: "",
         });
@@ -34,7 +34,7 @@ export default function CreateFormForm({ onSuccess }: CreateFormFormProps) {
     >
       {({ getError, getValue, onFocus, setValue }) => (
         <div className="flex flex-col mt-5 gap-3">
-          <Label title="Email" error={getError("title")}>
+          <Label title="Title" error={getError("title")}>
             <Input 
               value={getValue("title")}
               onFocus={() => onFocus("title")}

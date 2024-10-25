@@ -25,6 +25,7 @@ interface FormHandlerProps<T> {
   children: (args: ChildrenProps<T>) => ReactElement;
   schema: ZodSchema;
   renderSubmitBtnText?: () => JSX.Element;
+  showToast?: boolean;
 }
 
 export default function FormHandler<T extends {}>({
@@ -34,7 +35,8 @@ export default function FormHandler<T extends {}>({
   defaultValues,
   children,
   schema,
-  renderSubmitBtnText
+  renderSubmitBtnText,
+  showToast,
 }: FormHandlerProps<T>) {
   const [loading, setLoading] = useState(false);
   const { id, ...restProps } = defaultValues;
@@ -56,7 +58,7 @@ export default function FormHandler<T extends {}>({
       if (defaultValues?.id) data = await onUpdate(values as T);
       else data = await onCreate(values as T);
       onComplete?.(data);
-      toast.success(`Successfully ${defaultValues?.id ? "updated the" : "created a new"} record`);
+      if (showToast) toast.success(`Successfully ${defaultValues?.id ? "updated the" : "created a new"} record`);
     } catch (err) {
       console.log(err);
     } finally {
