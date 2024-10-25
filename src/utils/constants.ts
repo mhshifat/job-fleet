@@ -9,6 +9,7 @@ export const ROUTE_PATHS = {
   DASHBOARD_JOB_CREATE: "/dashboard/jobs/create",
   DASHBOARD_FORMS: "/dashboard/forms",
   DASHBOARD_FORM_CREATE: "/dashboard/forms/create",
+  DASHBOARD_SETTINGS: "/dashboard/settings",
 }
 
 export const DRAGGABLE_ITEM_TYPES = {

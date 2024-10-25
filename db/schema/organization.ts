@@ -14,7 +14,7 @@ export const organizationsRelations = relations(organizations, ({ one }) => ({
   user: one(users, {
     fields: [organizations.owner_id],
     references: [users.id]
-  })
+  }),
 }));
 
 export const organizationUsers = pgTable("organization_users", {
@@ -23,5 +23,5 @@ export const organizationUsers = pgTable("organization_users", {
 }, (t) => ({
   pk: primaryKey({
     columns: [t.user_id, t.organization_id]
-  })
+  }),
 }));

@@ -21,6 +21,7 @@ export async function prepareAuthPayload({password, ...user}: IUserDto & { passw
     user: organizationUser?.user || user,
     organization: organizationUser?.organization,
   }
+  
   const accessToken = createToken(payload, password, "1d");
   let session = await getSessionByUser(user.id);
   if (session) session = await updateSessionByUserAndId({

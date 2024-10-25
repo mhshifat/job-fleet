@@ -1,1 +1,0 @@
-ALTER TABLE "jobs" RENAME COLUMN "job_label" TO "job_level";

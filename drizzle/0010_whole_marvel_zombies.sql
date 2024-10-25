@@ -1,1 +1,0 @@
-ALTER TABLE "credentials" ADD COLUMN "otp" text;
