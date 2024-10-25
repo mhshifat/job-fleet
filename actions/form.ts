@@ -43,6 +43,20 @@ export async function getForms({ user_id, status }: { user_id?: string, status?:
   return results;
 }
 
+export async function getPublishedFormById(id: string) {
+  const [data] = await db
+    .select(formMap)
+    .from(forms)
+    .where(
+      and(
+        eq(forms.id, id),
+        eq(forms.status, "PUBLISHED"),
+      )
+    );
+  
+  return data;
+}
+
 export async function getFormByUserAndId(where: { id: string, user_id: string }) {
   const [data] = await db
     .select(formMap)

@@ -33,8 +33,8 @@ class FormService {
     return formDtoListToFormList(res.data);
   }
 
-  async getById(jobId: string) {
-    const res = await this._http.get<IFormDto>(`/forms/${jobId}`, {});
+  async getById(jobId: string, params: Record<string, unknown> = {}) {
+    const res = await this._http.get<IFormDto>(`/forms/${jobId}`, { params });
     if (!res.success) throw new Error(res.message);
     return formDtoToForm(res.data);
   }

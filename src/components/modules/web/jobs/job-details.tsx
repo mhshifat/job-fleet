@@ -6,6 +6,7 @@ import Spinner from "@/components/shared/spinner";
 import Button from "@/components/ui/button";
 import Editor from "@/components/ui/editor";
 import useGetFormQuery from "@/domain/form/use-get-form-query";
+import useGetPublicFormQuery from "@/domain/form/use-get-public-form-query";
 import useGetPublicJobQuery from "@/domain/job/use-get-public-job-query";
 import { formatISODate } from "@/utils/date";
 import { HardDriveUploadIcon } from "lucide-react";
@@ -13,17 +14,17 @@ import Link from "next/link";
 
 export default function JobDetails({ jobId }: { jobId: string }) {
   const { data, isLoading } = useGetPublicJobQuery(jobId);
-  const { data: formData } = useGetFormQuery(data?.formId as string);
+  const { data: formData, isLoading: isFormLoading } = useGetPublicFormQuery(data?.formId as string);
   const formElements = JSON.parse(formData?.fields || "[]");  
   // TODO:
   const isAlreadyApplied = false;
 
-  if (isLoading) return (
+  if (isLoading || isFormLoading) return (
     <div className="py-10">
       <Spinner fixed={false} size="md" variant="secondary" showTitle className="gap-3" />
     </div>
   );
-  if (!formData) return <DataNotFound className="mt-20" />;
+  if (!data || !formData) return <DataNotFound className="mt-20" />;
   return (
     <div>
       <div className="w-full aspect-[1/.25] bg-primary/10" />

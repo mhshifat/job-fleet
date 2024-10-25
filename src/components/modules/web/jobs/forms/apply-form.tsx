@@ -4,6 +4,7 @@ import { IFormElement } from "@/components/modules/admin/forms/form-builder-prov
 import FormPreview from "@/components/modules/admin/forms/form-preview";
 import Spinner from "@/components/shared/spinner";
 import useGetFormQuery from "@/domain/form/use-get-form-query";
+import useGetPublicFormQuery from "@/domain/form/use-get-public-form-query";
 import useUpdateFormMutation from "@/domain/form/use-update-form-mutation";
 import { handleError } from "@/utils/error";
 import { toast } from "@/utils/toast";
@@ -13,7 +14,7 @@ export default function ApplyForm() {
   const { formId, id } = useParams();
   const router = useRouter();
   const updateForm = useUpdateFormMutation();
-  const { data: formData, isLoading } = useGetFormQuery(formId as string);
+  const { data: formData, isLoading } = useGetPublicFormQuery(formId as string);
   const formElements = JSON.parse(formData?.fields || "[]");  
   const formRecords = formData?.records;
 

@@ -9,8 +9,8 @@ import { jobToJobDto } from "@/infra/job/transform";
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   const searchParams = new URL(req.url).searchParams;
   const isPublic = searchParams.get("public");
-
-  if (isPublic) return asyncErrorHandler(async () => {
+  
+  if (isPublic === 'true') return asyncErrorHandler(async () => {
     const jobId = params.id;
     const job = await getPublishedJobById(jobId);
     return NextResponse.json<APIResponse>({
