@@ -1,5 +1,4 @@
 import LoadingBtn from "@/components/shared/loading-btn";
-import Spinner from "@/components/shared/spinner";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import Label from "@/components/ui/label";
@@ -7,9 +6,8 @@ import { useSteps } from "@/components/ui/step";
 import useCreateJobMutation from "@/domain/job/use-create-job-mutation";
 import useUpdateJobMutation from "@/domain/job/use-update-job-mutation";
 import { ICreateJobFormSchema } from "@/domain/job/validators";
-import { jobService } from "@/infra/job/service";
 import { ROUTE_PATHS } from "@/utils/constants";
-import { ArrowLeftIcon, ArrowRightIcon, SaveIcon } from "lucide-react";
+import { ArrowLeftIcon, SaveIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 

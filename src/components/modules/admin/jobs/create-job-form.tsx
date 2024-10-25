@@ -8,6 +8,7 @@ import {
   createJobFormSchema,
   ICreateJobFormSchema,
 } from "@/domain/job/validators";
+import useSettingsQuery from "@/domain/settings/use-settings-query";
 import { cn } from "@/utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { lazy, useEffect } from "react";
@@ -67,9 +68,9 @@ export default function CreateJobForm({ jobId }: { jobId: string | null }) {
     },
   });
   const { data: newData, isLoading } = useGetJobQuery(jobId);
+  const { data: settingsData } = useSettingsQuery();
 
   useEffect(() => {
-    if (!newData || !jobId) return;
     form.reset({
       id: newData?.id || "",
       title: newData?.title || "",
@@ -85,12 +86,12 @@ export default function CreateJobForm({ jobId }: { jobId: string | null }) {
       numOfExperience: newData?.numOfExperience || "",
       currency: newData?.currency || "",
       salaryRange: newData?.salaryRange || "",
-      streetAddress: newData?.streetAddress || "",
-      city: newData?.city || "",
-      zipCode: newData?.zipCode || "",
-      country: newData?.country || "",
+      streetAddress: settingsData?.streetAddress || newData?.streetAddress || "",
+      city: settingsData?.city || newData?.city || "",
+      zipCode: settingsData?.zipCode || newData?.zipCode || "",
+      country: settingsData?.country || newData?.country || "",
     });
-  }, [newData, jobId, form]);
+  }, [newData, jobId, form, settingsData]);
 
   if (isLoading) return (
     <div className="py-10">
