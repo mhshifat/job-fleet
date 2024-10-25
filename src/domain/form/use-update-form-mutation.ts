@@ -5,7 +5,7 @@ import { IForm, INewFormPayload } from "./form";
 import { formService } from "@/infra/form/service";
 
 type ResponseType = IForm;
-type RequestType = Partial<INewFormPayload> & { id: string };
+type RequestType = Partial<INewFormPayload> & { id: string; allowPublicRecords?: boolean };
 
 export default function useUpdateFormMutation() {
   const queryClient = useQueryClient();

@@ -104,6 +104,25 @@ export async function updateFormByUserAndId(where: { id: string, user_id: string
   return data;
 }
 
+export async function updateFormById(id: string, values: Partial<IFormDto>, trx = db) {
+  delete values["id"];
+  
+  const [data] = await trx
+    .update(forms)
+    .set({
+      ...values,
+      updated_at: new Date(),
+    })
+    .where(
+      and(
+        eq(forms.id, id),
+      )
+    )
+    .returning(formMap);
+
+  return data;
+}
+
 export async function deleteFormByUserAndId(where: { id: string; user_id: string }) {
   const [data] = await db
     .delete(forms)

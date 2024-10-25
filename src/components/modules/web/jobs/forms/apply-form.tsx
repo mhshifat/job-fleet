@@ -17,7 +17,7 @@ export default function ApplyForm() {
   const { data: formData, isLoading } = useGetPublicFormQuery(formId as string);
   const formElements = JSON.parse(formData?.fields || "[]");  
   const formRecords = formData?.records;
-
+  
   async function handleSubmit(data: Record<string, string>) {
     const uniqueField = formElements.find((el: IFormElement) => el?.properties?.isUnique === true)?.properties?.fieldName;
     const isAlreadyApplied = formRecords?.[id as keyof typeof formRecords]?.some(item => item[uniqueField] === data[uniqueField]);
@@ -29,9 +29,10 @@ export default function ApplyForm() {
           [String(id)]: [{
             ...data,
             createdAt: new Date().toISOString()
-          }, ...(formRecords?.[id as keyof typeof formRecords] || []) as any[]]
+          }, ...(formRecords?.[id as keyof typeof formRecords] || []) as any[]],
         },
-        id: formId as string
+        id: formId as string,
+        allowPublicRecords: true
       });
       toast.success("Successfully applied to a job");
       router.push(`/jobs/${id}`);

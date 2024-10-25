@@ -19,7 +19,7 @@ class FormService {
   async update(id: string, values: Partial<INewFormPayload>) {
     const res = await this._http.patch<IFormDto>(`/forms/${id}`, values);
     if (!res.success) throw new Error(res.message);
-    return formDtoToForm(res.data);
+    return res.data;
   }
 
   async list() {
