@@ -18,6 +18,7 @@ export interface IJob {
   city: string;
   zipCode: string;
   country: string;
+  linkedinUrl: string;
   status: string;
   createdAt: Date;
 }

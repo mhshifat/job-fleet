@@ -34,6 +34,7 @@ export default function JobLocationForm() {
         "zipCode",
         "city",
         "country",
+        "linkedinUrl",
       ]);
       if (!isValid) throw new Error("Invalid fields");
 
@@ -58,7 +59,7 @@ export default function JobLocationForm() {
   }
   return (
     <div className="mt-8">
-      <h3 className="font-geist text-xl">Location</h3>
+      <h3 className="font-geist text-xl">Location & Social Links</h3>
       <p className="mt-2 font-geist-mono text-sm">
         Write and fill out the information of the job
       </p>
@@ -99,6 +100,17 @@ export default function JobLocationForm() {
           <Input placeholder="Ex: Bangladesh" {...register("country")} />
         </Label>
       </div>
+
+      <Label
+        title="Linkedin Post Url"
+        className="mt-5 flex-1"
+        error={errors?.linkedinUrl?.message}
+      >
+        <Input
+          placeholder="Ex: http://"
+          {...register("linkedinUrl")}
+        />
+      </Label>
 
       <div className="mt-10 flex flex-col justify-center items-center gap-5">
         <Button

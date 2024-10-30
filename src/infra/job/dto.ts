@@ -18,6 +18,7 @@ export interface IJobDto {
   city: string;
   zip_code: string;
   country: string;
+  linkedin_url: string;
   status: string;
   created_at: Date;
 }

@@ -40,7 +40,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   return asyncErrorHandler(async () => {
     const json = await req.json();
-    await createJobFormSchema.partial().parseAsync(json);
+    await createJobFormSchema.parseAsync(json);
     const { id, created_at, ...jobPayload } = jobToJobDto(json);
     const job = await updateJobByUserAndId({
       id: params.id,

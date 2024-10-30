@@ -65,6 +65,7 @@ export default function CreateJobForm({ jobId }: { jobId: string | null }) {
       city: "",
       zipCode: "",
       country: "",
+      linkedinUrl: "",
     },
   });
   const { data: newData, isLoading } = useGetJobQuery(jobId);
@@ -86,6 +87,7 @@ export default function CreateJobForm({ jobId }: { jobId: string | null }) {
       numOfExperience: newData?.numOfExperience || "",
       currency: newData?.currency || "",
       salaryRange: newData?.salaryRange || "",
+      linkedinUrl: newData?.linkedinUrl || "",
       streetAddress: settingsData?.streetAddress || newData?.streetAddress || "",
       city: settingsData?.city || newData?.city || "",
       zipCode: settingsData?.zipCode || newData?.zipCode || "",

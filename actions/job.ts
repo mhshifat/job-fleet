@@ -6,6 +6,7 @@ import { unstable_noStore } from "next/cache";
 import { jobs } from "../db/schema/job";
 import { IJobDtoPayload } from "@/infra/job/dto";
 import { and, eq } from "drizzle-orm";
+import { createForm, getForms } from "./form";
 
 const jobMap = {
   id: jobs.id,
@@ -27,6 +28,7 @@ const jobMap = {
   city: jobs.city,
   zip_code: jobs.zip_code,
   country: jobs.country,
+  linkedin_url: jobs.linkedin_url,
   status: jobs.status,
   created_at: jobs.created_at,
   updated_at: jobs.updated_at,
@@ -76,11 +78,23 @@ export async function getJobByUserAndId(where: { id: string, user_id: string }) 
 }
 
 export async function createJob(values: IJobDtoPayload & { user_id: string }) {
+  if (!values?.user_id) throw new Error("User id is required");
+  let [form] = await getForms({
+    user_id: values.user_id,
+    status: "PUBLISHED"
+  });
+  if (!form && !values?.form_id) form = await createForm({
+    title: "Default Form",
+    user_id: values.user_id,
+    status: "PUBLISHED",
+    records: {}
+  })
   const [data] = await db
     .insert(jobs)
     .values({
       id: createId(),
       ...values,
+      form_id: values.form_id || form.id,
       created_at: new Date(),
     })
     .returning(jobMap);

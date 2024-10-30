@@ -40,7 +40,8 @@ export default function JobCard({ data }: { data: IJob }) {
     <div className="border-[5px] border-background rounded-lg overflow-hidden shadow-sm ring-1 ring-background-secondary">
       <div className="aspect-square w-full bg-primary/10 rounded-tl-md rounded-tr-md py-4 px-5 flex flex-col">
         <div className="flex items-center gap-5 justify-between">
-          <small className="text-sm font-geist-mono font-medium">{data?.salaryRange} {data?.currency}</small>
+          {data?.salaryType !== "NEGOTIABLE" && <small className="text-sm font-geist-mono font-medium">{data?.salaryRange} {data?.currency}</small>}
+          {data?.salaryType === "NEGOTIABLE" && <small className="text-sm font-geist-mono font-medium">{data?.salaryType}</small>}
 
           <DeleteJobBtnWrapper id={data.id} />
         </div>

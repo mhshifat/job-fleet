@@ -22,6 +22,7 @@ export function jobDtoToJob(values: IJobDto): IJob {
     city: values.city,
     zipCode: values.zip_code,
     country: values.country,
+    linkedinUrl: values.linkedin_url,
     status: values.status,
     createdAt: values.created_at,
   }
@@ -48,6 +49,7 @@ export function jobToJobDto(values: IJob): IJobDto {
     city: values.city,
     zip_code: values.zipCode,
     country: values.country,
+    linkedin_url: values.linkedinUrl,
     status: values.status,
     created_at: values.createdAt,
   }

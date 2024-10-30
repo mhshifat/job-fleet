@@ -24,6 +24,7 @@ export const jobs = pgTable("jobs", {
   city: text("city").notNull(),
   zip_code: text("zip_code").notNull(),
   country: text("country").notNull(),
+  linkedin_url: text("linkedin_url"),
   status: text("status").notNull(),
   created_at: timestamp("created_at").notNull(),
   updated_at: timestamp("updated_at"),

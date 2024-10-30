@@ -71,12 +71,44 @@ export async function getFormByUserAndId(where: { id: string, user_id: string })
   return data;
 }
 
-export async function createForm(values: Omit<IFormDto, "id"> & { user_id: string }, trx = db) {
+export async function createForm(values: Omit<IFormDto, "id" | "fields"> & { user_id: string, fields?: string }, trx = db) {
   const [data] = await trx
     .insert(forms)
     .values({
       id: createId(),
       ...values,
+      fields: values.fields || JSON.stringify([
+        {
+          "title": "Text Input",
+          "isSidebarEl": true,
+          "properties": {
+            "label": "First Name",
+            "fieldName": "firstName",
+            "isRequired": true,
+            "isUnique": false
+          }
+        },
+        {
+          "title": "Text Input",
+          "isSidebarEl": true,
+          "properties": {
+            "label": "Last Name",
+            "fieldName": "lastName",
+            "isRequired": true,
+            "isUnique": false
+          }
+        },
+        {
+          "title": "Text Input",
+          "isSidebarEl": true,
+          "properties": {
+            "label": "Email",
+            "fieldName": "email",
+            "isRequired": true,
+            "isUnique": true
+          }
+        },
+      ]),
       created_at: new Date(),
     })
     .returning(formMap);

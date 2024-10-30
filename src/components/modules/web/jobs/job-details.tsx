@@ -8,7 +8,7 @@ import Editor from "@/components/ui/editor";
 import useGetPublicFormQuery from "@/domain/form/use-get-public-form-query";
 import useGetPublicJobQuery from "@/domain/job/use-get-public-job-query";
 import { formatISODate } from "@/utils/date";
-import { HardDriveUploadIcon } from "lucide-react";
+import { HardDriveUploadIcon, LinkedinIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function JobDetails({ jobId }: { jobId: string }) {
@@ -50,7 +50,7 @@ export default function JobDetails({ jobId }: { jobId: string }) {
               </div>
             </div>
 
-            <div className="ml-auto">
+            <div className="ml-auto flex items-center gap-2">
               {data?.formId && (
                 <Link href={!isAlreadyApplied ? `/jobs/${jobId}/forms/${data?.formId}` : `/jobs/${jobId}`}>
                   <Button disabled={isAlreadyApplied}>
@@ -59,6 +59,10 @@ export default function JobDetails({ jobId }: { jobId: string }) {
                   </Button>
                 </Link>
               )}
+              {data?.linkedinUrl && <Button disabled={isAlreadyApplied}>
+                <LinkedinIcon className="size-4" />
+                <span>Apply</span>
+              </Button>}
             </div>
           </div>
           <div className="p-5 flex items-start gap-5 justify-between">

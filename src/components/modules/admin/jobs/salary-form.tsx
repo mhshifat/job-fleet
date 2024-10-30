@@ -11,7 +11,7 @@ import { ICreateJobFormSchema } from "@/domain/job/validators";
 
 export default function SalaryForm() {
   const { nextStep, prevStep } = useSteps();
-  const { register, formState: { errors }, trigger, setValue, getValues } = useFormContext<ICreateJobFormSchema>();
+  const { register, formState: { errors }, trigger, setValue, getValues, watch } = useFormContext<ICreateJobFormSchema>();
 
   async function handleSubmit() {
     try {
@@ -70,26 +70,28 @@ export default function SalaryForm() {
         </Checkbox>
       </Label>
 
-      <div className="flex gap-5">
-        <Label title="Currency" className="mt-5 flex-1" error={errors?.currency?.message}>
-          <Select
-            value={[{ content: getValues("currency"), value: getValues("currency") }]}
-            onChange={(values) => setValue("currency", values[0].value, {
-              shouldDirty: true,
-              shouldTouch: true,
-              shouldValidate: true,
-            })}
-          >
-            <Select.Option value="BDT">BDT</Select.Option>
-          </Select>
-        </Label>
-        <Label title="Salary" className="mt-5 flex-1" error={errors?.salaryRange?.message}>
-          <Input
-            placeholder="Ex: 70000 - 100000"
-            {...register("salaryRange")}
-          />
-        </Label>
-      </div>
+      {watch("salaryType") !== "NEGOTIABLE" && (
+        <div className="flex gap-5">
+          <Label title="Currency" className="mt-5 flex-1" error={errors?.currency?.message}>
+            <Select
+              value={[{ content: getValues("currency"), value: getValues("currency") }]}
+              onChange={(values) => setValue("currency", values[0].value, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              })}
+            >
+              <Select.Option value="BDT">BDT</Select.Option>
+            </Select>
+          </Label>
+          <Label title="Salary" className="mt-5 flex-1" error={errors?.salaryRange?.message}>
+            <Input
+              placeholder="Ex: 70000 - 100000"
+              {...register("salaryRange")}
+            />
+          </Label>
+        </div>
+      )}
 
       <div className="mt-10 flex items-center gap-10 justify-between">
         <Button type="button" variant="ghost" className="w-max capitalize" onClick={() => prevStep({})}>
