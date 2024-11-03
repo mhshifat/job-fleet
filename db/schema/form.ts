@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { json, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { users } from "./user";
 
 export const forms = pgTable("forms", {
@@ -8,7 +8,6 @@ export const forms = pgTable("forms", {
   title: text("title").notNull(),
   fields: text("fields").notNull(),
   status: text("status").notNull(),
-  records: json("records").notNull().default({}),
   created_at: timestamp("created_at").notNull(),
   updated_at: timestamp("updated_at"),
 });

@@ -1,6 +1,6 @@
 "use server";
 
-import { IRegisterPayload } from "@/domain/auth/auth";
+import { ICandidateOnboardingPayload, IRegisterPayload } from "@/domain/auth/auth";
 import { createUser, deleteUserByEmail, getUserByEmail, getUserById, updateUserById } from "./user";
 import { comparePass, createToken, decodeToken, generateOTP, hashPass, verifyToken } from "@/utils/helpers";
 import { db } from "../db/drizzle";
@@ -62,6 +62,39 @@ export async function login(values: ILoginDtoPayload) {
     password: credential.password
   });
 
+  return data;
+}
+
+export async function signUpAsCandidate(values: ICandidateOnboardingPayload) {
+  const existingUser = await getUserByEmail(values.email);
+  if (!existingUser) {
+    const hashedPass = await hashPass(values.password);
+    const result = await db.transaction(async (trx) => {
+      const user = await createUser({
+        email: values.email,
+        first_name: "Anonymous",
+        last_name: "User",
+        verified: true
+      }, trx);
+      const credential = await createCredential({ password: hashedPass, otp: "", user_id: user.id }, trx);
+      return {
+        credential,
+        user
+      }
+    });
+    const data = await prepareAuthPayload({
+      ...result.user as IUserDto,
+      password: result.credential.password
+    });
+    return data;
+  }
+  const credential = await getCredentialByUser(existingUser.id);
+  const isPwdMatched = await comparePass(values.password, credential.password);
+  if (!isPwdMatched) throw new Error("400:-Invalid credentials");
+  const data = await prepareAuthPayload({
+    ...existingUser as IUserDto,
+    password: credential.password
+  });
   return data;
 }
 

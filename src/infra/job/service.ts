@@ -1,9 +1,6 @@
 import { http, IHttp } from "@/utils/http";
-import {
-  updateJobByUserAndId,
-} from "../../../actions/job";
-import { jobDtoListToJobList, jobDtoToJob, jobToJobDto } from "./transform";
-import { IJob, INewJobPayload } from "@/domain/job/job";
+import { jobDtoListToJobList, jobDtoToJob } from "./transform";
+import { INewJobPayload } from "@/domain/job/job";
 import { IJobDto } from "./dto";
 
 class JobService {

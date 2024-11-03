@@ -9,7 +9,9 @@ export default function AdminPagesLayout({ children }: PropsWithChildren) {
       <div className="flex-[0_0_auto] border-r border-border/50 shadow-sm">
         <AdminSidebar />
       </div>
-      <CanAccess>
+      <CanAccess
+        authProperties={['uid']}
+      >
         <div className="flex-1 overflow-auto relative flex flex-col">
           <AdminHeader />
           {children}

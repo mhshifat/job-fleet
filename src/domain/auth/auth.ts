@@ -23,6 +23,11 @@ export interface IRegisterPayload {
   confirmPassword: string;
 }
 
+export interface ICandidateOnboardingPayload {
+  email: string;
+  password: string;
+}
+
 export interface ISendOtpPayload {
   email: string;
 }

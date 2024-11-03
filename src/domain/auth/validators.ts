@@ -29,3 +29,10 @@ export const loginFormSchema = z.object({
 });
 
 export type ILoginFormSchema = z.infer<typeof loginFormSchema>;
+
+export const candidateOnBoardingSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
+export type ICandidateOnboardingSchema = z.infer<typeof candidateOnBoardingSchema>;

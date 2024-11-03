@@ -9,10 +9,11 @@ import { formToFormDto } from "@/infra/form/transform";
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   const searchParams = new URL(req.url).searchParams;
   const isPublic = searchParams.get("public");
-  
+
   if (isPublic === 'true') return asyncErrorHandler(async () => {
     const jobId = params.id;
     const job = await getPublishedFormById(jobId);
+    
     return NextResponse.json<APIResponse>({
       success: true,
       data: job
@@ -37,18 +38,6 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const json = await req.json();
-
-  if (json?.allowPublicRecords) return asyncErrorHandler(async () => {
-    const { records } = formToFormDto(json);
-    const form = await updateFormById(params.id, {
-      records
-    });
-    return NextResponse.json<APIResponse>({
-      success: true,
-      data: form
-    }, { status: 200 });
-  }) as Promise<void | Response>
-  
   const payload = await isAuthenticated();
   if (!payload?.data?.uid) throw new Error("401:-Unauthorized");
 

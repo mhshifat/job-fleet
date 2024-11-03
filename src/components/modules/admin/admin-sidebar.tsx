@@ -13,21 +13,25 @@ const ADMIN_SIDEBAR_MENUS = [
     title: "Dashboard",
     icon: LayoutDashboardIcon,
     link: ROUTE_PATHS.DASHBOARD,
+    authProperties: ["uid"]
   },
   {
     title: "Posts",
     icon: BookAudioIcon,
     link: ROUTE_PATHS.DASHBOARD_JOBS,
+    authProperties: ["oid"]
   },
   {
     title: "Forms",
     icon: ScrollTextIcon,
     link: ROUTE_PATHS.DASHBOARD_FORMS,
+    authProperties: ["oid"]
   },
   {
     title: "Settings",
     icon: CogIcon,
     link: ROUTE_PATHS.DASHBOARD_SETTINGS,
+    authProperties: ["oid"]
   },
 ]
 
@@ -38,6 +42,7 @@ export default function AdminSidebar() {
     <Sidebar className="empty:hidden">
       <CanAccess
         hideContent
+        authProperties={['uid']}
       >
         <Sidebar.Item className="p-3 cursor-pointer flex items-center gap-2 transition hover:shadow-sm">
           <Sidebar.CollapsedContent className="h-[40px] flex justify-center items-center border border-border rounded-md self-stretch aspect-square">
@@ -60,17 +65,23 @@ export default function AdminSidebar() {
             <UnfoldHorizontalIcon className="size-4 text-foreground/60" />
           </Sidebar.Toggler>
           <div className="flex flex-col py-3 gap-1">
-            {ADMIN_SIDEBAR_MENUS.map(({icon: Icon, ...item}, idx) => (
-              <Sidebar.Item key={item.title} className="px-3 py-0 cursor-pointer" label={idx === 0 ? "Menus" : ""}>
-                <Link href={item.link} className={cn("flex text-foreground/60 items-center transition hover:bg-foreground/10 rounded-md", {
-                  "bg-foreground/10 text-foreground": item.link !== "/dashboard" ? pathname.includes(item.link) : pathname === item.link
-                })}>
-                  <Sidebar.CollapsedContent className="h-[40px] flex justify-center items-center rounded-md self-stretch aspect-square">
-                    <Icon className="size-[20px]" />
-                  </Sidebar.CollapsedContent>
-                  <Sidebar.ExtendContent className="text-sm font-medium font-geist leading-[1]">{item.title}</Sidebar.ExtendContent>
-                </Link>
-              </Sidebar.Item>
+            {ADMIN_SIDEBAR_MENUS.map(({icon: Icon, authProperties, ...item}, idx) => (
+              <CanAccess
+                key={item.title}
+                hideContent
+                authProperties={authProperties}
+              >
+                <Sidebar.Item className="px-3 py-0 cursor-pointer" label={idx === 0 ? "Menus" : ""}>
+                  <Link href={item.link} className={cn("flex text-foreground/60 items-center transition hover:bg-foreground/10 rounded-md", {
+                    "bg-foreground/10 text-foreground": item.link !== "/dashboard" ? pathname.includes(item.link) : pathname === item.link
+                  })}>
+                    <Sidebar.CollapsedContent className="h-[40px] flex justify-center items-center rounded-md self-stretch aspect-square">
+                      <Icon className="size-[20px]" />
+                    </Sidebar.CollapsedContent>
+                    <Sidebar.ExtendContent className="text-sm font-medium font-geist leading-[1]">{item.title}</Sidebar.ExtendContent>
+                  </Link>
+                </Sidebar.Item>
+              </CanAccess>
             ))}
           </div>
         </div>

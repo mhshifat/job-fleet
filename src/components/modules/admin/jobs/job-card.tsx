@@ -91,7 +91,7 @@ export default function JobCard({ data }: { data: IJob }) {
         {form && <div className="flex items-center gap-5 justify-between bg-background">
           <h3 className="text-lg tracking-tighter font-geist-mono font-semibold leading-[1] text-foreground/80">View Records</h3>
 
-          <Link href={`/dashboard/forms/${data.formId}/records?jobId=${data.id}`}>
+          <Link href={`/dashboard/forms/${data.formId}/applications?jobId=${data.id}`}>
             <Button className="rounded-full">View</Button>
           </Link>
         </div>}

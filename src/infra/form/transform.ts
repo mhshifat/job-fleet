@@ -6,7 +6,6 @@ export function formDtoToForm(values: IFormDto): IForm {
     id: values.id,
     title: values.title,
     fields: values.fields,
-    records: values.records,
     status: values.status,
   }
 }
@@ -16,7 +15,6 @@ export function formToFormDto(values: IForm): IFormDto {
     id: values.id,
     title: values.title,
     fields: values.fields,
-    records: values.records,
     status: values.status,
   }
 }

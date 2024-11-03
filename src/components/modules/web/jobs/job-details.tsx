@@ -10,15 +10,26 @@ import useGetPublicJobQuery from "@/domain/job/use-get-public-job-query";
 import { formatISODate } from "@/utils/date";
 import { HardDriveUploadIcon, LinkedinIcon } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from '@/components/providers/auth';
+import { useDialog } from "@/components/providers/dialog";
+import CandidateInfoForm from "./candidate-info-form";
+import { useRouter } from "next/navigation";
+import useGetPublicApplicationsQuery from "@/domain/application/use-get-public-applications-query";
 
 export default function JobDetails({ jobId }: { jobId: string }) {
+  const router = useRouter();
+  const { authState, updateAuthState } = useAuth();
+  const { openDialog, closeDialog } = useDialog();
   const { data, isLoading } = useGetPublicJobQuery(jobId);
   const { data: formData, isLoading: isFormLoading } = useGetPublicFormQuery(data?.formId as string);
-  const formElements = JSON.parse(formData?.fields || "[]");  
-  // TODO:
-  const isAlreadyApplied = false;
+  const { data: applicationsData, isLoading: isApplicationLoading } = useGetPublicApplicationsQuery({
+    jobId,
+    candidateId: authState?.uid
+  });
+  const isAlreadyApplied = !!applicationsData?.length;
+  const loading = isLoading || isFormLoading || isApplicationLoading;
 
-  if (isLoading || isFormLoading) return (
+  if (loading) return (
     <div className="py-10">
       <Spinner fixed={false} size="md" variant="secondary" showTitle className="gap-3" />
     </div>
@@ -51,15 +62,29 @@ export default function JobDetails({ jobId }: { jobId: string }) {
             </div>
 
             <div className="ml-auto flex items-center gap-2">
-              {data?.formId && (
+              {authState?.uid && data?.formId && (
                 <Link href={!isAlreadyApplied ? `/jobs/${jobId}/forms/${data?.formId}` : `/jobs/${jobId}`}>
                   <Button disabled={isAlreadyApplied}>
-                    <HardDriveUploadIcon className="size-4" />
-                    <span>Apply</span>
+                    {!isAlreadyApplied && <HardDriveUploadIcon className="size-4" />}
+                    <span>{isAlreadyApplied ? "Applied" : "Apply"}</span>
                   </Button>
                 </Link>
               )}
-              {data?.linkedinUrl && <Button disabled={isAlreadyApplied}>
+              {!authState?.uid && data?.formId && (
+                <Button disabled={isAlreadyApplied} onClick={() => openDialog({
+                  title: "Applying with us?",
+                  description: "Please share some necessary information to get started",
+                  content: <CandidateInfoForm onSubmit={(values) => {
+                    updateAuthState(values);
+                    closeDialog?.();
+                    router.push(`/jobs/${jobId}/forms/${data?.formId}`);
+                  }} />
+                })}>
+                  {!isAlreadyApplied && <HardDriveUploadIcon className="size-4" />}
+                  <span>{isAlreadyApplied ? "Applied" : "Apply"}</span>
+                </Button>
+              )}
+              {data?.linkedinUrl && !isAlreadyApplied && <Button disabled={isAlreadyApplied}>
                 <LinkedinIcon className="size-4" />
                 <span>Apply</span>
               </Button>}

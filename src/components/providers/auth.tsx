@@ -21,6 +21,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const initializing = isLoading;
   const updateAuthState = useCallback(async (data: ILoginResponse | null) => {
     setAuthState(data);
+    forceUpdate();
   }, [])
 
   if (initializing) return <Spinner fixed variant="secondary" size="layout" />;

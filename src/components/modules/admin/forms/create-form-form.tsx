@@ -22,7 +22,6 @@ export default function CreateFormForm({ onSuccess }: CreateFormFormProps) {
         await createForm.mutateAsync({
           ...values,
           status: "DRAFT",
-          records: {},
           fields: "",
         });
         onSuccess?.();

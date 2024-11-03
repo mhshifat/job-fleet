@@ -86,8 +86,7 @@ export async function createJob(values: IJobDtoPayload & { user_id: string }) {
   if (!form && !values?.form_id) form = await createForm({
     title: "Default Form",
     user_id: values.user_id,
-    status: "PUBLISHED",
-    records: {}
+    status: "PUBLISHED"
   })
   const [data] = await db
     .insert(jobs)

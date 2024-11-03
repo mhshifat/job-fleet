@@ -22,6 +22,12 @@ class AuthService {
     return loginDtoToLogin(res.data);
   }
 
+  async candidateOnboarding(values: ILoginPayload) {
+    const res = await this._http.post<ILoginDto>("/auth/candidate", values);
+    if (!res.success) throw new Error(res.message);
+    return loginDtoToLogin(res.data);
+  }
+
   async register(values: IRegisterPayload) {
     const res = await this._http.post("/auth/sign-up", values);
     if (!res.success) throw new Error(res.message);

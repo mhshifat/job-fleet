@@ -15,6 +15,20 @@
       "when": 1730302141045,
       "tag": "0001_happy_unus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1730644100429,
+      "tag": "0002_conscious_annihilus",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1730644142013,
+      "tag": "0003_furry_praxagora",
+      "breakpoints": true
     }
   ]
 }
