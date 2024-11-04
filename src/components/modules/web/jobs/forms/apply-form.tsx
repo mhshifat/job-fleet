@@ -7,7 +7,6 @@ import Unauthorized from "@/components/shared/unauthorized";
 import useCreateApplicationMutation from "@/domain/application/use-create-application-mutation";
 import useGetPublicFormQuery from "@/domain/form/use-get-public-form-query";
 import { handleError } from "@/utils/error";
-import { toast } from "@/utils/toast";
 import { useParams, useRouter } from "next/navigation";
 
 export default function ApplyForm() {
@@ -22,10 +21,10 @@ export default function ApplyForm() {
     try {
       await applicationForm.mutateAsync({
         jobId: id as string,
-        record: JSON.stringify({
+        record: {
           ...data,
           createdAt: new Date().toISOString()
-        })
+        }
       });
       router.push(`/jobs/${id}`);
     } catch (err) {
