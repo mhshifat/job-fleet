@@ -32,7 +32,7 @@ export default function CreateFormForm({ onSuccess }: CreateFormFormProps) {
       renderSubmitBtnText={() => <>Create</>}
     >
       {({ getError, getValue, onFocus, setValue }) => (
-        <div className="flex flex-col mt-5 gap-3">
+        <div className="flex flex-col gap-3">
           <Label title="Title" error={getError("title")}>
             <Input 
               value={getValue("title")}

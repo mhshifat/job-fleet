@@ -1,4 +1,4 @@
-import { cn } from "@/utils/helpers";
+import { cn, createId } from "@/utils/helpers";
 import DraggableElement from "../../../shared/draggable-element";
 import { DRAGGABLE_ELEMENT_LIST } from "@/utils/constants";
 
@@ -8,7 +8,8 @@ export default function ElementList() {
       {DRAGGABLE_ELEMENT_LIST.map(({icon: Icon, ...item}) => (
         <DraggableElement data={{
           ...item,
-          isSidebarEl: true
+          isSidebarEl: true,
+          id: createId()
         }} id={item.title} key={item.title}>
           {({ isDragging }) => (
             <div className={cn("flex flex-col gap-2 justify-center items-center border border-border rounded-md py-5 px-3 cursor-pointer transition hover:bg-foreground/10", {

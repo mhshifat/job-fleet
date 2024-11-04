@@ -58,7 +58,10 @@ export default function DraggedElement({ children, onDelete, metadata, onClick, 
               <div className="flex justify-center items-center w-full h-full">
                 <p className="text-sm font-geist font-semibold text-foreground/70">Click for properties or drag for move</p>
               </div>
-              <button onClick={onDelete} className="border-none outline-none w-auto h-full bg-danger p-3 flex justify-center items-center text-background cursor-pointer">
+              <button onClick={(e) => {
+                e.stopPropagation();
+                onDelete?.();
+              }} className="border-none outline-none w-auto h-full bg-danger p-3 flex justify-center items-center text-background cursor-pointer">
                 <TrashIcon className="size-5" />
               </button>
             </div>

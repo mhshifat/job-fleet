@@ -78,33 +78,12 @@ export async function createForm(values: Omit<IFormDto, "id" | "fields"> & { use
       ...values,
       fields: values.fields || JSON.stringify([
         {
-          "title": "Text Input",
+          "title": "File Input",
           "isSidebarEl": true,
           "properties": {
-            "label": "First Name",
-            "fieldName": "firstName",
-            "isRequired": true,
-            "isUnique": false
-          }
-        },
-        {
-          "title": "Text Input",
-          "isSidebarEl": true,
-          "properties": {
-            "label": "Last Name",
-            "fieldName": "lastName",
-            "isRequired": true,
-            "isUnique": false
-          }
-        },
-        {
-          "title": "Text Input",
-          "isSidebarEl": true,
-          "properties": {
-            "label": "Email",
-            "fieldName": "email",
-            "isRequired": true,
-            "isUnique": true
+            "label": "Resume",
+            "fieldName": "resume",
+            "isRequired": true
           }
         },
       ]),

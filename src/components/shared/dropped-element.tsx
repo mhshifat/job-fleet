@@ -4,13 +4,12 @@ import { useDndMonitor, useDroppable } from "@dnd-kit/core";
 interface DroppedElementProps {
   className?: string;
   onDrop?: (data: { active: unknown; over: unknown; }) => void;
-  onDragStart?: (data: unknown) => void;
   children: (args: {
     isOver: boolean;
   }) => JSX.Element;
 }
 
-export default function DroppedElement({ children, className, onDrop, onDragStart }: DroppedElementProps) {
+export default function DroppedElement({ children, className, onDrop }: DroppedElementProps) {
   const {isOver, setNodeRef} = useDroppable({
     id: 'job-form-elements-droppable',
   });
@@ -22,9 +21,6 @@ export default function DroppedElement({ children, className, onDrop, onDragStar
         active: event.active.data.current?.draggedItemData,
         over: event.over.data.current,
       });
-    },
-    onDragStart(event) {
-      onDragStart?.(event.active.data.current?.draggedItemData);
     },
   })
 

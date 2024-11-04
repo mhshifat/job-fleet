@@ -14,10 +14,14 @@ export default function DraggableElement({ children, id, data }: DraggableElemen
     id,
     data: {
       draggedItemData: data,
-      dragOverlay: children({
-        isDragging: false,
-        transform: { x: 0, y: 0 }
-      })
+      dragOverlay: (
+        <div style={{ transform: "scale(.8)" }}>
+          {children({
+            isDragging: false,
+            transform: { x: 0, y: 0 }
+          })}
+        </div>
+      )
     }
   });
 

@@ -21,14 +21,7 @@ export default function DeleteHandler({ children, title, description, handler }:
     try {
       await handler();
       closeDialog();
-      toast.success("Successfully deleted");
-    } catch (err) {
-      if (err instanceof Error) {
-        toast.error(err.message);
-      } else {
-        toast.error("Something went wrong");
-      }
-    } finally {
+    } catch (err) {} finally {
       setLoading(false)
     }
   }

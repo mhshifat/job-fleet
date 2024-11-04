@@ -17,7 +17,11 @@ export default function useUpdateFormMutation() {
     },
     onSuccess: () => {
       toast.success("Successfully updated the form!");
-      queryClient.invalidateQueries({ queryKey: ["get-my-forms"] });
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return (query.queryKey?.[0] as string)?.startsWith("get-my-forms");
+        }
+      });
     },
     onError: (err) => {
       if (err instanceof AxiosError) {
