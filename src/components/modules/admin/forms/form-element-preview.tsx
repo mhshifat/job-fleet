@@ -21,7 +21,7 @@ export default function FormElementPreview({ label, element, readonly, error, on
       {element?.title === DRAGGABLE_ITEM_TYPES.TEXT_INPUT ?
         <Input disabled={readonly} onChange={({ target }) => onChange?.(target.value)} /> :
         element?.title === DRAGGABLE_ITEM_TYPES.FILE ?
-        <Uploader type="single" disabled={readonly} onChange={([file]) => onChange?.(file.url || "")} /> :
+        <Uploader type="single" accepted="PDF & PDF Only" disabled={readonly} onChange={([file]) => onChange?.(file.url || "")} /> :
         element?.title === DRAGGABLE_ITEM_TYPES.NUMBER_INPUT ?
         <Input disabled={readonly} type="number" onChange={({ target }) => onChange?.(target.value)} /> :
         element?.title === DRAGGABLE_ITEM_TYPES.TEXTAREA ?

@@ -25,7 +25,7 @@ export default function JobDetails({ jobId }: { jobId: string }) {
   const { data: applicationsData, isLoading: isApplicationLoading } = useGetPublicApplicationsQuery({
     jobId,
     candidateId: authState?.uid
-  });
+  }, { enabled: !!authState?.uid });
   const isAlreadyApplied = !!applicationsData?.length;
   const loading = isLoading || isFormLoading || isApplicationLoading;
 

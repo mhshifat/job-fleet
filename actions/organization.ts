@@ -32,6 +32,17 @@ export async function getOrganizationByName(name: string, trx = db) {
   return data;
 }
 
+export async function getOrganizationById(id: string, trx = db) {
+  const [data] = await trx
+    .select(organizationMap)
+    .from(organizations)
+    .where(
+      eq(organizations.id, id)
+    );
+  
+  return data;
+}
+
 export async function getOrganizationsByUser(userId: string, options?: { limit: number }, trx = db) {
   const results = await trx
     .select(organizationUserMap)

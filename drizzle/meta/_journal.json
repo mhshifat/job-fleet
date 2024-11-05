@@ -29,6 +29,27 @@
       "when": 1730644142013,
       "tag": "0003_furry_praxagora",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1730804387995,
+      "tag": "0004_sparkling_namor",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1730812031450,
+      "tag": "0005_aromatic_the_santerians",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1730816352788,
+      "tag": "0006_moaning_prowler",
+      "breakpoints": true
     }
   ]
 }

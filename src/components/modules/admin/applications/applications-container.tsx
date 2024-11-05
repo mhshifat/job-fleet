@@ -2,12 +2,9 @@
 
 import DataNotFound from "@/components/shared/data-not-found";
 import Spinner from "@/components/shared/spinner";
-import Button from "@/components/ui/button";
 import Select from "@/components/ui/select";
 import { IApplication } from "@/domain/application/application";
 import useGetApplicationsQuery from "@/domain/application/use-get-applications-query";
-import useGetPublicApplicationQuery from "@/domain/application/use-get-public-applications-query";
-import useGetFormQuery from "@/domain/form/use-get-form-query";
 import useGetMyJobsQuery from "@/domain/job/use-get-my-jobs-query";
 import { cn } from "@/utils/helpers";
 import { useParams, useSearchParams } from "next/navigation";
@@ -33,7 +30,6 @@ const tableHeaders = [
 export default function ApplicationContainer() {
   const { id } = useParams();
   const searchParams = useSearchParams();
-  const { data: formData, isLoading } = useGetFormQuery(id as string);
   const { data: jobs, isLoading: isJobsLoading } =  useGetMyJobsQuery();
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const { data: applications, isLoading: isApplicationsLoading } = useGetApplicationsQuery({

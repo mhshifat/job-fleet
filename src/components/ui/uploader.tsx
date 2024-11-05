@@ -1,12 +1,14 @@
 "use client";
 
-import { ImageUpIcon, Trash2Icon } from "lucide-react";
+import { FileTextIcon, ImageUpIcon, Trash2Icon } from "lucide-react";
 import Image from "next/image";
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Spinner from "../shared/spinner";
 import { cn } from "@/utils/helpers";
 import axios from "axios";
+import { fileDtoListToFileList } from "@/infra/file/transform";
+import { IFileDto } from "@/infra/file/dto";
 
 interface IUploaderFile {
   name: string;
@@ -21,9 +23,10 @@ interface UploaderProps {
   onChange?: (values: IUploaderFile[]) => void;
   value?: IUploaderFile[];
   className?: string;
+  accepted?: string;
 }
 
-export default function Uploader({ type = "list", className, value, disabled, onChange }: UploaderProps) {
+export default function Uploader({ type = "list", className, value, disabled, onChange, accepted }: UploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<IUploaderFile[]>([]);
@@ -46,38 +49,25 @@ export default function Uploader({ type = "list", className, value, disabled, on
     ]);
     try {
       const formdata = new FormData();
-      formdata.append("UPLOADCARE_PUB_KEY", process.env.NEXT_PUBLIC_UPLOADCARE_PUB_KEY!);
       acceptedFiles.map(file => {
         formdata.append("file", file, file.name);
       });
-      const uploadRes = await axios({
+      const uploadRes = await axios<{ data: IFileDto[] }>({
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data"
         },
-        url: "https://upload.uploadcare.com/base/",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/api/files`,
         data: formdata
       });
-      const { data } = await axios({
-        method: "GET",
-        headers: {
-          "Content-Type": "multipart/form-data"
-        },
-        url: "https://upload.uploadcare.com/info/",
-        params: {
-          pub_key: process.env.NEXT_PUBLIC_UPLOADCARE_PUB_KEY!,
-          file_id: uploadRes.data?.file,
-        }
-      });
+      const data = fileDtoListToFileList(uploadRes.data.data);
       setFiles(() => {
-        const values = [
-          {
-            name: data?.filename || "",
-            progress: 100,
-            size: data?.size || "",
-            url: `https://ucarecdn.com/${data.uuid}/${data.filename}`
-          }
-        ];
+        const values: IUploaderFile[] = data.map(item => ({
+          name: `${item.originalFilename}.${item.format}`,
+          progress: 100,
+          size: item.bytes,
+          url: `${item.url}?publicId=${item.publicId}&filename=${`${item.originalFilename}.${item.format}`}`
+        }));
         setTimeout(() => {
           onChange?.(values);
         }, 0);
@@ -108,6 +98,7 @@ export default function Uploader({ type = "list", className, value, disabled, on
           {!files.length && (
             <Uploader.Placeholder
               isDragActive={isDragActive}
+              accepted={accepted}
             />
           )}
     
@@ -116,12 +107,16 @@ export default function Uploader({ type = "list", className, value, disabled, on
               <div className="w-full relative overflow-hidden rounded-md flex items-center gap-5">
                 {files[0]?.progress >= 100 ? (
                   <>
-                    <img
-                      src={files[0]?.url || ""}
-                      alt=""
-                      role="presentation"
-                      className="rounded-md overflow-hidden object-cover border-border border w-10 h-10"
-                    />
+                    {files[0]?.name?.endsWith("pdf") ? (
+                      <FileTextIcon className="w-10 h-10" />
+                    ) : (
+                      <img
+                        src={files[0]?.url || ""}
+                        alt=""
+                        role="presentation"
+                        className="rounded-md overflow-hidden object-cover border-border border w-10 h-10"
+                      />
+                    )}
                     <span className="text-sm font-geist font-medium">{files[0].name}</span>
                     <div className="ml-auto" onClick={(e) => {
                       e.stopPropagation();
@@ -154,6 +149,7 @@ export default function Uploader({ type = "list", className, value, disabled, on
           {!files.length && (
             <Uploader.Placeholder
               isDragActive={isDragActive}
+              accepted={accepted}
             />
           )}
     
@@ -216,9 +212,11 @@ export default function Uploader({ type = "list", className, value, disabled, on
 }
 
 Uploader.Placeholder = ({
-  isDragActive
+  isDragActive,
+  accepted
 }: {
   isDragActive: boolean;
+  accepted?: string;
 }) => {
   return (
     <div className="group cursor-pointer min-h-20 flex flex-col gap-4 items-center justify-center">
@@ -259,7 +257,7 @@ Uploader.Placeholder = ({
         ) : (
           <p className="text-sm font-medium font-archivo text-foreground/70">Drag & Drop files or <span className="text-primary underline underline-offset-2 font-semibold">click here</span> to upload files.</p>
         )}
-        <p className="text-sm font-medium font-archivo text-foreground/70">PNG, JPG, JPEG</p>
+        <p className="text-sm font-medium font-archivo text-foreground/70">{accepted || "PNG, JPG, JPEG"}</p>
       </div>
     </div>
   )
