@@ -1,22 +1,26 @@
 import { APIResponse } from "@/utils/types";
 import { NextResponse } from "next/server";
-import { createJob, getJobs } from "../../../../actions/job";
 import { asyncErrorHandler } from "@/utils/error";
 import { isAuthenticated } from "../../../../actions/auth";
-import { jobToJobDto } from "@/infra/job/transform";
-import { createJobFormSchema } from "@/domain/job/validators";
+import { createWorkflow, getWorkflows } from "../../../../actions/workflow";
+import { createWorkflowFormSchema } from "@/domain/workflow/validators";
+import { workflowToWorkflowDto } from "@/infra/workflow/transform";
 
-export async function GET() {
+export async function GET(req: Request) {
   const payload = await isAuthenticated();
   if (!payload?.data?.uid) throw new Error("401:-Unauthorized");
+  if (!payload?.data?.oid) return NextResponse.json<APIResponse>({
+    success: true,
+    data: []
+  }, { status: 200 });
 
   return asyncErrorHandler(async () => {
-    const jobs = await getJobs({
-      user_id: payload?.data?.uid
+    const workflows = await getWorkflows({
+      org_id: payload?.data?.oid
     });
     return NextResponse.json<APIResponse>({
       success: true,
-      data: jobs
+      data: workflows
     }, { status: 200 });
   }) as Promise<void | Response>
 }
@@ -27,19 +31,16 @@ export async function POST(req: Request) {
 
   return asyncErrorHandler(async () => {
     const json = await req.json();
-    await createJobFormSchema.parseAsync({
-      ...json,
-      deadline: json.deadline
-    });
-    const { id, ...jobPayload } = jobToJobDto(json);
-    const job = await createJob({
-      ...jobPayload,
-      user_id: payload?.data?.uid,
-      org_id: payload?.data?.oid,
+    await createWorkflowFormSchema.parseAsync(json);
+    const { id, ...workflowPayload } = workflowToWorkflowDto(json);
+    
+    const workflow = await createWorkflow({
+      ...workflowPayload,
+      org_id: payload?.data?.oid
     });
     return NextResponse.json<APIResponse>({
       success: true,
-      data: job
+      data: workflow
     }, { status: 201 });
   }) as Promise<void | Response>
 }

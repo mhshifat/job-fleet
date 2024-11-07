@@ -7,10 +7,13 @@ import { jobs } from "../db/schema/job";
 import { IJobDtoPayload } from "@/infra/job/dto";
 import { and, eq } from "drizzle-orm";
 import { createForm, getForms } from "./form";
+import { createWorkflow, getWorkflows } from "./workflow";
+import { createStage } from "./stage";
 
 const jobMap = {
   id: jobs.id,
   form_id: jobs.form_id,
+  workflow_id: jobs.workflow_id,
   title: jobs.title,
   category: jobs.category,
   code: jobs.code,
@@ -77,28 +80,47 @@ export async function getJobByUserAndId(where: { id: string, user_id: string }) 
   return data;
 }
 
-export async function createJob(values: IJobDtoPayload & { user_id: string }) {
+export async function createJob(values: IJobDtoPayload & { user_id: string, org_id: string, workflow_id?: string }) {
   if (!values?.user_id) throw new Error("User id is required");
-  let [form] = await getForms({
-    user_id: values.user_id,
-    status: "PUBLISHED"
+  const job = await db.transaction(async (trx) => {
+    let [form] = await getForms({
+      user_id: values.user_id,
+      status: "PUBLISHED"
+    }, trx);
+    if (!form && !values?.form_id) form = await createForm({
+      title: "Default Form",
+      user_id: values.user_id,
+      status: "PUBLISHED"
+    }, trx)
+    let [workflow] = await getWorkflows({
+      org_id: values?.org_id
+    }, trx);
+    if (!workflow && !values?.workflow_id) {
+      workflow = await createWorkflow({
+        title: "Default Workflow",
+        org_id: values.org_id
+      }, trx);
+      await createStage({
+        title: "Online Interview",
+        workflow_id: workflow.id
+      }, trx)
+    }
+    
+    const [data] = await trx
+      .insert(jobs)
+      .values({
+        id: createId(),
+        ...values,
+        form_id: values.form_id || form.id,
+        workflow_id: values.workflow_id || workflow.id,
+        created_at: new Date(),
+      })
+      .returning(jobMap);
+  
+    return data;
   });
-  if (!form && !values?.form_id) form = await createForm({
-    title: "Default Form",
-    user_id: values.user_id,
-    status: "PUBLISHED"
-  })
-  const [data] = await db
-    .insert(jobs)
-    .values({
-      id: createId(),
-      ...values,
-      form_id: values.form_id || form.id,
-      created_at: new Date(),
-    })
-    .returning(jobMap);
-
-  return data;
+  
+  return job;
 }
 
 export async function updateJobByUserAndId(where: { id: string, user_id: string }, values: IJobDtoPayload) {

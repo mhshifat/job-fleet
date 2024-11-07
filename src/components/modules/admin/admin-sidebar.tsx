@@ -4,7 +4,7 @@ import CanAccess from "@/components/shared/can-access";
 import Sidebar from "@/components/ui/sidebar";
 import { ROUTE_PATHS } from "@/utils/constants";
 import { cn } from "@/utils/helpers";
-import { ArrowBigRightDashIcon, BookAudioIcon, CogIcon, LayoutDashboardIcon, ScrollTextIcon, UnfoldHorizontalIcon } from "lucide-react";
+import { ArrowBigRightDashIcon, BookAudioIcon, CogIcon, DumbbellIcon, LayoutDashboardIcon, ScrollTextIcon, UnfoldHorizontalIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -25,6 +25,12 @@ const ADMIN_SIDEBAR_MENUS = [
     title: "Forms",
     icon: ScrollTextIcon,
     link: ROUTE_PATHS.DASHBOARD_FORMS,
+    authProperties: ["oid"]
+  },
+  {
+    title: "Workflows",
+    icon: DumbbellIcon,
+    link: ROUTE_PATHS.DASHBOARD_WORKFLOWS,
     authProperties: ["oid"]
   },
   {

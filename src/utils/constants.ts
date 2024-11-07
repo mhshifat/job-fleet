@@ -8,7 +8,7 @@ export const ROUTE_PATHS = {
   DASHBOARD_JOBS: "/dashboard/jobs",
   DASHBOARD_JOB_CREATE: "/dashboard/jobs/create",
   DASHBOARD_FORMS: "/dashboard/forms",
-  DASHBOARD_FORM_CREATE: "/dashboard/forms/create",
+  DASHBOARD_WORKFLOWS: "/dashboard/workflows",
   DASHBOARD_SETTINGS: "/dashboard/settings",
 }
 

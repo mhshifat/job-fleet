@@ -11,6 +11,7 @@ import useUpdateJobMutation from "@/domain/job/use-update-job-mutation";
 import { toast } from "@/utils/toast";
 import { handleError } from "@/utils/error";
 import { copyToClipboard } from "@/utils/helpers";
+import useGetWorkflowsQuery from "@/domain/workflow/use-get-workflows-query";
 
 export default function JobCard({ data }: { data: IJob }) {
   const updateJob = useUpdateJobMutation();
@@ -18,11 +19,15 @@ export default function JobCard({ data }: { data: IJob }) {
   const { data: forms, refetch: refetchForms, isLoading: formsIsLoading } =  useGetMyFormsQuery({
     status: "PUBLISHED"
   });
+  const { data: workflows, isLoading: workflowsIsLoading } =  useGetWorkflowsQuery({});
   const form = useMemo(() => {
     return forms?.find(f => f.id === data.formId)
   }, [forms, data]);
+  const workflow = useMemo(() => {
+    return workflows?.find(w => w.id === data.workflowId)
+  }, [workflows, data]);
 
-  const isLoading = updateJob.isPending || formsIsLoading;
+  const isLoading = updateJob.isPending || formsIsLoading || workflowsIsLoading;
 
   async function handleAttachForm(formId: string) {
     try {
@@ -32,6 +37,18 @@ export default function JobCard({ data }: { data: IJob }) {
         id: data.id
       });
       toast.success("Successfully attached a form");
+    } catch (err) {
+      handleError(err);
+    }
+  }
+  async function handleAttachWorkflow(workflowId: string) {
+    try {
+      await updateJob.mutateAsync({
+        ...data,
+        workflowId,
+        id: data.id
+      });
+      toast.success("Successfully attached a workflow");
     } catch (err) {
       handleError(err);
     }
@@ -83,6 +100,23 @@ export default function JobCard({ data }: { data: IJob }) {
           </Select>
           {form?.id && (
             <Link href={`/dashboard/forms/${data.formId}`}>
+              <Button className="rounded-full">Edit</Button>
+            </Link>
+          )}
+        </div>
+        <div className="flex items-center gap-5 justify-between bg-background">
+          <Select 
+            disabled={isLoading}
+            value={[{ content: workflow?.title || "", value: workflow?.id || "" }]}
+            onChange={(values) => handleAttachWorkflow(values[0].value)}
+            placeholder={isLoading ? "Loading..." : "Attach Workflow"}
+          >
+            {workflows?.map(c => (
+              <Select.Option key={c.id} value={c.id}>{c.title}</Select.Option>
+            ))}
+          </Select>
+          {form?.id && (
+            <Link href={`/dashboard/workflows/${data.workflowId}`}>
               <Button className="rounded-full">Edit</Button>
             </Link>
           )}

@@ -1,6 +1,7 @@
 export interface IJob {
   id: string;
   formId?: string;
+  workflowId?: string;
   title: string;
   category: string;
   code: string | null;

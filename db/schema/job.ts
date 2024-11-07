@@ -2,11 +2,13 @@ import { relations } from "drizzle-orm";
 import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { users } from "./user";
 import { forms } from "./form";
+import { workflows } from "./workflow";
 
 export const jobs = pgTable("jobs", {
   id: text("id").primaryKey(),
   user_id: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   form_id: text("form_id").references(() => forms.id, { onDelete: "set null" }),
+  workflow_id: text("workflow_id").references(() => workflows.id, { onDelete: "set null" }),
   title: text("title").notNull(),
   category: text("category").notNull(),
   code: text("code").default(""),
@@ -38,5 +40,9 @@ export const jobsRelations = relations(jobs, ({ many, one }) => ({
   form: one(forms, {
     fields: [jobs.form_id],
     references: [forms.id]
+  }),
+  workflow: one(workflows, {
+    fields: [jobs.workflow_id],
+    references: [workflows.id]
   }),
 }));

@@ -5,6 +5,7 @@ export function jobDtoToJob(values: IJobDto): IJob {
   return {
     id: values.id,
     formId: values.form_id,
+    workflowId: values.workflow_id,
     title: values.title,
     category: values.category,
     code: values.code,
@@ -32,6 +33,7 @@ export function jobToJobDto(values: IJob): IJobDto {
   return {
     id: values.id,
     form_id: values.formId,
+    workflow_id: values.workflowId,
     title: values.title,
     category: values.category,
     code: values.code,

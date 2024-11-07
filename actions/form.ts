@@ -15,7 +15,7 @@ const formMap = {
   created_at: forms.created_at,
 }
 
-export async function getForms({ user_id, status }: { user_id?: string, status?: string }) {
+export async function getForms({ user_id, status }: { user_id?: string, status?: string }, trx = db) {
   unstable_noStore();
 
   const queries = [
@@ -26,7 +26,7 @@ export async function getForms({ user_id, status }: { user_id?: string, status?:
     queries.push(eq(forms.status, status));
   }
 
-  if (user_id) return await db
+  if (user_id) return await trx
     .select(formMap)
     .from(forms)
     .where(
@@ -35,7 +35,7 @@ export async function getForms({ user_id, status }: { user_id?: string, status?:
       )
     );
 
-  const results = await db
+  const results = await trx
     .select(formMap)
     .from(forms);
 
