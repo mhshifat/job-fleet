@@ -10,6 +10,7 @@ import { cn } from "@/utils/helpers";
 import { useParams, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import ShowApplicationDataBtnWrapper from "./show-application-data-btn-wrapper";
+import AssignStageBtnWrapper from "./assign-stage-btn-wrapper";
 
 const tableHeaders = [
   {
@@ -21,6 +22,10 @@ const tableHeaders = [
     key: (data: IApplication) => `${data?.candidate?.email}`
   },
   {
+    title: "Stage",
+    key: (data: IApplication) => <AssignStageBtnWrapper data={data} />,
+  },
+  {
     title: "",
     key: (data: IApplication) => <ShowApplicationDataBtnWrapper data={data} />,
     align: "right"
@@ -28,7 +33,6 @@ const tableHeaders = [
 ]
 
 export default function ApplicationContainer() {
-  const { id } = useParams();
   const searchParams = useSearchParams();
   const { data: jobs, isLoading: isJobsLoading } =  useGetMyJobsQuery();
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);

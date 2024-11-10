@@ -92,6 +92,7 @@ export default function Select({
   return (
     <SelectContext.Provider value={{ updateValue }}>
       <div
+        className="w-full"
         role="button"
         ref={setReferenceElement}
         onClick={() => !disabled && setOpen((value) => !value)}
@@ -160,7 +161,10 @@ Select.Placeholder = ({
   return (
     <div
       className={cn(
-        "cursor-pointer flex items-center border border-border h-[var(--size)] rounded-md overflow-hidden transition py-2 px-3 font-medium font-geist text-sm focus-within:shadow-[0_0_0_1px_white,0_0_0_3px_hsl(var(--primary))]"
+        "cursor-pointer flex items-center border border-border h-[var(--size)] rounded-md overflow-hidden transition py-2 px-3 font-medium font-geist text-sm focus-within:shadow-[0_0_0_1px_white,0_0_0_3px_hsl(var(--primary))]",
+        {
+          "bg-foreground/10 cursor-not-allowed text-foreground/30": disabled
+        }
       )}
     >
       <input

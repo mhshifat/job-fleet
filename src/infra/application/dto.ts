@@ -4,6 +4,7 @@ export interface IApplicationDto {
   id: string;
   candidate_id: string;
   job_id: string;
+  stage_id?: string;
   record: Record<string, string>;
   created_at: Date;
   candidate?: IUserDto;

@@ -8,6 +8,7 @@ import {
   addDays,
   startOfMonth,
   parse,
+  isFuture
 } from "date-fns";
 import { fromZonedTime } from "date-fns-tz";
 
@@ -156,4 +157,8 @@ export function getDateWithTimestamp(
 export function addMinutesToCurrentTime(min: number) {
   const now = Date.now();
   return now + (1000 * 60 * min);
+}
+
+export function isInFuture(date: Date) {
+  return isFuture(date);
 }

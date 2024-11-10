@@ -21,6 +21,12 @@ class ApplicationService {
     if (!res.success) throw new Error(res.message);
     return applicationDtoListToApplicationList(res.data);
   }
+
+  async update(id: string, values: Partial<INewApplicationPayload>) {
+    const res = await this._http.patch<IApplicationDto>(`/applications/${id}`, values);
+    if (!res.success) throw new Error(res.message);
+    return applicationDtoToApplication(res.data);
+  }
 }
 
 export const applicationService = new ApplicationService(http);

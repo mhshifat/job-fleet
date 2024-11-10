@@ -12,6 +12,7 @@ import { toast } from "@/utils/toast";
 import { handleError } from "@/utils/error";
 import { copyToClipboard } from "@/utils/helpers";
 import useGetWorkflowsQuery from "@/domain/workflow/use-get-workflows-query";
+import { isInFuture } from "@/utils/date";
 
 export default function JobCard({ data }: { data: IJob }) {
   const updateJob = useUpdateJobMutation();
@@ -26,8 +27,10 @@ export default function JobCard({ data }: { data: IJob }) {
   const workflow = useMemo(() => {
     return workflows?.find(w => w.id === data.workflowId)
   }, [workflows, data]);
-
+  
+  const isFutureDate = isInFuture(new Date(data.deadline));
   const isLoading = updateJob.isPending || formsIsLoading || workflowsIsLoading;
+  const disabled = !isFutureDate;
 
   async function handleAttachForm(formId: string) {
     try {
@@ -79,7 +82,7 @@ export default function JobCard({ data }: { data: IJob }) {
 
         <div className="flex items-center gap-5 justify-between bg-background">
           <Select 
-            disabled={isLoading}
+            disabled={isLoading || disabled}
             value={[{ content: form?.title || "", value: form?.id || "" }]}
             onChange={(values) => handleAttachForm(values[0].value)}
             onCreateNew={() => openDialog({
@@ -106,7 +109,7 @@ export default function JobCard({ data }: { data: IJob }) {
         </div>
         <div className="flex items-center gap-5 justify-between bg-background">
           <Select 
-            disabled={isLoading}
+            disabled={isLoading || disabled}
             value={[{ content: workflow?.title || "", value: workflow?.id || "" }]}
             onChange={(values) => handleAttachWorkflow(values[0].value)}
             placeholder={isLoading ? "Loading..." : "Attach Workflow"}
@@ -115,7 +118,7 @@ export default function JobCard({ data }: { data: IJob }) {
               <Select.Option key={c.id} value={c.id}>{c.title}</Select.Option>
             ))}
           </Select>
-          {form?.id && (
+          {workflow?.id && (
             <Link href={`/dashboard/workflows/${data.workflowId}`}>
               <Button className="rounded-full">Edit</Button>
             </Link>
@@ -123,7 +126,7 @@ export default function JobCard({ data }: { data: IJob }) {
         </div>
 
         {form && <div className="flex items-center gap-5 justify-between bg-background">
-          <h3 className="text-lg tracking-tighter font-geist-mono font-semibold leading-[1] text-foreground/80">View Records</h3>
+          <h3 className="text-lg tracking-tighter font-geist-mono font-semibold leading-[1] text-foreground/80">View Applications</h3>
 
           <Link href={`/dashboard/forms/${data.formId}/applications?jobId=${data.id}`}>
             <Button className="rounded-full">View</Button>
@@ -133,7 +136,7 @@ export default function JobCard({ data }: { data: IJob }) {
           <h3 className="text-lg tracking-tighter font-geist-mono font-semibold leading-[1] text-foreground/80">Share</h3>
 
           <div>
-            <Button className="rounded-full" onClick={() => copyToClipboard(`${window.location.origin}/jobs/${data.id}`)}>Copy</Button>
+            <Button disabled={disabled} className="rounded-full" onClick={() => copyToClipboard(`${window.location.origin}/jobs/${data.id}`)}>Copy</Button>
           </div>
         </div>
       </div>

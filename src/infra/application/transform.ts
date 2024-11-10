@@ -6,6 +6,7 @@ export function applicationDtoToApplication(values: IApplicationDto): IApplicati
     id: values.id,
     candidateId: values.candidate_id,
     jobId: values.job_id,
+    stageId: values.stage_id,
     record: values.record,
     createdAt: values.created_at,
     ...values?.candidate?{
@@ -25,6 +26,7 @@ export function applicationToApplicationDto(values: IApplication): IApplicationD
     id: values.id,
     candidate_id: values.candidateId,
     job_id: values.jobId,
+    stage_id: values.stageId,
     record: values.record,
     created_at: values.createdAt,
     ...values?.candidate?{

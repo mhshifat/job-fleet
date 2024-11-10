@@ -4,7 +4,6 @@ import { cn } from "@/utils/helpers";
 import { createContext, CSSProperties, Dispatch, ForwardedRef, forwardRef, HTMLAttributes, PropsWithChildren, SetStateAction, useCallback, useContext, useImperativeHandle, useMemo, useState } from "react";
 import Portal from "../shared/portal";
 import { usePopper } from "react-popper";
-import { ModifierPhases, State } from "@popperjs/core";
 
 interface PopupContextState {
   open: boolean;
@@ -24,7 +23,7 @@ interface PopupContextState {
 const PopupContext = createContext<PopupContextState | null>(null);
 
 interface PopupProps extends HTMLAttributes<HTMLDivElement> {
-  comRef: ForwardedRef<{ toggle: () => void; }>
+  comRef?: ForwardedRef<{ toggle: () => void; }>
 }
 
 export default function Popup({ children, className, comRef }: PropsWithChildren<PopupProps>) {

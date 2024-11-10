@@ -7,7 +7,7 @@ import Button from "@/components/ui/button";
 import Editor from "@/components/ui/editor";
 import useGetPublicFormQuery from "@/domain/form/use-get-public-form-query";
 import useGetPublicJobQuery from "@/domain/job/use-get-public-job-query";
-import { formatISODate } from "@/utils/date";
+import { formatISODate, isInFuture } from "@/utils/date";
 import { HardDriveUploadIcon, LinkedinIcon } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from '@/components/providers/auth';
@@ -28,13 +28,14 @@ export default function JobDetails({ jobId }: { jobId: string }) {
   }, { enabled: !!authState?.uid });
   const isAlreadyApplied = !!applicationsData?.length;
   const loading = isLoading || isFormLoading || isApplicationLoading;
+  const isFutureDate = data ? isInFuture(new Date(data.deadline)) : false;
 
   if (loading) return (
     <div className="py-10">
       <Spinner fixed={false} size="md" variant="secondary" showTitle className="gap-3" />
     </div>
   );
-  if (!data || !formData) return <DataNotFound className="mt-20" />;
+  if (!data || !formData || !isFutureDate) return <DataNotFound className="mt-20" />;
   return (
     <div>
       <div className="w-full aspect-[1/.25] bg-primary/10" />

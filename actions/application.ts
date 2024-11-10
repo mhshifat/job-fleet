@@ -10,6 +10,7 @@ import { users } from "../db/schema/user";
 const applicationMap = {
   id: applications.id,
   job_id: applications.job_id,
+  stage_id: applications.stage_id,
   candidate_id: applications.candidate_id,
   record: applications.record,
   created_at: applications.created_at,
@@ -71,4 +72,23 @@ export async function getApplicationsByQuery(query: Partial<IApplicationDto>) {
     );
   
   return results;
+}
+
+export async function updateApplicationById(id: string, values: Partial<IApplicationDto>, trx = db) {
+  delete values["id"];
+  
+  const [data] = await trx
+    .update(applications)
+    .set({
+      ...values,
+      updated_at: new Date(),
+    })
+    .where(
+      and(
+        eq(applications.id, id),
+      )
+    )
+    .returning(applicationMap);
+
+  return data;
 }
