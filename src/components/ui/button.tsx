@@ -13,6 +13,7 @@ const buttonVariants = cva(
         "secondary-outlined": "bg-background border border-border text-foreground hover:bg-foreground/80 hover:text-background active:bg-foreground/90 disabled:bg-foreground/10 disabled:cursor-not-allowed disabled:text-foreground/30",
         link: "text-primary hover:text-primary/80 active:text-primary/90 disabled:cursor-not-allowed disabled:text-foreground/30",
         ghost: "text-foreground/50 hover:text-foreground/80 active:text-foreground/90 disabled:cursor-not-allowed disabled:text-foreground/30 !p-0",
+        "ghost-destructive": "text-danger hover:text-danger/80 active:text-danger/90 disabled:cursor-not-allowed disabled:text-foreground/30 !p-0",
       },
       size: {
         default: "h-[var(--size)] px-4",
@@ -29,7 +30,7 @@ const buttonVariants = cva(
 )
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "link" | "outlined" | "ghost" | "secondary-outlined" | "destructive";
+  variant?: "default" | "link" | "outlined" | "ghost" | "secondary-outlined" | "destructive" | "ghost-destructive";
   size?: "default" | "icon" | "max" | "sm";
 }
 

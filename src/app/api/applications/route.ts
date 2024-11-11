@@ -10,11 +10,13 @@ export async function GET(req: Request) {
   const searchParams = new URL(req.url).searchParams;
   const isPublic = searchParams.get("public");
   const jobId = searchParams.get("jobId");
+  const stageId = searchParams.get("stageId");
   const candidateId = searchParams.get("candidateId");
 
   if (isPublic === 'true') return asyncErrorHandler(async () => {
     const applications = await getApplicationsByQuery({
       ...jobId?{job_id:jobId}:{},
+      ...stageId?{stage_id:stageId}:{},
       ...candidateId?{candidate_id:candidateId}:{},
     });
     
@@ -30,6 +32,7 @@ export async function GET(req: Request) {
   return asyncErrorHandler(async () => {
     const applications = await getApplicationsByQuery({
       ...jobId?{job_id:jobId}:{},
+      ...stageId?{stage_id:stageId}:{},
       ...candidateId?{candidate_id:candidateId}:{},
     });
     return NextResponse.json<APIResponse>({

@@ -59,6 +59,7 @@ export async function getApplicationsByQuery(query: Partial<IApplicationDto>) {
   const wheres: SQL<unknown>[] = [];
   if (query.id) wheres.push(eq(applications.id, query.id));
   if (query.job_id) wheres.push(eq(applications.job_id, query.job_id));
+  if (query.stage_id) wheres.push(eq(applications.stage_id, query.stage_id));
   if (query.candidate_id) wheres.push(eq(applications.candidate_id, query.candidate_id));
 
   const results = await db

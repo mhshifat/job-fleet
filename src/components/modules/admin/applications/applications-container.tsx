@@ -11,6 +11,8 @@ import { useParams, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import ShowApplicationDataBtnWrapper from "./show-application-data-btn-wrapper";
 import AssignStageBtnWrapper from "./assign-stage-btn-wrapper";
+import useGetStagesQuery from "@/domain/workflow/use-get-stages-query";
+import Button from "@/components/ui/button";
 
 const tableHeaders = [
   {
@@ -36,20 +38,31 @@ export default function ApplicationContainer() {
   const searchParams = useSearchParams();
   const { data: jobs, isLoading: isJobsLoading } =  useGetMyJobsQuery();
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  const [selectedStageId, setSelectedStageId] = useState<string | null>(null);
   const { data: applications, isLoading: isApplicationsLoading } = useGetApplicationsQuery({
     jobId: selectedJobId || "",
+    ...selectedStageId?{ stageId: selectedStageId }:{}
   });
   const selectedJob = useMemo(() => {
     return jobs?.find(j => j.id === selectedJobId);
   }, [selectedJobId, jobs])
+  const { data: stagesData, isLoading: isStagesLoading } = useGetStagesQuery({
+    workflowId: selectedJob?.workflowId
+  }, { enabled: !!selectedJob?.workflowId });
+  const selectedStage = useMemo(() => {
+    return stagesData?.find(s => s.id === selectedStageId);
+  }, [selectedStageId, stagesData])
   const jobId = searchParams.get("jobId");
+  const isFiltersSelected = !!selectedStageId;
 
   useEffect(() => {
     if (!jobId) return;
     setSelectedJobId(jobId);
   }, [jobId])
 
-  console.log({ applications });
+  function clearFilters() {
+    setSelectedStageId(null);
+  }
   if (isApplicationsLoading) return (
     <div className="py-10">
       <Spinner fixed={false} size="md" variant="secondary" showTitle title="Fetching Forms..." className="gap-3" />
@@ -57,7 +70,7 @@ export default function ApplicationContainer() {
   );
   return (
     <div className="mt-10 w-full px-5">
-      <div className="mb-5 w-full flex items-center justify-start">
+      <div className="mb-5 w-full flex items-center justify-start gap-2">
         <div className="max-w-80">
           <Select
             disabled={isJobsLoading}
@@ -70,6 +83,22 @@ export default function ApplicationContainer() {
             ))}
           </Select>
         </div>
+        <div className="max-w-80">
+          <Select
+            disabled={isStagesLoading}
+            value={[{ content: selectedStage?.title || "", value: selectedStage?.id || "" }]}
+            onChange={(values) => setSelectedStageId(values[0].value)}
+            placeholder={isJobsLoading ? "Loading..." : "Filter by stage"}
+          >
+            {stagesData?.map(j => (
+              <Select.Option key={j.id} value={j.id}>{j.title}</Select.Option>
+            ))}
+          </Select>
+        </div>
+
+        {isFiltersSelected && <div className="ml-auto">
+          <Button variant="ghost-destructive" onClick={clearFilters}>Clear</Button>
+        </div>}
       </div>
       <table className="w-full border-collapse">
         <thead>
