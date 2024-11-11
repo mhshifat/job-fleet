@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { users } from "./user";
 import { files } from "./file";
+import { workflows } from "./workflow";
 
 export const organizations = pgTable("organizations", {
   id: text("id").primaryKey(),
@@ -16,7 +17,9 @@ export const organizationsRelations = relations(organizations, ({ one, many }) =
     fields: [organizations.owner_id],
     references: [users.id]
   }),
-  files: many(files)
+  files: many(files),
+  organizations: many(organizations),
+  workflows: many(workflows),
 }));
 
 export const organizationUsers = pgTable("organization_users", {
