@@ -6,4 +6,4 @@ export interface IAutomation {
   createdAt: string;
 }
 
-export type INewAutomationPayload = Omit<IAutomation, "id" | "createdAt">;
+export type INewAutomationPayload = Omit<IAutomation, "id" | "createdAt" | "orgId">;
