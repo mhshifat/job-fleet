@@ -6,6 +6,9 @@ import { applications } from "../db/schema/application";
 import { IApplicationDto, IApplicationDtoPayload } from "@/infra/application/dto";
 import { and, eq, SQL } from "drizzle-orm";
 import { users } from "../db/schema/user";
+import { getStageBy } from "./stage";
+import { getAutomationBy, runAutomation } from "./automation";
+import { getUserById } from "./user";
 
 const applicationMap = {
   id: applications.id,
@@ -90,6 +93,22 @@ export async function updateApplicationById(id: string, values: Partial<IApplica
       )
     )
     .returning(applicationMap);
+  
+  if (values?.stage_id) {
+    const stage = await getStageBy({
+      id: values.stage_id,
+    });
+    if (!stage.automation_id) return;
+    const automation = await getAutomationBy({
+      id: stage.automation_id!,
+    });
+    const candidate = await getUserById(data.candidate_id);
+    runAutomation({
+      id: automation.id
+    }, {
+      ...candidate
+    })
+  }
 
   return data;
 }

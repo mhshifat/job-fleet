@@ -6,6 +6,7 @@ export function stageDtoToStage(values: IStageDto): IStage {
     id: values.id,
     title: values.title,
     workflowId: values.workflow_id,
+    automationId: values.automation_id,
     createdAt: values.created_at,
   }
 }
@@ -15,6 +16,7 @@ export function stageToStageDto(values: IStage): IStageDto {
     id: values.id,
     title: values.title,
     workflow_id: values.workflowId,
+    automation_id: values.automationId,
     created_at: values.createdAt,
   }
 }

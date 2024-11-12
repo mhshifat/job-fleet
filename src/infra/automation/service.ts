@@ -21,6 +21,12 @@ class AutomationService {
     if (!res.success) throw new Error(res.message);
     return automationDtoToAutomation(res.data);
   }
+  
+  async run(id: string) {
+    const res = await this._http.post<IAutomationDto>(`/automations/${id}/run`, {});
+    if (!res.success) throw new Error(res.message);
+    return automationDtoToAutomation(res.data);
+  }
 
   async list(query: Record<string, unknown> = {}) {
     const res = await this._http.get<IAutomationDto[]>(`/automations`, { params: query });

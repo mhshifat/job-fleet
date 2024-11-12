@@ -36,7 +36,10 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const { id, ...stagePayload } = stageToStageDto(json);
     const stage = await updateStageBy({
       id: params.id,
-      workflow_id: stagePayload?.workflow_id
+      workflow_id: stagePayload?.workflow_id,
+      ...stagePayload?.automation_id?{
+        automation_id: stagePayload?.automation_id
+      }:{},
     }, {
       ...stagePayload,
     });

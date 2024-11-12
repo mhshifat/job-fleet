@@ -1,8 +1,8 @@
 export interface IAutomation {
   id: string;
   title: string;
-  stageId?: string;
-  orgId?: string;
+  flow?: Record<string, unknown>;
+  orgId: string;
   createdAt: string;
 }
 

@@ -39,7 +39,7 @@ export default function AssignStageBtnWrapper({ data }: AssignStageBtnWrapperPro
       </Popup.Trigger>
       <Popup.Content>
         <ul className="min-w-[240px]">
-          {stagesData?.map(item => (
+          {stagesData?.filter(s => !!s.automationId)?.map(item => (
             <li className="w-full hover:opacity-50 cursor-pointer font-geist-mono font-medium flex items-center justify-between gap-2" key={item.id} onClick={() => {
               handleAssignStage(item.id);
               popUpRef.current.toggle();

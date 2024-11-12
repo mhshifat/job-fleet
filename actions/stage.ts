@@ -10,6 +10,8 @@ import { IStageDto } from "@/infra/stage/dto";
 const stageMap = {
   id: stages.id,
   title: stages.title,
+  workflow_id: stages.workflow_id,
+  automation_id: stages.automation_id,
   created_at: stages.created_at,
 }
 
@@ -45,14 +47,17 @@ export async function createStage(values: Omit<IStageDto, "id" | "created_at"> &
   return data;
 }
 
-export async function getStageBy(where: { id: string, workflow_id: string }) {
+export async function getStageBy(where: { id: string, workflow_id?: string }) {
+  const queries = [];
+  if (where.id) queries.push(eq(stages.id, where.id!))
+  if (where.workflow_id) queries.push(eq(stages.workflow_id, where.workflow_id!))
+    
   const [data] = await db
     .select(stageMap)
     .from(stages)
     .where(
       and(
-        eq(stages.id, where.id),
-        eq(stages.workflow_id, where.workflow_id),
+        ...queries
       )
     );
   
@@ -66,6 +71,8 @@ export async function updateStageBy(where: { id: string, workflow_id: string }, 
     .update(stages)
     .set({
       title: values.title,
+      workflow_id: values.workflow_id,
+      automation_id: values.automation_id,
       updated_at: new Date(),
     })
     .where(

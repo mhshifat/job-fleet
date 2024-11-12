@@ -19,7 +19,7 @@ class StageService {
   async update(id: string, values: Partial<INewStagePayload>) {
     const res = await this._http.patch<IStageDto>(`/stages/${id}`, values);
     if (!res.success) throw new Error(res.message);
-    return res.data;
+    return stageDtoToStage(res.data);
   }
 
   async list(query: Record<string, unknown> = {}) {
