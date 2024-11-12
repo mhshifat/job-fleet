@@ -129,6 +129,7 @@ export async function updateAutomationBy(where: Partial<IAutomationDto>, values:
 
 export async function deleteAutomationBy(where: Partial<IAutomationDto>) {
   const queries = [];
+  if (where.id) queries.push(eq(automations.id, where.id!))
   if (where.org_id) queries.push(eq(automations.org_id, where.org_id!))
 
   const [data] = await db
