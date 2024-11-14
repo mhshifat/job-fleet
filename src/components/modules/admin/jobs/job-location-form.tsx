@@ -13,6 +13,7 @@ import { useFormContext } from "react-hook-form";
 
 export default function JobLocationForm() {
   const createJob = useCreateJobMutation();
+  const createJobAsDraft = useCreateJobMutation();
   const updateJob = useUpdateJobMutation();
   const { prevStep } = useSteps();
   const router = useRouter();
@@ -24,9 +25,9 @@ export default function JobLocationForm() {
   } = useFormContext<ICreateJobFormSchema>();
 
   const jobId = getValues("id");
-  const loading = createJob.isPending || updateJob.isPending;
+  const loading = createJob.isPending || updateJob.isPending || createJobAsDraft.isPending;
   
-  async function handleSubmit(status?: "DRAFT") {
+  async function handleSubmit() {
     try {
       const formValues = getValues();
       const isValid = await trigger([
@@ -49,7 +50,30 @@ export default function JobLocationForm() {
         ...formValues,
         code: formValues.code || null,
         deadline: formValues.deadline,
-        status: status || "PUBLISHED",
+        status: "PUBLISHED",
+      });
+      
+      router.push(ROUTE_PATHS.DASHBOARD_JOBS);
+    } catch (err) {
+      console.error(err);
+    } finally {}
+  }
+  async function handleSaveAsDraft() {
+    try {
+      const formValues = getValues();
+      const isValid = await trigger([
+        "streetAddress",
+        "zipCode",
+        "city",
+        "country",
+        "linkedinUrl",
+      ]);
+      if (!isValid) throw new Error("Invalid fields");
+      await createJob.mutateAsync({
+        ...formValues,
+        code: formValues.code || null,
+        deadline: formValues.deadline,
+        status: "DRAFT",
       });
       
       router.push(ROUTE_PATHS.DASHBOARD_JOBS);
@@ -128,7 +152,7 @@ export default function JobLocationForm() {
           className="capitalize"
           onClick={() => handleSubmit()}
         >
-          <LoadingBtn loading={loading}>
+          <LoadingBtn loading={createJob.isPending}>
             {jobId ? "Update" : "Post this job now"}
           </LoadingBtn>
         </Button>
@@ -137,9 +161,9 @@ export default function JobLocationForm() {
           disabled={loading}
           variant="ghost"
           className="w-max capitalize"
-          onClick={() => handleSubmit("DRAFT")}
+          onClick={() => handleSaveAsDraft()}
         >
-          <LoadingBtn loading={loading} icon={false}>
+          <LoadingBtn loading={createJobAsDraft.isPending} icon={false}>
             <SaveIcon className="size-4" />
             Save as draft
           </LoadingBtn>

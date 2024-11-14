@@ -17,7 +17,11 @@ export default function useCreateJobMutation() {
     },
     onSuccess: () => {
       toast.success("Successfully created a new job!");
-      queryClient.invalidateQueries({ queryKey: ["get-my-jobs"] });
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return (query.queryKey?.[0] as string)?.startsWith("get-my-jobs");
+        }
+      });
     },
     onError: (err) => {
       if (err instanceof AxiosError) {

@@ -35,7 +35,7 @@ export default function AssignStageBtnWrapper({ data }: AssignStageBtnWrapperPro
       comRef={popUpRef}
     >
       <Popup.Trigger>
-        <Button disabled={isLoading} className="w-[200px]" variant={assignedStage?.id ? "default" : "secondary-outlined"} size="sm">{assignedStage?.title || "Assign Stage"}</Button>
+        <Button disabled={isLoading} variant={assignedStage?.id ? "default" : "secondary-outlined"} size="sm">{assignedStage?.title || "Assign Stage"}</Button>
       </Popup.Trigger>
       <Popup.Content>
         <ul className="min-w-[240px]">

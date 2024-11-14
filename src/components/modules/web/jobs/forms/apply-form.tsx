@@ -14,7 +14,7 @@ export default function ApplyForm() {
   const { authState } = useAuth();
   const { formId, id } = useParams();
   const router = useRouter();
-  const applicationForm = useCreateApplicationMutation();
+  const createApplication = useCreateApplicationMutation();
   const { data: formData, isLoading } = useGetPublicFormQuery(formId as string);
   const { isLoading: isApplicationLoading } = useGetPublicApplicationsQuery({
     jobId: id as string,
@@ -32,7 +32,7 @@ export default function ApplyForm() {
   
   async function handleSubmit(data: Record<string, string>) {
     try {
-      await applicationForm.mutateAsync({
+      await createApplication.mutateAsync({
         jobId: id as string,
         record: {
           ...data,
@@ -61,6 +61,7 @@ export default function ApplyForm() {
       submitBtnText="Submit"
       formElements={formElements}
       onSubmit={handleSubmit}
+      loading={createApplication.isPending}
     />
   )
 }

@@ -36,6 +36,8 @@ export async function createApplication(values: IApplicationDtoPayload) {
     })
     .returning();
 
+  runApplicationAutomations({ stage_id: values.stage_id }, data as IApplicationDto);
+
   return data;
 }
 
@@ -94,6 +96,12 @@ export async function updateApplicationById(id: string, values: Partial<IApplica
     )
     .returning(applicationMap);
   
+  runApplicationAutomations({ stage_id: values.stage_id }, data as IApplicationDto);
+
+  return data;
+}
+
+export async function runApplicationAutomations(values: { stage_id?: string }, data: IApplicationDto) {
   if (values?.stage_id) {
     const stage = await getStageBy({
       id: values.stage_id,
@@ -109,6 +117,4 @@ export async function updateApplicationById(id: string, values: Partial<IApplica
       ...candidate
     })
   }
-
-  return data;
 }

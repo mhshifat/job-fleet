@@ -47,7 +47,7 @@ export async function createStage(values: Omit<IStageDto, "id" | "created_at"> &
   return data;
 }
 
-export async function getStageBy(where: { id: string, workflow_id?: string }) {
+export async function getStageBy(where: Partial<IStageDto>) {
   const queries = [];
   if (where.id) queries.push(eq(stages.id, where.id!))
   if (where.workflow_id) queries.push(eq(stages.workflow_id, where.workflow_id!))

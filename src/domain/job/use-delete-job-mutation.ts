@@ -17,7 +17,11 @@ export default function useDeleteJobMutation(id: string) {
     },
     onSuccess: () => {
       toast.success("Successfully deleted the job!");
-      queryClient.invalidateQueries({ queryKey: ["get-my-jobs"] });
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return (query.queryKey?.[0] as string)?.startsWith("get-my-jobs");
+        }
+      });
     },
     onError: (err) => {
       if (err instanceof AxiosError) {

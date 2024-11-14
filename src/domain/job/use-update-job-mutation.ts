@@ -20,7 +20,11 @@ export default function useUpdateJobMutation() {
     },
     onSuccess: (data) => {
       toast.success("Successfully updated the job!");
-      queryClient.invalidateQueries({ queryKey: ["get-my-jobs"] });
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return (query.queryKey?.[0] as string)?.startsWith("get-my-jobs");
+        }
+      });
       queryClient.invalidateQueries({ queryKey: [`get-job-by-id-${data.id}`] });
       queryClient.invalidateQueries({ queryKey: [`get-public-job-by-id--${data.id}`] });
     },

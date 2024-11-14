@@ -4,14 +4,16 @@ import FormElementPreview from "./form-element-preview";
 import { FormEvent, ReactNode, useState } from "react";
 import Label from "@/components/ui/label";
 import Divider from "@/components/ui/divider";
+import LoadingBtn from "@/components/shared/loading-btn";
 
 interface IFormPreviewProps {
   submitBtnText?: ReactNode;
   formElements: IFormElement[];
   onSubmit: (values: Record<string, string>) => void;
+  loading?: boolean;
 }
 
-export default function FormPreview({ formElements, onSubmit, submitBtnText }: IFormPreviewProps) {
+export default function FormPreview({ loading, formElements, onSubmit, submitBtnText }: IFormPreviewProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formValues, setFormValues] = useState<Record<string, string>>({});
 
@@ -64,7 +66,11 @@ export default function FormPreview({ formElements, onSubmit, submitBtnText }: I
                   />
                 ))}
 
-                <Button type="submit" className="mt-auto">{submitBtnText || "Test"}</Button>
+                <Button disabled={loading} type="submit" className="mt-auto">
+                  <LoadingBtn loading={loading}>
+                    {submitBtnText || "Test"}
+                  </LoadingBtn>
+                </Button>
               </fieldset>
             </form>
           </div>

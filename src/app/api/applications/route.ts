@@ -5,6 +5,8 @@ import { isAuthenticated } from "../../../../actions/auth";
 import { applicationToApplicationDto } from "@/infra/application/transform";
 import { createApplication, getApplicationsByQuery } from "../../../../actions/application";
 import { createApplicationFormSchema } from "@/domain/application/validators";
+import { getStages } from "../../../../actions/stage";
+import { getPublishedJobById } from "../../../../actions/job";
 
 export async function GET(req: Request) {
   const searchParams = new URL(req.url).searchParams;
@@ -50,8 +52,13 @@ export async function POST(req: Request) {
     const json = await req.json();
     await createApplicationFormSchema.parseAsync(json);
     const { id, created_at, ...applicationPayload } = applicationToApplicationDto(json);
+    const job = await getPublishedJobById(applicationPayload.job_id);
+    const [stage] = await getStages({
+      workflow_id: job.workflow_id!
+    })
     const application = await createApplication({
       ...applicationPayload,
+      stage_id: stage.id,
       candidate_id: payload?.data?.uid,
     });
     return NextResponse.json<APIResponse>({
