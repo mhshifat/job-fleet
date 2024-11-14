@@ -8,6 +8,7 @@ import { unstable_noStore } from "next/cache";
 import { IWorkflowDto } from "@/infra/workflow/dto";
 import { IAutomationDto } from "@/infra/automation/dto";
 import { sendEmail } from "./email";
+import { generateGoogleMeetLink } from "./services/google";
 
 const automationMap = {
   id: automations.id,
@@ -61,11 +62,11 @@ export async function runAutomation(where: Partial<Omit<IAutomationDto, "created
       )
     );
 
-  const flowNodes = (data?.flow as { nodes: { id: string, type: string, data: unknown }[] })?.nodes?.filter(item => !item?.type?.includes("trigger"));
+  const flowNodes = (data?.flow as { nodes: { id: string, type: string, data: unknown }[] })?.nodes?.filter(item => !item?.type?.includes("trigger")) || [];
   const flowEdges = (data?.flow as { edges: { source: string, target: string }[] })?.edges?.map(item => ({
     source: flowNodes?.find(n => n.id === item.source),
     target: flowNodes?.find(n => n.id === item.target),
-  }));
+  })) || [];
 
   function runFlows() {
     for (const edge of flowEdges) {
@@ -78,6 +79,18 @@ export async function runAutomation(where: Partial<Omit<IAutomationDto, "created
             from: process.env.MAIL_FROM!,
             subject: data.subject,
             html: data.content
+          })
+        }
+        case "google_meet_action": {
+          const data = edge?.target?.data as { summary: string };
+          const payloadData = payload as { to?: string, email?: string };
+          if (!data.summary) return;
+          generateGoogleMeetLink({
+            orgId: where.org_id!,
+            meetingTime: 1800000,
+            date: new Date((new Date()).getTime() + (60*60*24*1000)).toISOString(),
+            summary: data.summary,
+            attendees: [payloadData?.to || payloadData?.email || ""]
           })
         }
       }

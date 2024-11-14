@@ -4,7 +4,7 @@ import CanAccess from "@/components/shared/can-access";
 import Sidebar from "@/components/ui/sidebar";
 import { ROUTE_PATHS } from "@/utils/constants";
 import { cn } from "@/utils/helpers";
-import { ArrowBigRightDashIcon, BookAudioIcon, CogIcon, DumbbellIcon, LayoutDashboardIcon, ScrollTextIcon, UnfoldHorizontalIcon, WorkflowIcon } from "lucide-react";
+import { ArrowBigRightDashIcon, BookAudioIcon, CogIcon, DumbbellIcon, LayoutDashboardIcon, MicrochipIcon, ScrollTextIcon, UnfoldHorizontalIcon, WorkflowIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -37,6 +37,12 @@ const ADMIN_SIDEBAR_MENUS = [
     title: "Automations",
     icon: WorkflowIcon,
     link: ROUTE_PATHS.DASHBOARD_AUTOMATIONS,
+    authProperties: ["oid"]
+  },
+  {
+    title: "Integrations",
+    icon: MicrochipIcon,
+    link: ROUTE_PATHS.DASHBOARD_INTEGRATIONS,
     authProperties: ["oid"]
   },
   {

@@ -28,6 +28,7 @@ import useUpdateAutomationMutation from '@/domain/automation/use-update-automati
 import { DragEvent, ForwardedRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import AutomationNodeTypes from './automation-node-types';
 import { cn, createId } from '@/utils/helpers';
+import Badge from '@/components/ui/badge';
 
 interface AutomationBuilderProps { 
   automationId: string;
@@ -168,6 +169,14 @@ export default function AutomationBuilder({ automationId, innerRef }: Automation
         <AutomationNodeTypes.EmailAction {...args} onChange={(data) => setNodes(values => values.map(v => v.id === args.id ? ({...v, data}) : v) as Node[])} />
       </AutomationNodeTypes>
     ),
+    google_meet_action: (args: { id: string; data: Record<string, unknown> }) => (
+      <AutomationNodeTypes
+        title="Google Meet"
+        onDelete={() => setNodes(values => values.filter(item => item.id !== args.id))}
+      >
+        <AutomationNodeTypes.GoogleMeetAction {...args} onChange={(data) => setNodes(values => values.map(v => v.id === args.id ? ({...v, data}) : v) as Node[])} />
+      </AutomationNodeTypes>
+    ),
   }), []);
   if (isLoading) return (
     <div className="py-10">
@@ -198,9 +207,11 @@ export default function AutomationBuilder({ automationId, innerRef }: Automation
       <aside className='py-3 px-5 w-full max-w-[270px] bg-background-secondary h-auto self-stretch'>
         <div className='w-full grid grid-cols-2 gap-5'>
           {Object.keys(nodeTypes).map(key => (
-            <div className={cn("flex flex-col gap-2 justify-center items-center border border-border rounded-md py-5 px-3 cursor-pointer transition hover:bg-foreground/10 capitalize", {
+            <div key={key} className={cn("flex flex-col gap-2 justify-center items-center text-center border border-border rounded-md py-5 px-3 cursor-pointer transition hover:bg-foreground/10 capitalize", {
             })} onDragStart={(event) => onDragStart(event, key)} draggable>
-              {key?.split("_")?.[0]}
+              {key?.includes("trigger") && <Badge className='bg-warning'>Trigger</Badge>}
+              {!key?.includes("trigger") && <Badge>Action</Badge>}
+              {key?.split("_")?.slice(0, -1).join(" ")}
             </div>
           ))}
         </div>

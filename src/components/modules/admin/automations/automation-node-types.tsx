@@ -11,6 +11,11 @@ import { useAutomationBuilder } from "./automation-builder-provider";
 import Button from "@/components/ui/button";
 import { Trash2Icon } from "lucide-react";
 import Input from "@/components/ui/input";
+import useGetIntegrationsQuery from './../../../../domain/integration/use-get-integrations-query';
+import { cn } from "@/utils/helpers";
+import Link from "next/link";
+import { ROUTE_PATHS } from "@/utils/constants";
+import Spinner from "@/components/shared/spinner";
 
 interface AutomationNodeTypesProps {
   type?: "trigger";
@@ -190,6 +195,82 @@ AutomationNodeTypes.EmailAction = (props: { id: string; data: Record<string, unk
             }}
           />
         </Label>
+      </li>
+    </ul>
+  )
+}
+
+AutomationNodeTypes.GoogleMeetAction = (props: { id: string; data: Record<string, unknown>, onChange: (data: unknown) => void }) => {
+  const { addFlowElement } = useAutomationBuilder();
+  const { data: integrations, isLoading } = useGetIntegrationsQuery({
+    type: "google_meet"
+  });
+  const integration = integrations?.[0] || null;
+
+  const form = useForm({
+    defaultValues: {
+      summary: (props?.data?.summary || "") as string,
+    },
+    resolver: zodResolver(
+      z.object({
+        summary: z.string({ message: "Summary is required" }).min(1, "Summary is required")
+      })
+    )
+  });
+
+  useEffect(() => {
+    if (!props.id) return;
+    addFlowElement(props.id, {
+      async triggerForm() {
+        return form.trigger();
+      },
+    })
+  }, [props.id])
+
+  function updateDate() {
+    const formValues = form.getValues();
+    props?.onChange(formValues);
+  }
+  if (isLoading) return (
+    <div className="py-10">
+      <Spinner fixed={false} size="md" variant="secondary" showTitle className="gap-3" />
+    </div>
+  )
+  return (
+    <ul className={cn("flex flex-col gap-2 py-3")}>
+      <li className={cn("flex items-center justify-center flex-col gap-5", {
+      "border border-danger rounded-md": !integration
+    })}>
+        {integration && (
+          <div className="w-full">
+            <Label
+              title="Summary" 
+              error={form.formState.errors.summary?.message}
+            >
+              <Input
+                placeholder="Type Summary"
+                value={form.watch("summary") || ""}
+                onChange={({ target }) => {
+                  form.setValue("summary", target.value, {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                    shouldValidate: true
+                  });
+                  updateDate();
+                }}
+              />
+            </Label>
+            <p className="text-xs font-geist font-medium mt-1 text-foreground/60 max-w-[300px]">
+              Meeting will be scheduled in 1 day from the email is sent.
+            </p>
+          </div>
+        )}
+        {!integration && <p className="text-sm font-geist-mono font-medium text-center text-danger max-w-[300px]">You do not have connection to your google meet, so this action will not work</p>}
+        {!integration && (
+          <Link href={ROUTE_PATHS.DASHBOARD_INTEGRATIONS}>
+            <Button variant="link">Go to Integrations</Button>
+          </Link>
+        )}
       </li>
     </ul>
   )

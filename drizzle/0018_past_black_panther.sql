@@ -1,0 +1,1 @@
+ALTER TABLE "integrations" DROP CONSTRAINT "integrations_type_unique";

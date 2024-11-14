@@ -16,7 +16,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       id: params.id,
       org_id: payload?.data?.oid
     }, {
-      to: json?.to || "test@test.com",
+      to: json?.to || "mehedihassanshifat01@gmail.com",
     });
     return NextResponse.json<APIResponse>({
       success: true,

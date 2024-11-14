@@ -1,0 +1,1 @@
+ALTER TABLE "integrations" ADD CONSTRAINT "integrations_org_id_type_unique" UNIQUE("org_id","type");

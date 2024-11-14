@@ -1,0 +1,1 @@
+ALTER TABLE "integrations" ADD CONSTRAINT "integrations_type_unique" UNIQUE("type");
